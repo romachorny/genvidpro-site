@@ -1,0 +1,20 @@
+# Deploy configuration for the Cloudflare Pages project "genvidpro".
+# It has to sit here, in the project root: Pages refuses --config elsewhere, and a
+# deploy run from another folder silently ships WITHOUT the functions bundle —
+# /chat and /ev came back 405 until this was moved back (checked 05.09.2026).
+# The file is uploaded with the site, so /wrangler.toml is closed in _redirects.
+# It exists for one reason: the KV store behind the funnel counter and the chat
+# ceiling has to be bound to the deployment, and a direct upload has nowhere else
+# to read that from.
+name = "genvidpro"
+pages_build_output_dir = "."
+compatibility_date = "2026-09-05"
+
+[[kv_namespaces]]
+binding = "EVENTS"
+id = "f2e23da908244bb39ed0c3be854ce83b"
+
+[env.preview]
+[[env.preview.kv_namespaces]]
+binding = "EVENTS"
+id = "f2e23da908244bb39ed0c3be854ce83b"

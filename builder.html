@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Build a real website for your shop in two minutes. Pick a look, type your name, download the HTML. Free, by GenVidPro.">
+<link rel="icon" href="/favicon.ico?v=3" sizes="any">
+<link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml">
+<link rel="icon" href="/favicon-48.png?v=3" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
+<!-- 15.09.2026: the builder is where a visitor is most convinced, and with no manifest
+     the install prompt never appeared here. Same tags as the front page. -->
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="GVPro">
+<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('/sw.js')})}</script>
+<meta name="theme-color" content="#0E0D0C">
+<title>Free Site Builder — GenVidPro</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;800&family=JetBrains+Mono:wght@400;600&family=Archivo:wght@400;500;700&family=Bebas+Neue&family=Playfair+Display:wght@500;700&family=Lora:wght@400;600&family=Syne:wght@600;800&family=Manrope:wght@400;600&display=swap">
+<style>
+:root{
+  --ink:#0E0D0C; --panel:#171513; --panel2:#1F1B18; --line:#2C2622;
+  --tx:#EDE7E2; --mut:#9A8F88; --acc:#C93A16; --ok:#3E9C6B;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --disp:'Big Shoulders Display',Impact,sans-serif;
+  --body:'Archivo',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--tx);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1600px;margin:0 auto;padding:28px 40px 64px}
+@media(max-width:760px){.wrap{padding:20px 16px 48px}}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 24px;border-bottom:1px solid var(--line);padding-bottom:18px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(38px,6vw,68px);line-height:.92;margin:6px 0 0;text-wrap:balance;letter-spacing:.01em}
+.sub{color:var(--mut);font-size:15px;max-width:52ch;margin:8px 0 0;line-height:1.5}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--mut)}
+.steps b{color:var(--tx);font-weight:600}
+
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 6px}
+.cat{font-family:var(--mono);font-size:12px;padding:7px 13px;border:1px solid var(--line);background:transparent;color:var(--mut);border-radius:999px;cursor:pointer}
+.cat[aria-pressed="true"]{color:var(--ink);background:var(--tx);border-color:var(--tx)}
+.cat[aria-pressed="false"]:hover{color:var(--tx);border-color:var(--acc)}
+.hint{font-family:var(--mono);font-size:11px;color:var(--mut);margin:10px 0 0;line-height:1.7}
+
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0 0}
+@media(min-width:1360px){.tiles{grid-template-columns:repeat(6,1fr)}.shot{height:168px}}
+.tile{position:relative;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:0;cursor:pointer;overflow:hidden;text-align:left;color:inherit;transition:border-color .18s, transform .18s}
+.tile:hover,.tile:focus-visible{border-color:var(--acc);transform:translateY(-3px)}
+.tile[aria-pressed="true"]{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.shot{height:186px;overflow:hidden;position:relative;background:#000;direction:ltr}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.shotfr{border:0;display:block;transform-origin:top left;pointer-events:none;background:#000}
+.tile figcaption{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 11px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+.tile figcaption span{color:var(--mut)}
+
+.stage{display:grid;grid-template-columns:320px 1fr;gap:22px;margin-top:28px;align-items:start}
+.panelbox{border:1px solid var(--line);background:var(--panel);padding:18px;border-radius:18px}
+.grp{border-top:1px solid var(--line);padding:14px 0 2px}
+.grp:first-of-type{border-top:0;padding-top:0}
+label.lab{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
+input[type=text]{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--tx);font-family:var(--body);font-size:14px;padding:10px 14px;border-radius:999px}
+input[type=text]:focus{outline:2px solid var(--acc);outline-offset:1px}
+.sw{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.sw button{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.22);cursor:pointer;padding:0}
+.sw button[aria-pressed="true"]{outline:2px solid var(--tx);outline-offset:2px}
+input[type=color]{width:34px;height:26px;padding:0;background:none;border:1px solid var(--line);cursor:pointer}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{flex:1;background:transparent;border:0;border-right:1px solid var(--line);color:var(--mut);font-family:var(--mono);font-size:11px;padding:8px 4px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--tx);color:var(--ink)}
+.fonts button{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:var(--tx);padding:9px 14px;margin-bottom:6px;cursor:pointer;font-size:15px;border-radius:14px}
+.fonts button[aria-pressed="true"]{border-color:var(--acc)}
+.fonts button small{display:block;font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+
+.viewer{border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;min-height:560px;border-radius:18px;overflow:hidden;scroll-margin-top:12px;transition:box-shadow .4s,border-color .4s}
+.viewer.flash{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 0 40px rgba(201,58,22,.35)}
+.bar{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--mut)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.bar .url{flex:1;background:var(--panel2);border:1px solid var(--line);padding:4px 9px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .seg{border:0}
+.bar .seg button{border:1px solid var(--line);margin-left:4px;padding:4px 9px}
+.btn.tiny{padding:5px 12px;font-size:11px;border-radius:999px}
+.frame{flex:1;background:#000;display:flex;justify-content:center;padding:0;position:relative}
+.frame #bigshot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:.9}
+.frame iframe{position:relative}
+.frame iframe{border:0;width:100%;height:700px;background:#fff;transition:width .25s}
+.frame.mob iframe{width:390px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+
+/* Левая колонка короткая, правая — длинный прайс. При align-items:start под
+   кнопками зияла пустота во весь экран. Растягиваем ячейку и ставим её
+   содержимое по центру: дырки нет ни сверху, ни снизу. */
+.close{display:block;border:1px solid var(--line);margin-top:24px;border-radius:18px;overflow:hidden}
+.close .left{border-bottom:1px solid var(--line)}
+.close .addons{columns:2;column-gap:26px}
+@media(max-width:900px){.close .addons{columns:1}}
+@media(min-width:1400px){.close .addons{columns:3}}
+.close .addons li{break-inside:avoid;-webkit-column-break-inside:avoid}
+.close>div{padding:20px 22px}
+
+.close h2{font-family:var(--disp);font-size:34px;margin:6px 0 8px;font-weight:800;line-height:1}
+.close p{color:var(--mut);font-size:14px;line-height:1.55;margin:0 0 14px;max-width:46ch}
+.btn{display:inline-block;font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:12px 22px;border:1px solid var(--tx);background:var(--tx);color:var(--ink);cursor:pointer;border-radius:999px;transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-2px)}
+.btn.red:hover{box-shadow:0 12px 30px rgba(201,58,22,.4)}
+.btn.ghost{background:transparent;color:var(--tx)}
+.btn.red{background:var(--acc);border-color:var(--acc);color:#fff}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}
+.row .btn{width:100%;text-align:center}
+.note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.5}
+.price{font-family:var(--mono);font-size:12px;color:var(--mut);line-height:1.9;border-top:1px solid var(--line);margin-top:12px;padding-top:12px}
+.price b{color:var(--tx)}
+.plans{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:8px}
+.plans li{border:1px solid var(--line);border-radius:14px;padding:12px 15px;transition:border-color .25s,transform .25s}
+.plans li:hover{border-color:var(--acc);transform:translateY(-2px)}
+.plans li.pick{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.plans .hd{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-family:var(--mono);font-size:12px}
+.plans .hd b{color:var(--tx)}.plans .hd i{color:var(--acc);font-style:normal}
+.plans p{color:var(--mut);font-size:12.5px;line-height:1.5;margin:5px 0 0}
+.addons{list-style:none;padding:0;margin:12px 0 0;border-top:1px solid var(--line)}
+.addons li{border-bottom:1px solid var(--line);padding:11px 0;transition:padding .25s}
+.addons li:hover{padding-left:8px}
+.addons .hd{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-family:var(--mono);font-size:12px}
+.addons .hd b{color:var(--tx);font-weight:600}
+.addons .hd i{color:var(--acc);font-style:normal}
+.addons p{color:var(--mut);font-size:12.5px;line-height:1.5;margin:5px 0 0;max-width:50ch}
+.close{grid-template-columns:1fr 1.15fr}
+footer{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+@media(max-width:760px){.steps{margin-left:0;font-size:10px;gap:6px}.close h2{font-size:26px}}
+@media(max-width:980px){.tiles{grid-template-columns:repeat(2,1fr)}.stage{grid-template-columns:1fr}.close{grid-template-columns:1fr}.close .left{border-right:0;border-bottom:1px solid var(--line)}}
+@media(max-width:760px),(hover:none){
+  .cat{padding:10px 15px;font-size:12.5px}
+  .sw button{width:34px;height:34px}
+  input[type=color]{width:44px;height:40px}
+  .grp input:not([type=color]):not([type=checkbox]){min-height:44px}
+  #toyseg button,#mode button{min-height:44px}
+  .bar .seg{overflow:visible}
+  .btn.tiny{position:relative}
+  .btn.tiny::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
+  .seg button{padding:12px 6px}
+  .btn{padding:14px 22px}
+  .fonts button{padding:12px 14px}
+}
+@media(max-width:620px){.tiles{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<button type="button" class="shr" id="shr" aria-label="Share this page" aria-expanded="false" title="Share">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.3 10.8 15.7 6.4"/><path d="M8.3 13.2 15.7 17.6"/></svg>
+</button>
+<div class="shr-menu" id="shr-menu" hidden role="menu" aria-labelledby="shr"></div>
+<style>
+/* Glyph only, transparent, in a slightly oval neon ring. */
+.shr{position:fixed;top:14px;right:14px;z-index:60;display:inline-flex;align-items:center;justify-content:center;
+  width:46px;height:32px;padding:0;background:none;border:1px solid rgba(255,74,28,.85);
+  color:#fff;border-radius:999px;cursor:pointer;
+  box-shadow:0 0 9px rgba(255,74,28,.55),inset 0 0 10px rgba(255,74,28,.12);
+  transition:box-shadow .25s,color .25s,border-color .25s;-webkit-tap-highlight-color:transparent}
+.shr svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(255,74,28,.85))}
+.shr:hover,.shr[aria-expanded="true"]{border-color:#FF7A4C;color:#FF4A1C;
+  box-shadow:0 0 16px rgba(255,74,28,.95),0 0 40px rgba(255,74,28,.5),inset 0 0 14px rgba(255,74,28,.2)}
+@media(max-width:640px){.shr{width:42px;height:30px}}
+.shr-menu{position:fixed;top:58px;right:14px;z-index:60;min-width:210px;padding:6px;
+  background:rgba(14,13,12,.96);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,74,28,.6);border-radius:16px;
+  box-shadow:0 0 14px rgba(255,74,28,.35),0 22px 50px rgba(0,0,0,.6);
+  display:flex;flex-direction:column;gap:2px}
+.shr-menu[hidden]{display:none}
+.shr-menu a,.shr-menu button{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:11px;
+  background:none;border:0;color:#F2EFEA;font-family:inherit;font-size:13.5px;text-align:left;
+  text-decoration:none;cursor:pointer;transition:background .18s,color .18s}
+.shr-menu a:hover,.shr-menu button:hover{background:rgba(255,74,28,.16);color:#fff}
+.shr-menu i{width:18px;text-align:center;font-style:normal;color:#FF4A1C;font-size:14px}
+.shr-menu .ok{color:#FF4A1C}
+</style>
+<script>
+/* Same behaviour as the home page: the phone's own share sheet where there is
+   one, a short list of networks where there is not. */
+(function(){
+  var btn=document.getElementById('shr'),menu=document.getElementById('shr-menu');
+  if(!btn||!menu)return;
+  var url=location.origin+'/builder.html';
+  var title='Build your own business site, free \u2014 GenVidPro';
+  var text='Twelve looks, your name, your colour. The real page, live, in minutes.';
+  var u=encodeURIComponent(url), t=encodeURIComponent(title), tt=encodeURIComponent(title+' \u2014 '+text);
+  var NETS=[
+    ['WhatsApp','\uD83D\uDCAC','https://wa.me/?text='+encodeURIComponent(title+' '+url)],
+    ['Telegram','\u2708','https://t.me/share/url?url='+u+'&text='+t],
+    ['Facebook','\u0192','https://www.facebook.com/sharer/sharer.php?u='+u],
+    ['X','\u2715','https://twitter.com/intent/tweet?url='+u+'&text='+t],
+    ['LinkedIn','in','https://www.linkedin.com/sharing/share-offsite/?url='+u],
+    ['Email','\u2709','mailto:?subject='+t+'&body='+tt+'%0A%0A'+u]
+  ];
+  menu.innerHTML=NETS.map(function(n){
+    return '<a href="'+n[2]+'" target="_blank" rel="noopener"><i>'+n[1]+'</i>'+n[0]+'</a>';
+  }).join('')+'<button type="button" id="shr-copy"><i>\u29C9</i>Copy link</button>';
+  function open(o){menu.hidden=!o;btn.setAttribute('aria-expanded',String(o));}
+  document.getElementById('shr-copy').addEventListener('click',function(){
+    var b=this,done=function(){b.innerHTML='<i class="ok">\u2713</i>Link copied';setTimeout(function(){b.innerHTML='<i>\u29C9</i>Copy link';open(false);},1100);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done,done);}
+    else{var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}ta.remove();done();}
+  });
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(navigator.share){navigator.share({title:title,text:text,url:url}).catch(function(){open(menu.hidden);});return;}
+    open(menu.hidden);
+  });
+  document.addEventListener('click',function(e){if(!menu.hidden&&!menu.contains(e.target)&&e.target!==btn)open(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')open(false);});
+})();
+</script>
+<div class="wrap">
+<header class="top">
+  <div>
+    <div class="kicker"><a href="/" style="color:inherit;text-decoration:none">&larr; genvidpro.com</a> &middot; free site builder</div>
+    <h1>Make your own<br>business site</h1>
+    <p class="sub">Pick a look, type your name, move the colour. What you see is the real page, live, not a picture of one.</p>
+  </div>
+  <div class="steps"><span>01 <b>category</b></span><span>02 <b>look</b></span><span>03 <b>your brand</b></span><span>04 <b>take it</b></span></div>
+</header>
+
+<div class="cats" id="cats"></div>
+<p class="hint" id="hint">Twelve looks for a barbershop. Tap one to load it below.</p>
+
+<div class="tiles" id="tiles"></div>
+
+<div class="stage">
+  <div class="panelbox">
+    <div class="grp">
+      <label class="lab" for="fName">Business name</label>
+      <input type="text" id="fName" value="Barber Shop" maxlength="22">
+    </div>
+    <div class="grp">
+      <label class="lab" for="fTag">One line about you</label>
+      <input type="text" id="fTag" value="Fades, beards and hot towels in Florentin" maxlength="60">
+    </div>
+    <div class="grp">
+      <label class="lab" for="fCity">Street &amp; city</label>
+      <input type="text" id="fCity" value="14 Vital St, Tel Aviv" maxlength="34">
+    </div>
+    <div class="grp">
+      <label class="lab" for="fWa">WhatsApp number for bookings</label>
+      <input type="text" id="fWa" value="972500000000" maxlength="16" inputmode="numeric">
+      <p class="note" style="margin-top:6px">Digits with country code. Every button on your page writes the message and opens this chat.</p>
+    </div>
+    <div class="grp">
+      <span class="lab">Colour</span>
+      <div class="sw" id="sw"></div>
+    </div>
+    <div class="grp">
+      <span class="lab">Type</span>
+      <div class="fonts" id="fonts"></div>
+    </div>
+    <div class="grp">
+      <span class="lab">Logo style</span>
+      <div class="fonts" id="logos"></div>
+      <span class="lab" style="margin-top:10px">Second word colour</span>
+      <div class="sw" id="sw2"></div>
+    </div>
+    <div class="grp">
+      <span class="lab">Looks showcase</span>
+      <div class="seg" id="toyseg">
+        <button type="button" data-t="1" aria-pressed="true">On</button>
+        <button type="button" data-t="0" aria-pressed="false">Off</button>
+      </div>
+      <p class="note" style="margin-top:8px">Ten cuts and beards run on a loop, and the button books the one on screen.</p>
+    </div>
+    <div class="grp">
+      <span class="lab">Light or dark</span>
+      <div class="seg" id="mode">
+        <button type="button" data-m="dark" aria-pressed="true">Dark</button>
+        <button type="button" data-m="light" aria-pressed="false">Light</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="viewer">
+    <div class="bar">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <!-- Ровно то, что через мгновение подставит render() из S.name. Держим
+           одинаковым, иначе на долю секунды мелькает чужое имя магазина. -->
+      <span class="url" id="url">yourshop.co.il</span>
+      <button type="button" class="btn ghost tiny" id="full">Open full page</button>
+      <span class="seg" id="dev">
+        <button type="button" data-d="desk" aria-pressed="true">Desktop</button>
+        <button type="button" data-d="mob" aria-pressed="false">Phone</button>
+      </span>
+    </div>
+    <div class="frame" id="frame"><img id="bigshot" alt="" aria-hidden="true"><iframe id="big" title="Live preview of your site"></iframe></div>
+  </div>
+</div>
+
+<div class="close">
+  <div class="left">
+    <div class="kicker">step 04</div>
+    <h2>Take the file. Or let us put it online.</h2>
+    <p>The HTML is yours, free, no account, no email. Hosting it, hooking up a domain, writing the real copy and shooting the video is where we come in.</p>
+    <div class="row">
+      <button class="btn" id="dl">Download the HTML</button>
+      <button class="btn red" id="live">Put it online for me</button>
+      <button class="btn ghost" id="rand">Surprise me</button>
+      <a class="btn ghost" id="disc" href="https://wa.me/972545517210?text=Hi%20Roman%2C%20I%20built%20a%20site%20in%20your%20builder.%20Is%20there%20any%20discount%20you%20could%20offer%20me%3F" target="_blank" rel="noopener">Ask for a discount</a>
+    </div>
+    <!-- 15.09.2026: people install from the builder, so the notification button lives here
+         too. push.js (loaded by gv-chrome.js) fills this place in. -->
+    <div data-gv-push data-gv-push-class="btn ghost"></div>
+    <p class="note" id="dlnote">Free file, no email asked. Open it in any browser, it works offline.</p>
+  </div>
+  <div>
+    <div class="kicker">one setup, then a small monthly</div>
+    <ul class="addons">
+      <li><div class="hd"><b>Your site, built and live</b><i>$2,000 once</i></div><p>Written, designed, on your own domain, fast, and installable as an app from day one. That is PWA: your icon on the home screen, opens full screen, still opens with no signal. No App Store, no review, no yearly fee. Every button drops the lead into your WhatsApp, Telegram and email.</p></li>
+      <li><div class="hd"><b>An assistant that talks</b><i>$900 once</i></div><p>People ask about price or hours, by voice or by typing, in their own language. It answers and sends you the name and the number.</p></li>
+      <li><div class="hd"><b>A bot on Telegram and WhatsApp</b><i>$1,500 once</i></div><p>Takes bookings, answers the same five questions people always ask, reminds them the day before, hands you the rest.</p></li>
+      <li><div class="hd"><b>See it in your room</b><i>from $1,200</i></div><p>Web AR. Your customer points the phone at the wall and the sofa, the fridge or the washing machine stands there at real size. Nothing to install. Plus $180 per product we build.</p></li>
+      <li><div class="hd"><b>Change it yourself</b><i>$300 once</i></div><p>You get a code word. Type it on your own page and the prices and the hours become editable, right there. Bigger things stay with us.</p></li>
+      <li><div class="hd"><b>Numbers you can act on</b><i>$300 once</i></div><p>Who came, what they clicked, where they left. One short report a month, in words, not charts you have to decode.</p></li>
+      <li><div class="hd"><b>Video at the top</b><i>from $600</i></div><p>Ten seconds of your place, your hands, your work. Shot or generated, cut for the page and for reels.</p></li>
+    </ul>
+
+    <div class="kicker" style="margin-top:20px">then we keep it alive</div>
+    <ul class="plans">
+      <li><div class="hd"><b>Care</b><i>$29 / mo</i></div><p>Hosting, domain renewal, backups, we watch that it stays up. Two changes a month, you send them on WhatsApp.</p></li>
+      <li class="pick"><div class="hd"><b>Connected</b><i>$79 / mo</i></div><p>Care, plus the assistant answering on the page and every lead pushed to WhatsApp, Telegram and email. Five changes a month.</p></li>
+      <li><div class="hd"><b>Growth</b><i>$149 / mo</i></div><p>Connected, plus the numbers once a month and one change made because of them. First month free.</p></li>
+    </ul>
+    <p class="note">Cancel any month. US studios charge $5,000 and up for the same package, and $75 to $150 a month to keep it.</p>
+  </div>
+</div><!-- /.close — the footer used to sit inside this two column block, and
+            .wrap was never closed at all; the browser patched it up silently,
+            which is how the order panel on the front page broke once before -->
+
+<footer>Built by <a href="/" style="color:var(--tx)">GenVidPro</a> &middot; twelve looks, one engine &middot; the file is yours, free &middot; <a href="https://wa.me/972545517210" target="_blank" rel="noopener" style="color:var(--tx)">WhatsApp</a></footer>
+</div><!-- /.wrap -->
+
+<script src="tpl-engine.js?v=23"></script>
+<script>
+var page=GVP.page,TPL=GVP.TPL,FONTS=GVP.FONTS,LOGOS=GVP.LOGOS,SWATCH=GVP.SWATCH,SERVICES=GVP.SERVICES,CATS=GVP.CATS,CAT=GVP.CAT,S=GVP.DEFAULT;
+(function(){var q=new URLSearchParams(location.search);
+ if(q.get("name")){S.name=q.get("name").slice(0,22);}
+ if(q.get("tpl")&&TPL.some(function(t){return t.id===q.get("tpl")})){S.tpl=q.get("tpl");}
+ if(q.get("acc")&&/^#[0-9a-fA-F]{6}$/.test(q.get("acc"))){S.acc=q.get("acc");}
+ if(q.get("mode")==="light"||q.get("mode")==="dark"){S.mode=q.get("mode");}
+})();
+var tilesEl=document.getElementById("tiles"),bigEl=document.getElementById("big");
+/* The twelve tiles used to be photographs of the barbershop, taken once and
+   baked into media/tpl/. Pick "Dental clinic" and you still got twelve pictures
+   of a barbershop. Now every tile is the real page, rendered small: same engine,
+   same category, animations off (lite) and the photo showcase left out, so twelve
+   of them cost about as much as one. */
+function tileDoc(tid){
+ var st=(GVP.dress?GVP.dress(S,tid):Object.assign({},S,{tpl:tid}));
+ return page(tid, Object.assign({}, st, {toy:false}), true);
+}
+function drawTiles(){
+ tilesEl.innerHTML="";
+ TPL.forEach(function(t){
+  var b=document.createElement("button");
+  b.className="tile";b.type="button";b.setAttribute("aria-pressed",String(S.tpl===t.id));
+  b.innerHTML='<figure style="margin:0"><div class="shot"><iframe class="shotfr" title="'+t.n+' preview" scrolling="no" tabindex="-1" aria-hidden="true"></iframe></div>'
+   +'<figcaption><b>'+t.n+'</b><span>'+t.note+'</span></figcaption></figure>';
+  b.querySelector(".shotfr").srcdoc=tileDoc(t.id);
+  b.onclick=function(){Object.assign(S, (GVP.dress?GVP.dress(S,t.id):{tpl:t.id}));try{syncControls()}catch(e){}renderNow();
+   if(window.gvNav)gvNav();
+   var v=document.querySelector(".viewer");
+   if(v){v.scrollIntoView({behavior:"smooth",block:"start"});v.classList.add("flash");setTimeout(function(){v.classList.remove("flash")},900);}
+  };
+  tilesEl.appendChild(b);
+ });
+}
+var TILEW=1280;
+function sizeTiles(){
+ document.querySelectorAll(".tile").forEach(function(b){
+  var w=b.clientWidth||280;
+  var h=Math.round(w*0.72);
+  b.querySelector(".shot").style.height=h+"px";
+  var fr=b.querySelector(".shotfr");
+  if(fr){var k=w/TILEW;fr.style.width=TILEW+"px";fr.style.height=Math.round(h/k)+"px";fr.style.transform="scale("+k.toFixed(4)+")";}
+ });
+}
+var szt;window.addEventListener("resize",function(){clearTimeout(szt);szt=setTimeout(sizeTiles,150);});
+function syncControls(){
+ // Шаблон принёс свой шрифт и цвета — переключатели в панели обязаны это показать,
+ // иначе человек видит одно, а кнопки утверждают другое.
+ try{
+  document.querySelectorAll("#sw button").forEach(function(x){x.setAttribute("aria-pressed",String(x.title===S.acc))});
+  var p=document.getElementById("pick"); if(p)p.value=S.acc;
+  document.querySelectorAll("#fonts button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.f===S.font))});
+  document.querySelectorAll("#modeseg button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.m===S.mode))});
+  document.querySelectorAll("#logos button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.l===S.logo))});
+ }catch(e){}
+}
+/* render() rebuilds thirteen documents: twelve tiles and the big preview, each
+   carrying photographs. It used to run on every keystroke in the name field, so
+   typing "Dental Studio" tore down and rebuilt them thirteen times and cancelled
+   every image that was still on the way. A cancelled image fires onerror, and the
+   old markup hid it for good - which is exactly the empty grey box Roma kept
+   seeing. Two things fix it: wait until the typing stops, and only rebuild the
+   twelve tiles when something that changes them actually changed. */
+var rTimer=null, lastTileKey='';
+function tileKey(){return [S.cat,S.acc,S.acc2,S.font,S.mode,S.logo,S.name,S.tag,S.city].join('|');}
+function renderNow(){
+ var key=tileKey();
+ if(key!==lastTileKey){lastTileKey=key;drawTiles();}
+ sizeTiles();
+ bigEl.srcdoc=page(S.tpl,S);
+ var bs=document.getElementById("bigshot"); if(bs){ if(S.cat==="barber"){bs.src="media/tpl/"+S.tpl+".jpg?v=10";bs.style.display="";} else {bs.removeAttribute("src");bs.style.display="none";} }
+ document.getElementById("url").textContent=(S.name.toLowerCase().replace(/[^a-z0-9]/g,"")||"yourshop")+".co.il";
+}
+function render(){ clearTimeout(rTimer); rTimer=setTimeout(renderNow,220); }
+/* The category buttons used to be decoration: eleven of them answered "not built
+   yet". Now each one actually loads its own prices, its own photographs and its
+   own copy into all twelve looks. Only the name, the line and the address are
+   replaced, so anything the visitor has already typed by hand is left alone. */
+function pickCat(id){
+ var K=CAT[id]; if(!K)return;
+ var prev=CAT[S.cat]||CAT.barber;
+ if(!S.name||S.name===prev.name)S.name=K.name;
+ if(!S.tag||S.tag===prev.tag)S.tag=K.tag;
+ if(!S.city||S.city===prev.city)S.city=K.city;
+ S.cat=id;
+ var n=document.getElementById("fName"),t=document.getElementById("fTag"),c=document.getElementById("fCity");
+ if(n)n.value=S.name; if(t)t.value=S.tag; if(c)c.value=S.city;
+ try{syncControls()}catch(e){}
+ render();
+ document.getElementById("hint").innerHTML='Twelve looks for a '+CATS.filter(function(x){return x[0]===id})[0][1].toLowerCase()+'. Tap one to load it below.';
+ if(window.gvT)gvT();
+}
+CATS.forEach(function(c,i){
+ var b=document.createElement("button");b.className="cat";b.type="button";b.textContent=c[1];
+ b.setAttribute("aria-pressed",String(c[0]===S.cat));
+ b.onclick=function(){
+  document.querySelectorAll(".cat").forEach(function(x){x.setAttribute("aria-pressed","false")});
+  b.setAttribute("aria-pressed","true");
+  pickCat(c[0]);
+  if(window.gvNav)gvNav();
+ };
+ document.getElementById("cats").appendChild(b);
+});
+SWATCH.forEach(function(h){
+ var b=document.createElement("button");b.type="button";b.style.background=h;b.title=h;
+ b.setAttribute("aria-pressed",String(h===S.acc));b.setAttribute("aria-label","Color "+h);
+ b.onclick=function(){S.acc=h;document.querySelectorAll("#sw button").forEach(function(x){x.setAttribute("aria-pressed",String(x.title===h))});document.getElementById("pick").value=h;render();};
+ document.getElementById("sw").appendChild(b);
+});
+var pick=document.createElement("input");pick.type="color";pick.id="pick";pick.value=S.acc;pick.setAttribute("aria-label","Pick any color");
+pick.oninput=function(){S.acc=pick.value;document.querySelectorAll("#sw button").forEach(function(x){x.setAttribute("aria-pressed","false")});render();};
+document.getElementById("sw").appendChild(pick);
+FONTS.forEach(function(f){
+ var b=document.createElement("button");b.type="button";b.style.fontFamily=f.d;b.innerHTML=f.n.split(" / ")[0]+'<small>'+f.t+'</small>';
+ b.setAttribute("aria-pressed",String(f.id===S.font));
+ b.onclick=function(){S.font=f.id;document.querySelectorAll("#fonts button").forEach(function(x,i){x.setAttribute("aria-pressed",String(FONTS[i].id===f.id))});render();};
+ document.getElementById("fonts").appendChild(b);
+});
+LOGOS.forEach(function(l){
+ var b=document.createElement("button");b.type="button";b.textContent=l.n;b.style.fontSize="14px";
+ b.setAttribute("aria-pressed",String(l.id===S.logo));
+ b.onclick=function(){S.logo=l.id;document.querySelectorAll("#logos button").forEach(function(x,i){x.setAttribute("aria-pressed",String(LOGOS[i].id===l.id))});render();};
+ document.getElementById("logos").appendChild(b);
+});
+var SW2=["#C93A16","#F2EDE8","#0E1B3A","#1F6F4A","#B08333","#7A2BE2"];
+SW2.forEach(function(h){
+ var b=document.createElement("button");b.type="button";b.style.background=h;b.title=h;b.setAttribute("aria-label","Second colour "+h);
+ b.setAttribute("aria-pressed",String(h===S.acc2));
+ b.onclick=function(){S.acc2=h;document.querySelectorAll("#sw2 button").forEach(function(x){x.setAttribute("aria-pressed",String(x.title===h))});document.getElementById("pick2").value=h;render();};
+ document.getElementById("sw2").appendChild(b);
+});
+var pick2=document.createElement("input");pick2.type="color";pick2.id="pick2";pick2.value=S.acc2;pick2.setAttribute("aria-label","Pick the second colour");
+pick2.oninput=function(){S.acc2=pick2.value;document.querySelectorAll("#sw2 button").forEach(function(x){x.setAttribute("aria-pressed","false")});render();};
+document.getElementById("sw2").appendChild(pick2);
+document.querySelectorAll("#toyseg button").forEach(function(b){b.onclick=function(){S.toy=b.dataset.t==="1";document.querySelectorAll("#toyseg button").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});render();};});
+document.querySelectorAll("#mode button").forEach(function(b){b.onclick=function(){S.mode=b.dataset.m;document.querySelectorAll("#mode button").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});render();};});
+document.querySelectorAll("#dev button").forEach(function(b){b.onclick=function(){document.getElementById("frame").className="frame"+(b.dataset.d==="mob"?" mob":"");document.querySelectorAll("#dev button").forEach(function(x){x.setAttribute("aria-pressed",String(x===b))});};});
+["fName","fTag","fCity","fWa"].forEach(function(id){document.getElementById(id).addEventListener("input",function(e){S[{fName:"name",fTag:"tag",fCity:"city",fWa:"wa"}[id]]=e.target.value;render();});});
+document.getElementById("rand").onclick=function(){
+ var spins=0,iv=setInterval(function(){Object.assign(S, GVP.dress(S, TPL[Math.floor(Math.random()*TPL.length)].id));render();if(++spins>7){clearInterval(iv);finishRoll();}},110);
+ function finishRoll(){
+ Object.assign(S, GVP.dress(S, TPL[Math.floor(Math.random()*TPL.length)].id));
+ S.acc=SWATCH[Math.floor(Math.random()*SWATCH.length)];
+ S.font=FONTS[Math.floor(Math.random()*FONTS.length)].id;
+ S.mode=Math.random()<.5?"dark":"light";
+ S.logo=LOGOS[Math.floor(Math.random()*LOGOS.length)].id;
+ S.acc2=SW2[Math.floor(Math.random()*SW2.length)];
+ document.getElementById("pick2").value=S.acc2;
+ document.querySelectorAll("#sw2 button").forEach(function(x){x.setAttribute("aria-pressed",String(x.title===S.acc2))});
+ document.querySelectorAll("#logos button").forEach(function(x,i){x.setAttribute("aria-pressed",String(LOGOS[i].id===S.logo))});
+ document.getElementById("pick").value=S.acc;
+ document.querySelectorAll("#sw button").forEach(function(x){x.setAttribute("aria-pressed",String(x.title===S.acc))});
+ document.querySelectorAll("#fonts button").forEach(function(x,i){x.setAttribute("aria-pressed",String(FONTS[i].id===S.font))});
+ document.querySelectorAll("#mode button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.m===S.mode))});
+ render();
+ }
+};
+document.getElementById("full").onclick=function(){
+ var b=new Blob([page(S.tpl,S)],{type:"text/html"});
+ window.open(URL.createObjectURL(b),"_blank","noopener");
+};
+document.getElementById("dl").onclick=function(){
+ var blob=new Blob([page(S.tpl,S)],{type:"text/html"});
+ var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=(S.name.toLowerCase().replace(/[^a-z0-9]/g,"")||"site")+".html";
+ document.body.appendChild(a);a.click();a.remove();
+ document.getElementById("dlnote").textContent="Saved. On genvidpro.com this is the real download; inside this preview the browser may block it.";
+};
+document.getElementById("live").onclick=function(){
+ var t=TPL.filter(function(x){return x.id===S.tpl})[0];
+ var f=FONTS.filter(function(x){return x.id===S.font})[0];
+ var msg="Hi Roman, I built a site in your builder.\nName: "+S.name+"\nLine: "+S.tag+"\nPlace: "+S.city+"\nLook: "+t.n+" / "+f.n+" / "+S.acc+" + "+S.acc2+" / "+S.logo+" / "+S.mode+"\nCan you put it online for me?";
+ window.open("https://wa.me/972545517210?text="+encodeURIComponent(msg),"_blank","noopener");
+};
+["fName","fTag","fCity"].forEach(function(id){var k={fName:"name",fTag:"tag",fCity:"city"}[id];document.getElementById(id).value=S[k];});
+document.querySelectorAll("#mode button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.m===S.mode))});
+document.getElementById("pick").value=S.acc;
+
+/* Back means back. A category and a template are the two things a visitor picks
+   here, and neither used to leave a trace, so Back walked straight out of the
+   site. Each pick now writes one entry (and a readable #barber/fade address, so
+   a chosen look survives a reload and can be sent to someone). */
+(function(){
+ var quiet=false;
+ function addr(){return '#'+S.cat+'/'+S.tpl}
+ /* 15.09.2026: one entry per pick meant leaving the builder took as many Back presses
+    as looks tried. The first pick pushes a single entry, so Back first returns to the
+    look the visitor arrived at; every later pick replaces it, so the next Back leaves. */
+ var pushed=false;
+ window.gvNav=function(){if(quiet)return;try{if(pushed){history.replaceState({cat:S.cat,tpl:S.tpl,gvb:1},'',addr())}else{pushed=true;history.pushState({cat:S.cat,tpl:S.tpl,gvb:1},'',addr())}}catch(e){}};
+ function apply(cat,tpl){
+  quiet=true;
+  try{
+   if(cat&&CAT[cat]&&cat!==S.cat){
+    document.querySelectorAll('.cat').forEach(function(x,i){x.setAttribute('aria-pressed',String(CATS[i][0]===cat))});
+    pickCat(cat);
+   }
+   if(tpl&&tpl!==S.tpl&&TPL.filter(function(x){return x.id===tpl}).length){
+    Object.assign(S,(GVP.dress?GVP.dress(S,tpl):{tpl:tpl}));
+    try{syncControls()}catch(e){}
+    renderNow();
+   }
+   document.querySelectorAll('.tile').forEach(function(x,i){x.setAttribute('aria-pressed',String(TPL[i]&&TPL[i].id===S.tpl))});
+  }catch(e){}
+  quiet=false;
+ }
+ addEventListener('popstate',function(e){
+  var st=e.state,cat,tpl;
+  if(st&&st.cat){cat=st.cat;tpl=st.tpl}
+  else{var h=(location.hash||'').replace('#','').split('/');cat=h[0];tpl=h[1]}
+  apply(cat||S.cat,tpl||S.tpl);
+ });
+ var h=(location.hash||'').replace('#','').split('/');
+ if(h[0]&&CAT[h[0]])apply(h[0],h[1]);
+ try{history.replaceState({cat:S.cat,tpl:S.tpl},'',addr())}catch(e){}
+})();
+
+render();
+</script>
+
+<script src="i18n.js?v=15" defer></script>
+<script>/* the twelve tiles and the controls are drawn after the translator has walked the page once; walk again when everything is on */
+addEventListener('load',function(){
+  if(window.gvT)setTimeout(gvT,600);
+  /* the tiles are redrawn on every category change; translate again after each redraw */
+  if(typeof renderNow==='function'){var _r=renderNow;renderNow=function(){var v=_r.apply(this,arguments);if(window.gvT)setTimeout(gvT,0);return v;};}
+});</script>
+<script src="assistant.js?v=5" defer></script>
+<script src="/gv-chrome.js?v=17" defer></script>
+</body>
+</html>

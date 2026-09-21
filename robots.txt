@@ -1,0 +1,7 @@
+# genvidpro.com
+User-agent: *
+Allow: /
+Disallow: /chat
+Disallow: /ev
+
+Sitemap: https://genvidpro.com/sitemap.xml
