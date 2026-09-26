@@ -1,7 +1,7 @@
 {
   "$schema": "https://genvidpro.com/services.schema.json",
-  "version": "2026-09-23.2",
-  "updated": "2026-09-23",
+  "version": "2026-09-26.3",
+  "updated": "2026-09-26",
   "wa_number": "972539760820",
   "languages": ["he", "en", "ru", "ar"],
   "owner": { "he": "רומן", "en": "Roman", "ru": "Роман", "ar": "رومان" },
@@ -136,6 +136,12 @@
       "ru": ["меню", "все услуги", "что вы делаете", "начать сначала", "заново", "услуги"],
       "ar": ["القائمة", "كل الخدمات", "ماذا تقدمون", "من البداية", "الخدمات"]
     },
+    "what_we_do": {
+      "he": ["מה אתם עושים", "במה אתם עוסקים", "מה אתם מציעים", "אילו שירותים", "מה השירותים שלכם", "מה יש לכם"],
+      "en": ["what do you do", "what you do", "what do you offer", "what services", "which services", "what can you do", "what do you guys do", "tell me about your services"],
+      "ru": ["чем вы занимаетесь", "чем занимаетесь", "чем вы тут занимаетесь", "что вы делаете", "что вы предлагаете", "какие услуги", "какие у вас услуги", "что у вас есть", "что вы умеете"],
+      "ar": ["ماذا تقدمون", "ماذا تعملون", "ما هي خدماتكم", "ما الخدمات", "بماذا تعملون"]
+    },
     "thanks": {
       "he": ["תודה", "תודה רבה", "סבבה", "אוקיי", "אחלה", "מעולה", "בסדר"],
       "en": ["thanks", "thank you", "ok", "okay", "great", "cool", "perfect", "fine"],
@@ -194,7 +200,10 @@
     "pick_option": { "he": "אפשר לבחור מהאפשרויות למטה, או לכתוב תשובה משלך.", "en": "Tap one of the options below, or write your own answer.", "ru": "Выберите вариант ниже или напишите свой ответ.", "ar": "اختر أحد الخيارات أدناه، أو اكتب إجابتك." },
     "file_received": { "he": "הקובץ התקבל 👍", "en": "Got the file 👍", "ru": "Файл получен 👍", "ar": "وصل الملف 👍" },
     "languages_note": { "he": "אני מדבר עברית, אנגלית, רוסית וערבית.", "en": "I speak English, Hebrew, Russian and Arabic.", "ru": "Я говорю на русском, иврите, английском и арабском.", "ar": "أتحدث العربية والعبرية والإنجليزية والروسية." },
-    "no_name_word": { "he": "", "en": "", "ru": "", "ar": "" }
+    "no_name_word": { "he": "", "en": "", "ru": "", "ar": "" },
+    "dropped": { "he": "הורדתי {service} מההזמנה.", "en": "Dropped {service} from the order.", "ru": "Убрал {service} из заявки.", "ar": "أزلت {service} من الطلب." },
+    "dropped_all": { "he": "הורדתי {service}. מה מעניין אותך?", "en": "Dropped {service}. What are you interested in?", "ru": "Убрал {service}. Что интересно?", "ar": "أزلت {service}. ماذا يهمك؟" },
+    "third_party": { "he": "מכאן אני לא שולח הודעות לאנשים אחרים ולא משנה הזמנות או מחירים. העברתי את הבקשה לרומן. הוא יחזור אליך כאן.", "en": "I don't message other people from here, and I don't change orders or prices. I've passed the request to Roman. He'll come back to you here.", "ru": "Отсюда я не пишу другим людям и не меняю заказы и цены. Передал просьбу Роману. Он ответит вам здесь.", "ar": "من هنا لا أرسل رسائل إلى أشخاص آخرين ولا أغيّر الطلبات أو الأسعار. نقلت الطلب إلى رومان. سيعود إليك هنا." }
   },
   "services": [
     {
@@ -455,6 +464,7 @@
       "active": true,
       "order": 5,
       "category": "web",
+      "source_service": "site",
       "names": { "he": "אתר כאפליקציה", "en": "Your site as an app", "ru": "Сайт как приложение", "ar": "موقعك كتطبيق" },
       "short": { "he": "אתר כאפליקציה", "en": "Site as an app", "ru": "Сайт-приложение", "ar": "موقعك كتطبيق" },
       "keywords": {
@@ -577,6 +587,135 @@
           ] }
       ],
       "never": ["Meta fees are included", "messages are free", "we pay the Meta fees"],
+      "work_link": "https://genvidpro.com/automation"
+    },
+    {
+      "id": "learn_claude",
+      "tag": "learn",
+      "active": true,
+      "order": 7,
+      "category": "automation",
+      "names": { "he": "ללמוד את Claude", "en": "Learn Claude", "ru": "Научиться Claude", "ar": "تعلّم Claude" },
+      "short": { "he": "ללמוד את Claude", "en": "Learn Claude", "ru": "Научиться Claude", "ar": "تعلّم Claude" },
+      "keywords": {
+        "he": ["ללמוד קלוד", "ללמוד את claude", "קורס claude", "הדרכת claude", "סדנת claude", "ללמד אותי claude"],
+        "en": ["learn claude", "claude training", "teach me claude", "claude course", "claude lesson", "claude workshop"],
+        "ru": ["научиться claude", "обучение claude", "курс claude", "научите claude", "уроки claude", "claude обучение", "обучение клод"],
+        "ar": ["تعلم كلود", "تعلم claude", "دورة claude", "تدريب claude", "ورشة claude"]
+      },
+      "pitch": {
+        "he": "ללמוד לעבוד עם Claude על המשימות שלך. עוברים על העבודה שלך, מראים מה אפשר להעביר אליו ובונים את זה יחד. מעביר רומן, שמריץ על Claude את ההפקה שלו. {from}.",
+        "en": "Learn to work with Claude on your own tasks. We go through your work, show what can be handed to Claude, and build it together. Roman runs it, and he runs his own studio on Claude. {from}.",
+        "ru": "Научиться работать с Claude на своих задачах. Разбираем вашу работу, показываем, что можно отдать Claude, и собираем это вместе. Ведёт Роман, который держит на Claude собственное производство. {from}.",
+        "ar": "تعلّم العمل مع Claude على مهامك أنت. نراجع عملك، ونبيّن ما يمكن تسليمه لـ Claude، ونبنيه معاً. يقدّمها رومان، وهو يدير إنتاجه على Claude. {from}."
+      },
+      "included": {
+        "he": "עוברים על העבודה היומית שלך, בוחרים מה להעביר ל-Claude, כותבים את ההוראות ומריצים את זה על משימה אמיתית שלך. את הפורמט, ההיקף והמועדים רומן מסכם איתך.",
+        "en": "We go through your daily work, pick what moves to Claude, write the instructions and run it on one real task of yours. Roman agrees the format, the scope and the dates with you.",
+        "ru": "Разбираем вашу ежедневную работу, выбираем, что уходит к Claude, пишем инструкции и прогоняем это на одной вашей настоящей задаче. Формат, объём и даты Роман согласует с вами.",
+        "ar": "نراجع عملك اليومي، ونختار ما ينتقل إلى Claude، ونكتب التعليمات ونجرّبها على مهمة حقيقية لك. الشكل والحجم والمواعيد يتفق عليها رومان معك."
+      },
+      "timeline": { "he": "1-2 שבועות", "en": "1-2 weeks", "ru": "1-2 недели", "ar": "أسبوع إلى أسبوعين" },
+      "price_ils": 1500,
+      "price_usd": 450,
+      "options": [
+        { "id": "course", "kind": "from",
+          "names": { "he": "ללמוד את Claude", "en": "Learn Claude", "ru": "Научиться Claude", "ar": "تعلّم Claude" },
+          "note": { "he": "על המשימות שלך", "en": "on your own tasks", "ru": "на ваших задачах", "ar": "على مهامك" },
+          "price_ils": 1500, "price_usd": 450 }
+      ],
+      "brief_questions": [
+        { "id": "business", "type": "text",
+          "text": { "he": "מה העבודה שלך, ומה היית רוצה להעביר ל-Claude? אפשר בהודעה קולית או בכתב.", "en": "What is your work, and what would you like to hand to Claude? Voice or text, whatever's easier.", "ru": "Чем вы занимаетесь и что хотели бы отдать Claude? Голосом или текстом, как удобнее.", "ar": "ما هو عملك، وما الذي تود تسليمه لـ Claude؟ بالصوت أو بالكتابة، كما يناسبك." } },
+        { "id": "ai_level", "type": "buttons",
+          "text": { "he": "כמה אתה כבר מכיר כלי AI?", "en": "How well do you know AI tools already?", "ru": "Насколько вы уже знакомы с ИИ-инструментами?", "ar": "ما مدى معرفتك بأدوات الذكاء الاصطناعي؟" },
+          "choices": [
+            { "id": "new", "label": { "he": "עוד לא נגעתי", "en": "Not yet", "ru": "Ещё не пробовал", "ar": "لم أجرب بعد" } },
+            { "id": "tried", "label": { "he": "ניסיתי קצת", "en": "Tried a bit", "ru": "Немного пробовал", "ar": "جربت قليلاً" } },
+            { "id": "daily", "label": { "he": "כל יום", "en": "Every day", "ru": "Каждый день", "ar": "كل يوم" } }
+          ] },
+        { "id": "who_learns", "type": "buttons",
+          "text": { "he": "מי לומד: אתה או גם הצוות?", "en": "Who is learning: you, or the team too?", "ru": "Кто учится: вы или ещё команда?", "ar": "من سيتعلم: أنت أم الفريق أيضاً؟" },
+          "choices": [
+            { "id": "me", "label": { "he": "רק אני", "en": "Just me", "ru": "Только я", "ar": "أنا فقط" } },
+            { "id": "team", "label": { "he": "אני והצוות", "en": "Me and the team", "ru": "Я и команда", "ar": "أنا والفريق" } },
+            { "id": "unsure_who", "label": { "he": "עוד לא החלטתי", "en": "Not decided yet", "ru": "Пока не решил", "ar": "لم أقرر بعد" } }
+          ] },
+        { "id": "deadline", "type": "buttons",
+          "text": { "he": "מתי צריך את זה?", "en": "When do you need it?", "ru": "Когда нужно?", "ar": "ما هو الموعد المطلوب؟" },
+          "choices": [
+            { "id": "week", "label": { "he": "השבוע", "en": "This week", "ru": "На этой неделе", "ar": "هذا الأسبوع" } },
+            { "id": "month", "label": { "he": "החודש", "en": "This month", "ru": "В этом месяце", "ar": "هذا الشهر" } },
+            { "id": "no_rush", "label": { "he": "לא דחוף", "en": "No rush", "ru": "Не срочно", "ar": "ليس مستعجلاً" } }
+          ] }
+      ],
+      "never": ["we sell Claude subscriptions", "we give you an Anthropic licence", "you get a certificate"],
+      "work_link": "https://genvidpro.com/automation"
+    },
+    {
+      "id": "os_build",
+      "tag": "os",
+      "active": true,
+      "order": 8,
+      "category": "automation",
+      "names": { "he": "מערכת הפעלה אישית", "en": "Build my OS", "ru": "Собрать мою ОС", "ar": "بناء نظام شخصي" },
+      "short": { "he": "מערכת אישית", "en": "Build my OS", "ru": "Личная ОС", "ar": "نظام شخصي" },
+      "keywords": {
+        "he": ["מערכת הפעלה אישית", "מערכת הפעלה", "מערכת אישית", "מערכת לניהול", "עוזר אישי בשרת", "שרת משלי"],
+        "en": ["build my os", "my os", "personal os", "my own os", "operations system", "own server system", "personal ai system"],
+        "ru": ["ос", "собрать мою ос", "мою ос", "своя ос", "личная ос", "собрать ос", "операционка", "операционная система", "система под себя", "свой сервер", "личная система"],
+        "ar": ["بناء نظام شخصي", "نظام شخصي", "نظام تشغيل", "نظام إدارة", "مساعد شخصي على خادم", "خادم خاص"]
+      },
+      "pitch": {
+        "he": "מערכת הפעלה אישית לעבודה שלך: שרת שרץ מסביב לשעון, שליטה בקול ובכתב מטלגרם, את המשימות מבצע Claude, ובפנים גיבויים ובדיקה עצמית. אותה מערכת שרומן עובד עליה בעצמו. {from}.",
+        "en": "A personal operations system for your work: a server that runs around the clock, voice and text control from Telegram, tasks executed by Claude, with backups and a self-check inside. The same system Roman runs himself. {from}.",
+        "ru": "Личная операционная система под вашу работу: сервер работает круглосуточно, управление голосом и текстом из Телеграма, задачи выполняет Claude, внутри бэкапы и самопроверка. Та же система, на которой работает сам Роман. {from}.",
+        "ar": "نظام تشغيل شخصي لعملك: خادم يعمل على مدار الساعة، وتحكّم بالصوت والكتابة من تيليجرام، والمهام ينفّذها Claude، وبداخله نسخ احتياطية وفحص ذاتي. النظام نفسه الذي يعمل عليه رومان. {from}."
+      },
+      "included": {
+        "he": "שרת משלך, גשר לטלגרם, תמלול קול על השרת עצמו, זרימות עסקיות ב-n8n, גיבויים מוצפנים עם בדיקת שחזור ובדיקה עצמית אחרי הפעלה מחדש. מה בדיוק ייכנס אצלך רומן מסכם איתך. את עלות השרת משלמים ישירות מהחשבון שלך.",
+        "en": "Your own server, a Telegram bridge, speech to text on the server itself, business flows in n8n, encrypted backups verified by a test extract, and a self-check after every reboot. Roman agrees with you what exactly goes in. The server itself is paid by you on your own account.",
+        "ru": "Свой сервер, мост в Телеграм, расшифровка голоса на самом сервере, бизнес-потоки в n8n, шифрованные бэкапы с проверкой восстановления и самопроверка после каждой перезагрузки. Что именно войдёт в вашу, Роман согласует с вами. Сам сервер вы оплачиваете на своём аккаунте.",
+        "ar": "خادم خاص بك، وجسر إلى تيليجرام، وتفريغ الصوت على الخادم نفسه، وتدفقات العمل في n8n، ونسخ احتياطية مشفّرة مع اختبار استرجاع، وفحص ذاتي بعد كل إعادة تشغيل. ما الذي يدخل عندك بالضبط يتفق عليه رومان معك. الخادم نفسه تدفعه أنت من حسابك."
+      },
+      "timeline": { "he": "2-4 שבועות", "en": "2-4 weeks", "ru": "2-4 недели", "ar": "أسبوعان إلى أربعة" },
+      "price_ils": 6500,
+      "price_usd": 1850,
+      "options": [
+        { "id": "os", "kind": "from",
+          "names": { "he": "מערכת אישית", "en": "Build my OS", "ru": "Личная ОС", "ar": "نظام شخصي" },
+          "note": { "he": "שרת, טלגרם, גיבויים", "en": "server, Telegram, backups", "ru": "сервер, Телеграм, бэкапы", "ar": "خادم، تيليجرام، نسخ" },
+          "price_ils": 6500, "price_usd": 1850 }
+      ],
+      "brief_questions": [
+        { "id": "business", "type": "text",
+          "text": { "he": "מה העבודה שלך, ומה אוכל הכי הרבה זמן? אפשר בהודעה קולית או בכתב.", "en": "What is your work, and what eats the most time in it? Voice or text, whatever's easier.", "ru": "Чем вы занимаетесь и что съедает больше всего времени? Голосом или текстом, как удобнее.", "ar": "ما هو عملك، وما الذي يستهلك أكثر وقتك؟ بالصوت أو بالكتابة، كما يناسبك." } },
+        { "id": "os_tasks", "type": "list",
+          "text": { "he": "מה המערכת צריכה לקחת על עצמה קודם?", "en": "What should the system take over first?", "ru": "Что система должна взять на себя в первую очередь?", "ar": "ما الذي يجب أن يتولاه النظام أولاً؟" },
+          "choices": [
+            { "id": "mail", "label": { "he": "מייל", "en": "Email", "ru": "Почта", "ar": "البريد" } },
+            { "id": "leads", "label": { "he": "פניות מהאתר", "en": "Leads from the site", "ru": "Заявки с сайта", "ar": "طلبات الموقع" } },
+            { "id": "chats", "label": { "he": "הודעות ומסנג'רים", "en": "Messengers", "ru": "Мессенджеры", "ar": "المراسلة" } },
+            { "id": "schedule", "label": { "he": "לוח זמנים", "en": "Schedule", "ru": "Расписание", "ar": "الجدول" } },
+            { "id": "reports", "label": { "he": "דוחות", "en": "Reports", "ru": "Отчёты", "ar": "التقارير" } },
+            { "id": "all", "label": { "he": "את כל אלה", "en": "All of these", "ru": "Всё сразу", "ar": "كل ما سبق" } }
+          ] },
+        { "id": "server", "type": "buttons",
+          "text": { "he": "יש לך כבר שרת משלך?", "en": "Do you already have your own server?", "ru": "Свой сервер уже есть?", "ar": "هل لديك خادم خاص بك؟" },
+          "choices": [
+            { "id": "have", "label": { "he": "יש", "en": "Yes", "ru": "Есть", "ar": "نعم" } },
+            { "id": "none", "label": { "he": "אין", "en": "No", "ru": "Нет", "ar": "لا" } },
+            { "id": "dunno", "label": { "he": "לא יודע", "en": "Not sure", "ru": "Не знаю", "ar": "لا أعرف" } }
+          ] },
+        { "id": "deadline", "type": "buttons",
+          "text": { "he": "מתי צריך את זה?", "en": "When do you need it?", "ru": "Когда нужно?", "ar": "ما هو الموعد المطلوب؟" },
+          "choices": [
+            { "id": "week", "label": { "he": "השבוע", "en": "This week", "ru": "На этой неделе", "ar": "هذا الأسبوع" } },
+            { "id": "month", "label": { "he": "החודש", "en": "This month", "ru": "В этом месяце", "ar": "هذا الشهر" } },
+            { "id": "no_rush", "label": { "he": "לא דחוף", "en": "No rush", "ru": "Не срочно", "ar": "ليس مستعجلاً" } }
+          ] }
+      ],
+      "never": ["we run your business for you", "the server costs nothing", "no monthly costs at all"],
       "work_link": "https://genvidpro.com/automation"
     }
   ]
