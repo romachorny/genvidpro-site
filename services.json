@@ -1,0 +1,583 @@
+{
+  "$schema": "https://genvidpro.com/services.schema.json",
+  "version": "2026-09-23.2",
+  "updated": "2026-09-23",
+  "wa_number": "972539760820",
+  "languages": ["he", "en", "ru", "ar"],
+  "owner": { "he": "רומן", "en": "Roman", "ru": "Роман", "ar": "رومان" },
+  "work_link": "https://genvidpro.com/work",
+  "order_tag": "order",
+  "general_tag": "general",
+  "currency_rule": {
+    "text": "Hebrew speaker or a +972 number: prices in ILS. Everyone else: USD. USD = ILS / 3.6 rounded UP to the nearest $50. Exception: monthly fees are fixed USD values set by Roman (199 ₪ = $60, 299 ₪ = $90), not rounded.",
+    "ils_if_language": ["he"],
+    "ils_if_country_code": ["972"],
+    "usd_from_ils": { "divide_by": 3.6, "round_up_to": 50 },
+    "format": { "ILS": "{n} ₪", "USD": "${n}" }
+  },
+  "bundle_rule": {
+    "text": "Three or more services in one order: 10% off the total. Five or more: 15%. Same rule as the order builder on genvidpro.com.",
+    "tiers": [
+      { "min_services": 3, "percent": 10 },
+      { "min_services": 5, "percent": 15 }
+    ]
+  },
+  "fallback": { "he": "את זה רומן יאשר.", "en": "Roman will confirm.", "ru": "Это Роман подтвердит.", "ar": "رومان سيؤكد ذلك." },
+  "price_rule": "Prices are always shown as a starting price (from X). No VAT talk: if asked, the fallback phrase.",
+  "categories": [
+    { "id": "video", "names": { "he": "וידאו וסרטים", "en": "Video and films", "ru": "Видео и фильмы", "ar": "فيديو وأفلام" } },
+    { "id": "brand", "names": { "he": "מיתוג", "en": "Brand", "ru": "Бренд", "ar": "الهوية" } },
+    { "id": "web", "names": { "he": "אתרים ואפליקציות", "en": "Sites and apps", "ru": "Сайты и приложения", "ar": "مواقع وتطبيقات" } },
+    { "id": "automation", "names": { "he": "אוטומציה", "en": "Automation", "ru": "Автоматизация", "ar": "الأتمتة" } }
+  ],
+  "goals": [
+    {
+      "id": "more_clients",
+      "text": { "he": "יותר לקוחות", "en": "More clients", "ru": "Больше клиентов", "ar": "عملاء أكثر" },
+      "categories": ["web", "automation"],
+      "keywords": {
+        "he": ["יותר לקוחות", "לקוחות", "מכירות", "פניות"],
+        "en": ["more clients", "more customers", "clients", "customers", "sales"],
+        "ru": ["больше клиентов", "клиент", "продаж"],
+        "ar": ["عملاء", "زبائن", "مبيعات"]
+      }
+    },
+    {
+      "id": "launch",
+      "text": { "he": "להשיק משהו חדש", "en": "Launch something new", "ru": "Запустить новое", "ar": "إطلاق شيء جديد" },
+      "categories": ["brand", "web"],
+      "keywords": {
+        "he": ["להשיק", "השקה", "עסק חדש", "לפתוח עסק"],
+        "en": ["launch", "new business", "starting a business", "opening"],
+        "ru": ["запуск", "запустить", "новый бизнес", "открываю", "открыть бизнес"],
+        "ar": ["إطلاق", "اطلاق", "مشروع جديد", "افتتاح"]
+      }
+    },
+    {
+      "id": "visual",
+      "text": { "he": "וידאו או עיצוב", "en": "A video or visual", "ru": "Видео или визуал", "ar": "فيديو أو تصميم" },
+      "categories": ["video", "brand"],
+      "keywords": {
+        "he": ["עיצוב", "ויז'ואל", "תוכן"],
+        "en": ["visual", "design", "content"],
+        "ru": ["визуал", "дизайн", "контент"],
+        "ar": ["تصميم", "محتوى"]
+      }
+    },
+    {
+      "id": "automate",
+      "text": { "he": "אוטומציה להזמנות", "en": "Automate orders", "ru": "Автоматизировать заявки", "ar": "أتمتة الطلبات" },
+      "categories": ["automation", "web"],
+      "keywords": {
+        "he": ["הזמנות", "תורים", "לאוטומט"],
+        "en": ["orders", "bookings", "appointments"],
+        "ru": ["заявк", "заказ", "запис"],
+        "ar": ["طلبات", "مواعيد", "حجوزات"]
+      }
+    },
+    {
+      "id": "unsure",
+      "text": { "he": "עוד לא החלטתי", "en": "Not sure yet", "ru": "Пока не знаю", "ar": "لم أقرر بعد" },
+      "categories": [],
+      "keywords": {
+        "he": ["לא יודע", "לא יודעת", "לא בטוח", "לא בטוחה", "לא החלטתי", "תעזרו לי לבחור"],
+        "en": ["not sure", "don't know", "dont know", "no idea", "help me choose"],
+        "ru": ["не знаю", "не уверен", "не уверена", "помогите выбрать"],
+        "ar": ["لا أعرف", "مش عارف", "لست متأكد", "لم أقرر"]
+      }
+    }
+  ],
+  "intents": {
+    "timeline": {
+      "he": ["כמה זמן", "זמן אספקה", "מתי זה יהיה מוכן", "לוח זמנים", "תוך כמה", "מתי מוכן"],
+      "en": ["how long", "how fast", "timeline", "turnaround", "how many days", "when will it be ready", "how soon"],
+      "ru": ["сколько времени", "срок", "сроки", "как быстро", "когда будет готов", "сколько дней"],
+      "ar": ["كم من الوقت", "كم يستغرق", "متى يكون جاهز", "المدة", "كم يوم"]
+    },
+    "price": {
+      "he": ["מחיר", "מחירים", "כמה עולה", "כמה זה עולה", "עלות", "הצעת מחיר", "כמה כסף", "כמה הכל", "כמה ביחד", "סה\"כ", "סה״כ"],
+      "en": ["price", "prices", "pricing", "cost", "costs", "how much", "quote", "rates", "in total", "altogether", "the total"],
+      "ru": ["цена", "цены", "цену", "стоимост", "сколько стоит", "сколько будет стоить", "прайс", "почём", "почем", "сколько всё", "сколько все", "сколько вместе", "итого", "в сумме"],
+      "ar": ["سعر", "أسعار", "اسعار", "كم التكلفة", "كم سعر", "تكلفة", "بكم", "كم يكلف", "المجموع", "كم الكل"]
+    },
+    "included": {
+      "he": ["מה כלול", "מה זה כולל", "מה מקבלים"],
+      "en": ["what's included", "what is included", "whats included", "what do i get", "does it include"],
+      "ru": ["что входит", "что включено", "что я получу"],
+      "ar": ["ماذا يشمل", "ما المشمول", "ماذا أحصل"]
+    },
+    "discount": {
+      "he": ["הנחה", "הנחות", "יותר זול", "מחיר מיוחד", "תעשה לי מחיר", "לקוח מייסד", "לקוחות מייסדים"],
+      "en": ["discount", "cheaper", "special price", "best price", "better price", "% off", "founding"],
+      "ru": ["скидк", "дешевле", "специальн", "уступите", "подешевле", "основател", "первых клиентов"],
+      "ar": ["خصم", "تخفيض", "أرخص", "ارخص", "سعر خاص", "مؤسس"]
+    },
+    "vat": {
+      "he": ["מע\"מ", "מע״מ", "מעמ", "כולל מעמ", "חשבונית מס"],
+      "en": ["vat", "incl vat", "including vat", "plus vat"],
+      "ru": ["ндс", "маам", "с ндс"],
+      "ar": ["ضريبة", "القيمة المضافة"]
+    },
+    "human": {
+      "he": ["נציג", "בן אדם", "לדבר עם רומן", "תתקשרו", "תתקשר אליי", "שיחת טלפון"],
+      "en": ["real person", "a human", "talk to roman", "speak to roman", "call me", "phone call", "talk to a person"],
+      "ru": ["живой человек", "оператор", "поговорить с романом", "позвоните", "созвониться", "перезвоните"],
+      "ar": ["شخص حقيقي", "موظف", "اتصل بي", "مكالمة", "التحدث مع رومان"]
+    },
+    "work": {
+      "he": ["תיק עבודות", "דוגמאות", "עבודות קודמות", "דוגמה"],
+      "en": ["portfolio", "examples", "your work", "samples", "previous work"],
+      "ru": ["портфолио", "примеры", "ваши работы", "примеры работ"],
+      "ar": ["أعمالكم", "اعمالكم", "أمثلة", "نماذج", "معرض الأعمال"]
+    },
+    "menu": {
+      "he": ["תפריט", "כל השירותים", "מה אתם עושים", "להתחיל מחדש", "שירותים"],
+      "en": ["menu", "all services", "what do you do", "start over", "services"],
+      "ru": ["меню", "все услуги", "что вы делаете", "начать сначала", "заново", "услуги"],
+      "ar": ["القائمة", "كل الخدمات", "ماذا تقدمون", "من البداية", "الخدمات"]
+    },
+    "thanks": {
+      "he": ["תודה", "תודה רבה", "סבבה", "אוקיי", "אחלה", "מעולה", "בסדר"],
+      "en": ["thanks", "thank you", "ok", "okay", "great", "cool", "perfect", "fine"],
+      "ru": ["спасибо", "ок", "окей", "хорошо", "отлично", "понял", "поняла", "супер"],
+      "ar": ["شكرا", "شكراً", "تمام", "حسنا", "ممتاز"]
+    },
+    "injection": {
+      "he": ["התעלם מההוראות", "תתעלם מההוראות", "מצב מפתח", "הנחיות מערכת"],
+      "en": ["ignore previous", "ignore all previous", "ignore your instructions", "system prompt", "you are now", "developer mode", "forget your instructions", "admin mode", "reveal your prompt"],
+      "ru": ["игнорируй", "забудь инструкции", "системный промпт", "ты теперь", "режим разработчика", "режим админа"],
+      "ar": ["تجاهل التعليمات", "تجاهل كل التعليمات", "وضع المطور"]
+    }
+  },
+  "texts": {
+    "greet": { "he": "היי {name}! 👋", "en": "Hi {name}! 👋", "ru": "Здравствуйте, {name}! 👋", "ar": "أهلاً {name}! 👋" },
+    "greet_noname": { "he": "היי! 👋", "en": "Hi! 👋", "ru": "Здравствуйте! 👋", "ar": "أهلاً! 👋" },
+    "intro": { "he": "כאן GenVidPro, הסטודיו של רומן. מה המטרה כרגע?", "en": "This is GenVidPro, Roman's studio. What's the goal right now?", "ru": "Это GenVidPro, студия Романа. Какая сейчас задача?", "ar": "هنا GenVidPro، استوديو رومان. ما هو الهدف الآن؟" },
+    "work_line": { "he": "העבודות שלנו: {work}", "en": "Our work: {work}", "ru": "Наши работы: {work}", "ar": "أعمالنا: {work}" },
+    "list_button": { "he": "בחירה", "en": "Choose", "ru": "Выбрать", "ar": "اختيار" },
+    "goal_section": { "he": "מטרה", "en": "Goal", "ru": "Задача", "ar": "الهدف" },
+    "services_section": { "he": "שירותים", "en": "Services", "ru": "Услуги", "ar": "الخدمات" },
+    "options_section": { "he": "אפשרויות", "en": "Options", "ru": "Варианты", "ar": "خيارات" },
+    "suggest_two": { "he": "לזה מתאים {a} או {b}. מה מעניין אותך?", "en": "For that I'd suggest {a} or {b}. Which one?", "ru": "Для этого подойдёт {a} или {b}. Что выберем?", "ar": "لهذا يناسب {a} أو {b}. أيهما يهمك؟" },
+    "suggest_one": { "he": "לזה מתאים {a}. נתחיל?", "en": "For that I'd suggest {a}. Shall we start?", "ru": "Для этого подойдёт {a}. Начнём?", "ar": "لهذا يناسب {a}. نبدأ؟" },
+    "all_services": { "he": "כל השירותים", "en": "All services", "ru": "Все услуги", "ar": "كل الخدمات" },
+    "menu": { "he": "זה מה שאנחנו עושים. מה מעניין אותך?", "en": "Here's what we do. What's interesting?", "ru": "Вот что мы делаем. Что интересно?", "ar": "هذا ما نقدمه. ماذا يهمك؟" },
+    "menu_prices": { "he": "המחיר תלוי במה שצריך. הנה השירותים עם מחירי התחלה:", "en": "Depends on what you need. Here are the services with starting prices:", "ru": "Зависит от задачи. Вот услуги со стартовыми ценами:", "ar": "يعتمد على ما تحتاجه. هذه الخدمات مع أسعار البداية:" },
+    "categories_menu": { "he": "איזה כיוון מעניין אותך?", "en": "Which direction?", "ru": "Какое направление?", "ar": "أي مجال يهمك؟" },
+    "from": { "he": "החל מ־{price}", "en": "from {price}", "ru": "от {price}", "ar": "ابتداءً من {price}" },
+    "addon": { "he": "תוספת {price}", "en": "+{price}", "ru": "+{price}", "ar": "إضافة {price}" },
+    "per_month": { "he": "{price} לחודש", "en": "{price}/month", "ru": "{price} в месяц", "ar": "{price} شهرياً" },
+    "plus": { "he": "ועוד", "en": "+", "ru": "+", "ar": "+" },
+    "unsure_choice": { "he": "צריך עצה", "en": "Need advice", "ru": "Нужен совет", "ar": "أحتاج نصيحة" },
+    "acks": {
+      "he": ["מעולה.", "סגור.", "רשמתי.", "יופי."],
+      "en": ["Got it.", "Great.", "Noted.", "Perfect."],
+      "ru": ["Принято.", "Отлично.", "Ясно.", "Супер."],
+      "ar": ["تمام.", "ممتاز.", "سجلت.", "رائع."]
+    },
+    "picked": { "he": "רשמתי: {list}.", "en": "Got it: {list}.", "ru": "Принято: {list}.", "ar": "سجلت: {list}." },
+    "and": { "he": " ו", "en": " and ", "ru": " и ", "ar": " و" },
+    "next_service": { "he": "עכשיו {service}.", "en": "Now {service}.", "ru": "Теперь {service}.", "ar": "الآن {service}." },
+    "queued": { "he": "רשמתי גם {service}, נגיע לזה מיד אחרי.", "en": "Noted {service} too, we'll get to it right after.", "ru": "Добавлено: {service}, займёмся следом.", "ar": "سجلت {service} أيضاً، سنصل إليه بعد ذلك." },
+    "closing": { "he": "תודה{comma_name}! הכל אצל רומן עכשיו, הוא יחזור אליך כאן תוך 24 שעות.", "en": "Thanks{comma_name}! Everything's with Roman now, he'll reply here within 24 hours.", "ru": "Спасибо{comma_name}! Всё передано Роману, он ответит здесь в течение 24 часов.", "ar": "شكراً{comma_name}! كل شيء عند رومان الآن، سيرد عليك هنا خلال 24 ساعة." },
+    "add_service": { "he": "להוסיף שירות", "en": "Add a service", "ru": "Добавить услугу", "ar": "إضافة خدمة" },
+    "bundle": { "he": "הנחה של {pct}% על {n} שירותים ביחד.", "en": "{pct}% off the total for {n} services together.", "ru": "Скидка {pct}% на всё за {n} {services_word} вместе.", "ar": "خصم {pct}% على المجموع مقابل {n} خدمات معاً." },
+    "services_word": { "ru": { "one": "услугу", "few": "услуги", "many": "услуг", "other": "услуги" } },
+    "price_head": { "he": "{service}:", "en": "{service}:", "ru": "{service}:", "ar": "{service}:" },
+    "timeline_line": { "he": "זמן עבודה ל{service}: {timeline}.", "en": "Timeline for {service}: {timeline}.", "ru": "Сроки, {service}: {timeline}.", "ar": "مدة العمل لـ{service}: {timeline}." },
+    "included_line": { "he": "מה כלול ב{service}: {included}", "en": "What's included in {service}: {included}", "ru": "Что входит, {service}: {included}", "ar": "ماذا يشمل {service}: {included}" },
+    "human": { "he": "בטח, רומן יענה כאן בעצמו.", "en": "Sure, Roman will reply here himself.", "ru": "Конечно, Роман ответит здесь сам.", "ar": "بالتأكيد، رومان سيرد هنا بنفسه." },
+    "guard": { "he": "כאן אפשר לעזור רק עם הפרויקט שלך 🙂", "en": "Here I can only help with your project 🙂", "ru": "Здесь я помогаю только с вашим проектом 🙂", "ar": "هنا أساعد فقط في مشروعك 🙂" },
+    "voice_fail": { "he": "לא הצלחתי לשמוע את ההודעה הקולית, אפשר לכתוב?", "en": "Couldn't catch the voice message, could you type it?", "ru": "Голосовое не распозналось, можете написать текстом?", "ar": "لم أتمكن من سماع الرسالة الصوتية، هل يمكنك كتابتها؟" },
+    "after_done": { "he": "קיבלתי, העברתי לרומן.", "en": "Got it, passed to Roman.", "ru": "Принято, передано Роману.", "ar": "تم، نقلته إلى رومان." },
+    "discount_info": { "he": "הנחת חבילה: {pct}% על {n} שירותים ומעלה ביחד. כל הנחה אחרת רומן יאשר.", "en": "Package discount: {pct}% off when you take {n} or more services together. Any other discount, Roman will confirm.", "ru": "Скидка за пакет: {pct}% при заказе от {n} услуг вместе. Любую другую скидку подтвердит Роман.", "ar": "خصم الباقة: {pct}% عند طلب {n} خدمات أو أكثر معاً. أي خصم آخر يؤكده رومان." },
+    "pick_option": { "he": "אפשר לבחור מהאפשרויות למטה, או לכתוב תשובה משלך.", "en": "Tap one of the options below, or write your own answer.", "ru": "Выберите вариант ниже или напишите свой ответ.", "ar": "اختر أحد الخيارات أدناه، أو اكتب إجابتك." },
+    "file_received": { "he": "הקובץ התקבל 👍", "en": "Got the file 👍", "ru": "Файл получен 👍", "ar": "وصل الملف 👍" },
+    "languages_note": { "he": "אני מדבר עברית, אנגלית, רוסית וערבית.", "en": "I speak English, Hebrew, Russian and Arabic.", "ru": "Я говорю на русском, иврите, английском и арабском.", "ar": "أتحدث العربية والعبرية والإنجليزية والروسية." },
+    "no_name_word": { "he": "", "en": "", "ru": "", "ar": "" }
+  },
+  "services": [
+    {
+      "id": "video",
+      "tag": "video",
+      "active": true,
+      "order": 1,
+      "category": "video",
+      "names": { "he": "סרטוני פרסום", "en": "Video ads", "ru": "Рекламные ролики", "ar": "فيديوهات إعلانية" },
+      "short": { "he": "סרטוני פרסום", "en": "Video ads", "ru": "Ролики", "ar": "فيديو إعلاني" },
+      "keywords": {
+        "he": ["וידאו", "סרטון", "סרטונים", "פרסומת", "פרסומות", "קליפ", "סרט תדמית", "רילס", "טיקטוק", "אנימציה"],
+        "en": ["video", "videos", "commercial", "advert", "advertising", "ads", "ad spot", "spot", "promo", "reel", "reels", "brand film", "clip", "tiktok", "youtube ad", "animation"],
+        "ru": ["видео", "ролик", "реклам", "клип", "рилс", "тикток", "анимац", "имиджевый фильм"],
+        "ar": ["فيديو", "إعلان", "اعلان", "إعلانات", "ريلز", "تيك توك", "مقطع"]
+      },
+      "pitch": {
+        "he": "אנחנו עושים פרסומות וסרטי תדמית, הכל נוצר ב־AI. פרסומת של 15-30 שניות {from}.",
+        "en": "We make ads and brand films, every frame generated with AI. A 15-30s ad spot starts {from}.",
+        "ru": "Делаем рекламные ролики и имиджевые фильмы, каждый кадр создан на AI. Ролик 15-30 секунд {from}.",
+        "ar": "نصنع إعلانات وأفلاماً تعريفية، كل لقطة مولّدة بالذكاء الاصطناعي. إعلان 15-30 ثانية {from}."
+      },
+      "included": {
+        "he": "כל פריים נוצר במיוחד לפי הבריף, בלי סטוק. שני סבבי תיקונים כלולים. גרסאות אנכיות לרשתות, בתוספת.",
+        "en": "Every frame is generated for your brief, no stock footage. Two rounds of changes are included. Vertical cutdowns for social are an add-on.",
+        "ru": "Каждый кадр создаётся под ваш бриф, без стоковых видео. Два круга правок входят в цену. Вертикальные версии для соцсетей заказываются отдельно.",
+        "ar": "كل لقطة تُصنع خصيصاً حسب طلبك، بدون مقاطع جاهزة. جولتان من التعديلات مشمولة. النسخ العمودية للشبكات إضافة منفصلة."
+      },
+      "timeline": { "he": "3-7 ימים לסרטון אחד", "en": "3-7 days for one video", "ru": "3-7 дней на один ролик", "ar": "3-7 أيام للفيديو الواحد" },
+      "price_ils": 3500,
+      "price_usd": 1000,
+      "options": [
+        { "id": "ad_spot", "kind": "from", "names": { "he": "פרסומת 15-30 שנ׳", "en": "Ad spot 15-30s", "ru": "Ролик 15-30 сек", "ar": "إعلان 15-30 ثانية" }, "price_ils": 3500, "price_usd": 1000 },
+        { "id": "brand_film", "kind": "from", "names": { "he": "סרט תדמית עד 90 שנ׳", "en": "Brand film up to 90s", "ru": "Фильм до 90 сек", "ar": "فيلم تعريفي 90 ث" }, "price_ils": 7500, "price_usd": 2100 },
+        { "id": "cutdowns", "kind": "addon", "names": { "he": "3 גרסאות אנכיות", "en": "3 vertical cutdowns", "ru": "3 вертикальные версии", "ar": "3 نسخ عمودية" }, "price_ils": 1200, "price_usd": 350 }
+      ],
+      "brief_questions": [
+        { "id": "video_type", "type": "buttons", "choices_from": "options", "add_unsure": true,
+          "text": { "he": "מה צריך?", "en": "What do you need?", "ru": "Что нужно?", "ar": "ما المطلوب؟" } },
+        { "id": "business", "type": "text",
+          "text": { "he": "מה המוצר או העסק?", "en": "What's the product or business?", "ru": "Что за продукт или бизнес?", "ar": "ما هو المنتج أو النشاط التجاري؟" } },
+        { "id": "platform", "type": "list",
+          "text": { "he": "איפה זה ירוץ?", "en": "Where will it run?", "ru": "Где будет показываться?", "ar": "أين سيُعرض؟" },
+          "choices": [
+            { "id": "social", "label": { "he": "אינסטגרם / טיקטוק", "en": "Instagram / TikTok", "ru": "Instagram / TikTok", "ar": "إنستغرام / تيك توك" } },
+            { "id": "youtube", "label": { "he": "יוטיוב", "en": "YouTube", "ru": "YouTube", "ar": "يوتيوب" } },
+            { "id": "website", "label": { "he": "באתר", "en": "Website", "ru": "Сайт", "ar": "الموقع الإلكتروني" } },
+            { "id": "tv", "label": { "he": "טלוויזיה או מסכים", "en": "TV or screens", "ru": "ТВ или экраны", "ar": "تلفزيون أو شاشات" } },
+            { "id": "several", "label": { "he": "בכמה מקומות", "en": "Several places", "ru": "В нескольких местах", "ar": "عدة أماكن" } },
+            { "id": "unsure", "label": { "he": "עוד לא החלטתי", "en": "Not sure yet", "ru": "Пока не решено", "ar": "لم أقرر بعد" } }
+          ] },
+        { "id": "has_assets", "type": "buttons",
+          "text": { "he": "יש לוגו ותמונות של המוצר?", "en": "Do you have a logo and product photos?", "ru": "Есть логотип и фото продукта?", "ar": "هل يوجد شعار وصور للمنتج؟" },
+          "choices": [
+            { "id": "yes", "label": { "he": "כן", "en": "Yes", "ru": "Да", "ar": "نعم" } },
+            { "id": "some", "label": { "he": "חלק", "en": "Some", "ru": "Частично", "ar": "بعضها" } },
+            { "id": "no", "label": { "he": "לא", "en": "No", "ru": "Нет", "ar": "لا" } }
+          ] },
+        { "id": "deadline", "type": "buttons",
+          "text": { "he": "מתי צריך את זה?", "en": "When do you need it?", "ru": "Когда нужно?", "ar": "ما هو الموعد المطلوب؟" },
+          "choices": [
+            { "id": "week", "label": { "he": "השבוע", "en": "This week", "ru": "На этой неделе", "ar": "هذا الأسبوع" } },
+            { "id": "month", "label": { "he": "החודש", "en": "This month", "ru": "В этом месяце", "ar": "هذا الشهر" } },
+            { "id": "no_rush", "label": { "he": "לא דחוף", "en": "No rush", "ru": "Не срочно", "ar": "ليس مستعجلاً" } }
+          ] }
+      ],
+      "never": ["filmed", "shot on location", "shooting day", "צילום", "съёмка", "снять", "stock footage included"],
+      "work_link": "https://genvidpro.com/work"
+    },
+    {
+      "id": "originals",
+      "tag": "originals",
+      "active": true,
+      "order": 2,
+      "category": "video",
+      "names": { "he": "ציורים חיים וסרטים", "en": "Living paintings and films", "ru": "Живые картины и фильмы", "ar": "لوحات حية وأفلام" },
+      "short": { "he": "ציורים חיים", "en": "Living paintings", "ru": "Живые картины", "ar": "لوحات حية" },
+      "keywords": {
+        "he": ["ציור", "ציורים", "ציור חי", "תמונה חיה", "סרט קצר", "יצירה", "אמנות", "לופ"],
+        "en": ["living painting", "painting", "paintings", "artwork", "short film", "loop", "portrait"],
+        "ru": ["картин", "живая картина", "оживить", "короткий фильм", "короткометраж", "портрет"],
+        "ar": ["لوحة", "لوحات", "لوحة حية", "فيلم قصير"]
+      },
+      "pitch": {
+        "he": "ציורים חיים וסרטים קצרים מקוריים. לופ של ציור חי אחד {from}.",
+        "en": "Living paintings and original short films. One living painting loop starts {from}.",
+        "ru": "Живые картины и авторские короткие фильмы. Одна живая картина {from}.",
+        "ar": "لوحات حية وأفلام قصيرة أصلية. لوحة حية واحدة {from}."
+      },
+      "included": {
+        "he": "תמונה שלך או ציור מנחלת הכלל הופכים ללופ חי ואיטי ב־Full HD, ו־4K לפי בקשה.",
+        "en": "Your own picture or a public-domain painting becomes a slow living loop in Full HD, 4K on request.",
+        "ru": "Ваша картинка или картина из общественного достояния становится медленной живой петлёй в Full HD, 4K по запросу.",
+        "ar": "صورتك أو لوحة من الملك العام تتحول إلى حلقة حية بطيئة بدقة Full HD، و4K عند الطلب."
+      },
+      "timeline": { "he": "3-5 ימים לכל יצירה", "en": "3-5 days per work", "ru": "3-5 дней на одну работу", "ar": "3-5 أيام لكل عمل" },
+      "price_ils": 2900,
+      "price_usd": 850,
+      "options": [
+        { "id": "loop", "kind": "from", "names": { "he": "ציור חי", "en": "Living painting", "ru": "Живая картина", "ar": "لوحة حية" }, "price_ils": 2900, "price_usd": 850 },
+        { "id": "series3", "kind": "from", "names": { "he": "סדרה של 3", "en": "Series of 3", "ru": "Серия из 3", "ar": "سلسلة من 3" }, "price_ils": 7500, "price_usd": 2100 },
+        { "id": "short_film", "kind": "from", "names": { "he": "סרט קצר מקורי", "en": "Original short film", "ru": "Короткий фильм", "ar": "فيلم قصير أصلي" }, "price_ils": 9000, "price_usd": 2500 }
+      ],
+      "brief_questions": [
+        { "id": "orig_type", "type": "buttons", "choices_from": "options",
+          "text": { "he": "מה מתאים?", "en": "Which one?", "ru": "Что интересно?", "ar": "أيها يناسبك؟" } },
+        { "id": "artwork", "type": "text",
+          "text": { "he": "איזו תמונה? תמונה שלך או ציור, אפשר לשלוח או פשוט לכתוב את השם.", "en": "Which picture? Your own photo or a painting, send it or just name it.", "ru": "Какая картинка? Ваше фото или картина, пришлите или просто напишите название.", "ar": "أي صورة؟ صورتك أو لوحة، أرسلها أو اكتب اسمها فقط." } },
+        { "id": "where", "type": "buttons",
+          "text": { "he": "איפה זה יוצג?", "en": "Where will it be shown?", "ru": "Где будет показываться?", "ar": "أين ستُعرض؟" },
+          "choices": [
+            { "id": "home", "label": { "he": "מסך בבית", "en": "Screen at home", "ru": "Экран дома", "ar": "شاشة في البيت" } },
+            { "id": "business", "label": { "he": "בעסק", "en": "Business space", "ru": "В бизнесе", "ar": "في مكان العمل" } },
+            { "id": "online", "label": { "he": "אונליין", "en": "Online", "ru": "Онлайн", "ar": "أونلاين" } }
+          ] },
+        { "id": "deadline", "type": "buttons",
+          "text": { "he": "מתי צריך את זה?", "en": "When do you need it?", "ru": "Когда нужно?", "ar": "ما هو الموعد المطلوب؟" },
+          "choices": [
+            { "id": "week", "label": { "he": "השבוע", "en": "This week", "ru": "На этой неделе", "ar": "هذا الأسبوع" } },
+            { "id": "month", "label": { "he": "החודש", "en": "This month", "ru": "В этом месяце", "ar": "هذا الشهر" } },
+            { "id": "no_rush", "label": { "he": "לא דחוף", "en": "No rush", "ru": "Не срочно", "ar": "ليس مستعجلاً" } }
+          ] }
+      ],
+      "never": ["price depends on the painting only", "copyrighted painting is fine"],
+      "work_link": "https://genvidpro.com/living-paintings"
+    },
+    {
+      "id": "site",
+      "tag": "site",
+      "active": true,
+      "order": 3,
+      "category": "web",
+      "names": { "he": "אתר", "en": "Website", "ru": "Сайт", "ar": "موقع إلكتروني" },
+      "short": { "he": "אתר", "en": "Website", "ru": "Сайт", "ar": "موقع إلكتروني" },
+      "keywords": {
+        "he": ["אתר", "אתרים", "דף נחיתה", "אתר אינטרנט", "חנות אונליין", "דומיין"],
+        "en": ["website", "web site", "site", "landing page", "landing", "web page", "webpage", "online store", "domain"],
+        "ru": ["сайт", "лендинг", "посадочн", "интернет-магазин", "домен"],
+        "ar": ["موقع", "مواقع", "صفحة هبوط", "متجر إلكتروني", "دومين"]
+      },
+      "pitch": {
+        "he": "אתרים שמביאים לקוחות ומותקנים בטלפון כמו אפליקציה. דף נחיתה {from}.",
+        "en": "Sites that bring clients and install on the phone like an app. A landing page starts {from}.",
+        "ru": "Сайты, которые приводят клиентов и ставятся на телефон как приложение. Лендинг {from}.",
+        "ar": "مواقع تجلب العملاء وتُثبّت على الهاتف كتطبيق. صفحة هبوط {from}."
+      },
+      "included": {
+        "he": "כתוב ומעוצב במיוחד בשבילך, על הדומיין שלך, מהיר, מותקן בטלפון כמו אפליקציה, והפניות מגיעות ישר לוואטסאפ.",
+        "en": "Written and designed for you, on your own domain, fast, installs on the phone like an app, leads go straight to your WhatsApp.",
+        "ru": "Тексты и дизайн под вас, на вашем домене, быстрый, ставится на телефон как приложение, заявки идут прямо в WhatsApp.",
+        "ar": "مكتوب ومصمم لك، على نطاقك الخاص، سريع، يُثبّت على الهاتف كتطبيق، والطلبات تصل مباشرة إلى واتساب."
+      },
+      "timeline": { "he": "דף נחיתה כ־5 ימים, אתר עסקי 3-5 שבועות", "en": "landing page about 5 days, business site 3-5 weeks", "ru": "лендинг около 5 дней, сайт для бизнеса 3-5 недель", "ar": "صفحة هبوط حوالي 5 أيام، موقع تجاري 3-5 أسابيع" },
+      "price_ils": 3500,
+      "price_usd": 1000,
+      "options": [
+        { "id": "landing", "kind": "from", "names": { "he": "דף נחיתה", "en": "Landing page", "ru": "Лендинг", "ar": "صفحة هبوط" }, "price_ils": 3500, "price_usd": 1000 },
+        { "id": "business_site", "kind": "from", "names": { "he": "אתר עסקי עד 5 עמודים", "en": "Business site, up to 5 pages", "ru": "Сайт для бизнеса до 5 страниц", "ar": "موقع تجاري حتى 5 صفحات" }, "short": { "he": "אתר עסקי", "en": "Business site", "ru": "Сайт для бизнеса", "ar": "موقع تجاري" }, "note": { "he": "כולל התקנה כאפליקציה", "en": "installable app included", "ru": "установка как приложение включена", "ar": "يشمل التثبيت كتطبيق" }, "price_ils": 6500, "price_usd": 1850 },
+        { "id": "care", "kind": "monthly", "names": { "he": "תחזוקה חודשית", "en": "Care plan", "ru": "Поддержка", "ar": "خطة صيانة" }, "monthly_ils": 150, "monthly_usd": 50 }
+      ],
+      "brief_questions": [
+        { "id": "site_type", "type": "buttons", "choices_from": "options", "add_unsure": true,
+          "text": { "he": "מה מתאים?", "en": "Which one fits?", "ru": "Что подходит?", "ar": "أيهما يناسبك؟" } },
+        { "id": "business", "type": "text",
+          "text": { "he": "מה העסק?", "en": "What's the business?", "ru": "Что за бизнес?", "ar": "ما هو مجال عملك؟" } },
+        { "id": "has_site", "type": "buttons",
+          "text": { "he": "יש לך אתר היום?", "en": "Do you have a site now?", "ru": "Сайт уже есть?", "ar": "هل لديك موقع الآن؟" },
+          "choices": [
+            { "id": "yes", "label": { "he": "כן, יש", "en": "Yes, I have one", "ru": "Да, есть", "ar": "نعم، يوجد" } },
+            { "id": "no", "label": { "he": "עוד אין", "en": "No site yet", "ru": "Пока нет", "ar": "ليس بعد" } }
+          ] },
+        { "id": "site_langs", "type": "list",
+          "text": { "he": "באילו שפות האתר?", "en": "Which languages should the site speak?", "ru": "На каких языках сайт?", "ar": "بأي لغات الموقع؟" },
+          "choices": [
+            { "id": "he", "label": { "he": "עברית", "en": "Hebrew", "ru": "Иврит", "ar": "العبرية" } },
+            { "id": "en", "label": { "he": "אנגלית", "en": "English", "ru": "Английский", "ar": "الإنجليزية" } },
+            { "id": "ru", "label": { "he": "רוסית", "en": "Russian", "ru": "Русский", "ar": "الروسية" } },
+            { "id": "ar", "label": { "he": "ערבית", "en": "Arabic", "ru": "Арабский", "ar": "العربية" } },
+            { "id": "he_en", "label": { "he": "עברית + אנגלית", "en": "Hebrew + English", "ru": "Иврит + английский", "ar": "العبرية + الإنجليزية" } },
+            { "id": "several", "label": { "he": "כמה שפות", "en": "Several", "ru": "Несколько", "ar": "عدة لغات" } }
+          ] },
+        { "id": "deadline", "type": "buttons",
+          "text": { "he": "מתי צריך את זה?", "en": "When do you need it?", "ru": "Когда нужно?", "ar": "ما هو الموعد المطلوب؟" },
+          "choices": [
+            { "id": "week", "label": { "he": "השבוע", "en": "This week", "ru": "На этой неделе", "ar": "هذا الأسبوع" } },
+            { "id": "month", "label": { "he": "החודש", "en": "This month", "ru": "В этом месяце", "ar": "هذا الشهر" } },
+            { "id": "no_rush", "label": { "he": "לא דחוף", "en": "No rush", "ru": "Не срочно", "ar": "ليس مستعجلاً" } }
+          ] }
+      ],
+      "never": ["the free builder site costs money", "made in seconds (for a custom site)"],
+      "work_link": "https://genvidpro.com/builder"
+    },
+    {
+      "id": "brand",
+      "tag": "brand",
+      "active": true,
+      "order": 4,
+      "category": "brand",
+      "names": { "he": "לוגו ומיתוג", "en": "Logo and brand", "ru": "Логотип и фирменный стиль", "ar": "شعار وهوية" },
+      "short": { "he": "לוגו ומיתוג", "en": "Logo and brand", "ru": "Логотип и стиль", "ar": "شعار وهوية" },
+      "keywords": {
+        "he": ["לוגו", "מיתוג", "זהות מותג", "ספר מותג", "מותג", "לוגואים"],
+        "en": ["logo", "logos", "brand", "branding", "identity", "brand book", "brandbook", "rebrand"],
+        "ru": ["логотип", "лого", "брендинг", "бренд", "фирменный стиль", "брендбук", "айдентик"],
+        "ar": ["شعار", "لوغو", "لوجو", "هوية", "علامة تجارية", "براند"]
+      },
+      "pitch": {
+        "he": "לוגו וזהות מותג. לוגו {from}.",
+        "en": "Logos and brand identity. A logo starts {from}.",
+        "ru": "Логотипы и фирменный стиль. Логотип {from}.",
+        "ar": "شعارات وهوية بصرية. شعار {from}."
+      },
+      "included": {
+        "he": "לוגו לבד, לוגו עם זהות מלאה (צבעים, פונטים ואיך להשתמש בהם), או ספר מותג מלא. את ההיקף המדויק רומן יאשר.",
+        "en": "A logo alone, a logo with a full identity (colours, fonts and how to use them), or a complete brand book. Roman confirms the exact scope.",
+        "ru": "Только логотип, логотип с фирменным стилем (цвета, шрифты и правила) или полный брендбук. Точный объём подтвердит Роман.",
+        "ar": "شعار فقط، أو شعار مع هوية كاملة (ألوان وخطوط وطريقة استخدامها)، أو دليل علامة كامل. رومان يؤكد النطاق الدقيق."
+      },
+      "timeline": { "he": "1-2 שבועות", "en": "1-2 weeks", "ru": "1-2 недели", "ar": "أسبوع إلى أسبوعين" },
+      "price_ils": 2800,
+      "price_usd": 800,
+      "options": [
+        { "id": "logo", "kind": "from", "names": { "he": "לוגו", "en": "Logo", "ru": "Логотип", "ar": "شعار" }, "price_ils": 2800, "price_usd": 800 },
+        { "id": "identity", "kind": "from", "names": { "he": "לוגו + זהות", "en": "Logo + identity", "ru": "Лого + стиль", "ar": "شعار + هوية" }, "price_ils": 6500, "price_usd": 1850 },
+        { "id": "brand_book", "kind": "from", "names": { "he": "ספר מותג מלא", "en": "Full brand book", "ru": "Полный брендбук", "ar": "دليل علامة كامل" }, "price_ils": 15000, "price_usd": 4200 }
+      ],
+      "brief_questions": [
+        { "id": "brand_type", "type": "buttons", "choices_from": "options",
+          "text": { "he": "מה צריך?", "en": "What do you need?", "ru": "Что нужно?", "ar": "ما المطلوب؟" } },
+        { "id": "brand_name", "type": "text",
+          "text": { "he": "מה שם המותג?", "en": "What's the brand name?", "ru": "Как называется бренд?", "ar": "ما اسم العلامة التجارية؟" } },
+        { "id": "business", "type": "text",
+          "text": { "he": "במה העסק עוסק?", "en": "What does the business do?", "ru": "Чем занимается бизнес?", "ar": "ما هو مجال عملك؟" } },
+        { "id": "style", "type": "list",
+          "text": { "he": "איזה סגנון קרוב יותר?", "en": "Which style is closer?", "ru": "Какой стиль ближе?", "ar": "أي أسلوب أقرب؟" },
+          "choices": [
+            { "id": "minimal", "label": { "he": "מינימליסטי", "en": "Minimal", "ru": "Минимализм", "ar": "بسيط" } },
+            { "id": "bold", "label": { "he": "נועז", "en": "Bold", "ru": "Смелый", "ar": "جريء" } },
+            { "id": "elegant", "label": { "he": "אלגנטי", "en": "Elegant", "ru": "Элегантный", "ar": "أنيق" } },
+            { "id": "playful", "label": { "he": "שובב", "en": "Playful", "ru": "Игривый", "ar": "مرح" } },
+            { "id": "classic", "label": { "he": "קלאסי", "en": "Classic", "ru": "Классика", "ar": "كلاسيكي" } },
+            { "id": "unsure", "label": { "he": "עוד לא החלטתי", "en": "Not sure yet", "ru": "Пока не решено", "ar": "لم أقرر بعد" } }
+          ] },
+        { "id": "deadline", "type": "buttons",
+          "text": { "he": "מתי צריך את זה?", "en": "When do you need it?", "ru": "Когда нужно?", "ar": "ما هو الموعد المطلوب؟" },
+          "choices": [
+            { "id": "week", "label": { "he": "השבוע", "en": "This week", "ru": "На этой неделе", "ar": "هذا الأسبوع" } },
+            { "id": "month", "label": { "he": "החודש", "en": "This month", "ru": "В этом месяце", "ar": "هذا الشهر" } },
+            { "id": "no_rush", "label": { "he": "לא דחוף", "en": "No rush", "ru": "Не срочно", "ar": "ليس مستعجلاً" } }
+          ] }
+      ],
+      "never": ["trademark registration included"],
+      "work_link": "https://genvidpro.com/work"
+    },
+    {
+      "id": "app",
+      "tag": "app",
+      "active": true,
+      "order": 5,
+      "category": "web",
+      "names": { "he": "אתר כאפליקציה", "en": "Your site as an app", "ru": "Сайт как приложение", "ar": "موقعك كتطبيق" },
+      "short": { "he": "אתר כאפליקציה", "en": "Site as an app", "ru": "Сайт-приложение", "ar": "موقعك كتطبيق" },
+      "keywords": {
+        "he": ["אפליקציה", "אפליקציות", "התראות", "פוש", "מסך הבית", "להתקין"],
+        "en": ["app", "apps", "application", "pwa", "installable", "push", "notifications", "home screen"],
+        "ru": ["приложени", "пуш", "уведомлен", "главный экран"],
+        "ar": ["تطبيق", "تطبيقات", "إشعارات", "اشعارات"]
+      },
+      "pitch": {
+        "he": "הופכים את האתר הקיים שלך לאפליקציה בטלפון, בלי חנות אפליקציות. {from}.",
+        "en": "We turn your existing site into an app on the phone, no app store needed. Starts {from}.",
+        "ru": "Превращаем ваш сайт в приложение на телефоне, без магазина приложений. Цена {from}.",
+        "ar": "نحوّل موقعك الحالي إلى تطبيق على الهاتف، بدون متجر تطبيقات. {from}."
+      },
+      "included": {
+        "he": "בלי App Store ובלי Google Play, בלי אישורים. מתקינים בנגיעה אחת, נפתח במסך מלא ועובד גם בלי קליטה. התראות פוש בגרסה עם פוש.",
+        "en": "No App Store or Google Play, no approvals. Installs in one tap, opens full screen, works without signal. Push notifications in the push version.",
+        "ru": "Без App Store и Google Play, без модерации. Ставится в одно касание, открывается на весь экран, работает без сети. Пуш-уведомления в версии с пушами.",
+        "ar": "بدون App Store أو Google Play، بدون موافقات. يُثبّت بلمسة واحدة، يفتح بملء الشاشة ويعمل بدون إنترنت. الإشعارات في النسخة مع الإشعارات."
+      },
+      "timeline": { "he": "יום-יומיים", "en": "1-2 days", "ru": "1-2 дня", "ar": "يوم إلى يومين" },
+      "price_ils": 3500,
+      "price_usd": 1000,
+      "options": [
+        { "id": "app", "kind": "from", "names": { "he": "בלי פוש", "en": "Without push", "ru": "Без пушей", "ar": "بدون إشعارات" }, "price_ils": 3500, "price_usd": 1000 },
+        { "id": "app_push", "kind": "from", "names": { "he": "עם התראות פוש", "en": "With push", "ru": "С пушами", "ar": "مع الإشعارات" }, "price_ils": 4900, "price_usd": 1400 }
+      ],
+      "brief_questions": [
+        { "id": "site_url", "type": "text",
+          "text": { "he": "מה הכתובת של האתר שלך?", "en": "What's your site address?", "ru": "Какой адрес вашего сайта?", "ar": "ما هو عنوان موقعك؟" } },
+        { "id": "app_type", "type": "buttons", "choices_from": "options", "add_unsure": true,
+          "text": { "he": "עם התראות פוש או בלי?", "en": "With push notifications or without?", "ru": "С пуш-уведомлениями или без?", "ar": "مع الإشعارات أو بدونها؟" } },
+        { "id": "users", "type": "buttons",
+          "text": { "he": "מי יתקין אותה?", "en": "Who will install it?", "ru": "Кто будет устанавливать?", "ar": "من سيثبته؟" },
+          "choices": [
+            { "id": "customers", "label": { "he": "לקוחות", "en": "Customers", "ru": "Клиенты", "ar": "العملاء" } },
+            { "id": "staff", "label": { "he": "עובדים", "en": "Staff", "ru": "Сотрудники", "ar": "الموظفون" } },
+            { "id": "both", "label": { "he": "שניהם", "en": "Both", "ru": "И те, и другие", "ar": "كلاهما" } }
+          ] },
+        { "id": "deadline", "type": "buttons",
+          "text": { "he": "מתי צריך את זה?", "en": "When do you need it?", "ru": "Когда нужно?", "ar": "ما هو الموعد المطلوب؟" },
+          "choices": [
+            { "id": "week", "label": { "he": "השבוע", "en": "This week", "ru": "На этой неделе", "ar": "هذا الأسبوع" } },
+            { "id": "month", "label": { "he": "החודש", "en": "This month", "ru": "В этом месяце", "ar": "هذا الشهر" } },
+            { "id": "no_rush", "label": { "he": "לא דחוף", "en": "No rush", "ru": "Не срочно", "ar": "ليس مستعجلاً" } }
+          ] }
+      ],
+      "never": ["published in the App Store", "published in Google Play", "notifications save money", "cheaper than SMS"],
+      "work_link": "https://genvidpro.com/app"
+    },
+    {
+      "id": "automation",
+      "tag": "automation",
+      "active": true,
+      "order": 6,
+      "category": "automation",
+      "names": { "he": "בוט לוואטסאפ", "en": "WhatsApp bot", "ru": "WhatsApp-бот", "ar": "بوت واتساب" },
+      "short": { "he": "בוט לוואטסאפ", "en": "WhatsApp bot", "ru": "WhatsApp-бот", "ar": "بوت واتساب" },
+      "keywords": {
+        "he": ["בוט", "צ'אטבוט", "צאטבוט", "אוטומציה", "סוכן חכם", "מענה אוטומטי", "בוטים"],
+        "en": ["bot", "bots", "chatbot", "chat bot", "automation", "automate", "ai agent", "crm", "auto-reply", "auto reply"],
+        "ru": ["бот", "бота", "боты", "ботом", "чат-бот", "чатбот", "автоматизац", "ии-агент", "автоответ", "crm"],
+        "ar": ["بوت", "روبوت", "أتمتة", "اتمتة", "وكيل ذكي", "رد آلي", "شات بوت"]
+      },
+      "pitch": {
+        "he": "בוטים לוואטסאפ שעונים ללקוחות, אוספים פניות ומעדכנים אותך. אגב, השיחה הזאת היא בדיוק המוצר 🙂 בוט {from} + {monthly}.",
+        "en": "WhatsApp bots that answer your clients, collect leads and alert you. By the way, you're talking to the product right now 🙂 A bot starts {from} + {monthly}.",
+        "ru": "WhatsApp-боты, которые отвечают клиентам, собирают заявки и сообщают вам. Кстати, вы прямо сейчас разговариваете с таким ботом 🙂 Бот {from} + {monthly}.",
+        "ar": "بوتات واتساب ترد على عملائك وتجمع الطلبات وتنبهك. بالمناسبة، هذه المحادثة هي المنتج نفسه 🙂 البوت {from} + {monthly}."
+      },
+      "included": {
+        "he": "עובד על WhatsApp Business API הרשמי. בוט: עונה ללקוחות ואוסף פניות. סוכן מלא: גם הודעות קוליות, 4 שפות, CRM והתראות אליך. את דמי ההודעות של Meta משלמים ישירות מהחשבון שלך.",
+        "en": "Runs on the official WhatsApp Business API. Bot: answers your clients and collects leads. Full agent: also voice messages, 4 languages, CRM and alerts to you. Meta message fees are paid by you on your own account.",
+        "ru": "Работает на официальном WhatsApp Business API. Бот: отвечает клиентам и собирает заявки. Полный агент: ещё голосовые, 4 языка, CRM и уведомления вам. Сборы Meta за сообщения вы оплачиваете сами на своём аккаунте.",
+        "ar": "يعمل على WhatsApp Business API الرسمي. البوت: يرد على عملائك ويجمع الطلبات. الوكيل الكامل: أيضاً الرسائل الصوتية، 4 لغات، CRM وتنبيهات لك. رسوم رسائل Meta تدفعها أنت من حسابك الخاص."
+      },
+      "timeline": { "he": "1-2 שבועות", "en": "1-2 weeks", "ru": "1-2 недели", "ar": "أسبوع إلى أسبوعين" },
+      "price_ils": 3500,
+      "price_usd": 1000,
+      "monthly_ils": 199,
+      "monthly_usd": 60,
+      "options": [
+        { "id": "bot", "kind": "from", "names": { "he": "בוט", "en": "Bot", "ru": "Бот", "ar": "بوت" }, "note": { "he": "עונה ללקוחות ואוסף פניות", "en": "answers and collects leads", "ru": "отвечает и собирает заявки", "ar": "يرد ويجمع الطلبات" }, "price_ils": 3500, "price_usd": 1000, "monthly_ils": 199, "monthly_usd": 60 },
+        { "id": "agent", "kind": "from", "names": { "he": "סוכן מלא", "en": "Full agent", "ru": "Полный агент", "ar": "وكيل كامل" }, "note": { "he": "קול, 4 שפות, CRM, התראות", "en": "voice, 4 languages, CRM, owner alerts", "ru": "голос, 4 языка, CRM, уведомления", "ar": "صوت، 4 لغات، CRM، تنبيهات" }, "price_ils": 6500, "price_usd": 1850, "monthly_ils": 299, "monthly_usd": 90 }
+      ],
+      "brief_questions": [
+        { "id": "business", "type": "text",
+          "text": { "he": "מה העסק ואיפה הולכים לאיבוד לקוחות? אפשר בהודעה קולית או בכתב.", "en": "Tell me about your business and where you lose clients. Voice or text, whatever's easier.", "ru": "Расскажите про бизнес и где теряются клиенты. Голосом или текстом, как удобнее.", "ar": "ما هو نشاطك وأين يضيع العملاء؟ بالصوت أو بالكتابة، كما يناسبك." } },
+        { "id": "bot_tasks", "type": "list",
+          "text": { "he": "מה הכי חשוב שהבוט יעשה?", "en": "What should it do first?", "ru": "Что бот должен делать в первую очередь?", "ar": "ما أهم شيء يفعله البوت؟" },
+          "choices": [
+            { "id": "answer", "label": { "he": "לענות על שאלות", "en": "Answer questions", "ru": "Отвечать на вопросы", "ar": "الرد على الأسئلة" } },
+            { "id": "bookings", "label": { "he": "לקבוע תורים", "en": "Take bookings", "ru": "Записывать клиентов", "ar": "حجز المواعيد" } },
+            { "id": "orders", "label": { "he": "לקבל הזמנות", "en": "Take orders", "ru": "Принимать заказы", "ar": "استقبال الطلبات" } },
+            { "id": "leads", "label": { "he": "לאסוף פניות", "en": "Collect leads", "ru": "Собирать заявки", "ar": "جمع العملاء المحتملين" } },
+            { "id": "payments", "label": { "he": "קישורי תשלום", "en": "Payment links", "ru": "Ссылки на оплату", "ar": "روابط الدفع" } },
+            { "id": "reminders", "label": { "he": "תזכורות", "en": "Reminders", "ru": "Напоминания", "ar": "التذكيرات" } },
+            { "id": "all", "label": { "he": "את כל אלה", "en": "All of these", "ru": "Всё сразу", "ar": "كل ما سبق" } }
+          ] },
+        { "id": "bot_level", "type": "buttons", "choices_from": "options", "add_unsure": true,
+          "text": { "he": "איזו רמה מתאימה?", "en": "Which level fits?", "ru": "Какой уровень подходит?", "ar": "أي مستوى يناسبك؟" } },
+        { "id": "volume", "type": "list",
+          "text": { "he": "בערך כמה הודעות ביום?", "en": "About how many messages a day?", "ru": "Примерно сколько сообщений в день?", "ar": "كم رسالة تقريباً في اليوم؟" },
+          "choices": [
+            { "id": "lt10", "label": { "he": "עד 10", "en": "Up to 10", "ru": "До 10", "ar": "حتى 10" } },
+            { "id": "m10_50", "label": { "he": "בין 10 ל־50", "en": "10 to 50", "ru": "10-50", "ar": "من 10 إلى 50" } },
+            { "id": "m50_100", "label": { "he": "בין 50 ל־100", "en": "50 to 100", "ru": "50-100", "ar": "من 50 إلى 100" } },
+            { "id": "gt100", "label": { "he": "יותר מ־100", "en": "More than 100", "ru": "Больше 100", "ar": "أكثر من 100" } }
+          ] },
+        { "id": "client_langs", "type": "list",
+          "text": { "he": "באילו שפות הלקוחות שלך כותבים?", "en": "Which languages do your clients write in?", "ru": "На каких языках пишут ваши клиенты?", "ar": "بأي لغات يكتب عملاؤك؟" },
+          "choices": [
+            { "id": "he", "label": { "he": "עברית", "en": "Hebrew", "ru": "Иврит", "ar": "العبرية" } },
+            { "id": "ru", "label": { "he": "רוסית", "en": "Russian", "ru": "Русский", "ar": "الروسية" } },
+            { "id": "en", "label": { "he": "אנגלית", "en": "English", "ru": "Английский", "ar": "الإنجليزية" } },
+            { "id": "ar", "label": { "he": "ערבית", "en": "Arabic", "ru": "Арабский", "ar": "العربية" } },
+            { "id": "he_ru", "label": { "he": "עברית + רוסית", "en": "Hebrew + Russian", "ru": "Иврит + русский", "ar": "العبرية + الروسية" } },
+            { "id": "he_en", "label": { "he": "עברית + אנגלית", "en": "Hebrew + English", "ru": "Иврит + английский", "ar": "العبرية + الإنجليزية" } },
+            { "id": "several", "label": { "he": "כמה שפות", "en": "Several", "ru": "Несколько", "ar": "عدة لغات" } }
+          ] }
+      ],
+      "never": ["Meta fees are included", "messages are free", "we pay the Meta fees"],
+      "work_link": "https://genvidpro.com/automation"
+    }
+  ]
+}

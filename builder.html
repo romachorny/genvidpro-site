@@ -304,7 +304,7 @@ footer{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:26px;b
       <button class="btn" id="dl">Download the HTML</button>
       <button class="btn red" id="live">Put it online for me</button>
       <button class="btn ghost" id="rand">Surprise me</button>
-      <a class="btn ghost" id="disc" href="https://wa.me/972545517210?text=Hi%20Roman%2C%20I%20built%20a%20site%20in%20your%20builder.%20Is%20there%20any%20discount%20you%20could%20offer%20me%3F" target="_blank" rel="noopener">Ask for a discount</a>
+      <a class="btn ghost" id="disc" href="https://wa.me/972539760820" data-gvp-service="site" data-gvp-source="builder" data-gvp-text="Hi Roman, I built a site in your builder. Is there any discount you could offer me?" target="_blank" rel="noopener">Ask for a discount</a>
     </div>
     <!-- 15.09.2026: people install from the builder, so the notification button lives here
          too. push.js (loaded by gv-chrome.js) fills this place in. -->
@@ -314,9 +314,9 @@ footer{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:26px;b
   <div>
     <div class="kicker">one setup, then a small monthly</div>
     <ul class="addons">
-      <li><div class="hd"><b>Your site, built and live</b><i>$2,000 once</i></div><p>Written, designed, on your own domain, fast, and installable as an app from day one. That is PWA: your icon on the home screen, opens full screen, still opens with no signal. No App Store, no review, no yearly fee. Every button drops the lead into your WhatsApp, Telegram and email.</p></li>
-      <li><div class="hd"><b>An assistant that talks</b><i>$900 once</i></div><p>People ask about price or hours, by voice or by typing, in their own language. It answers and sends you the name and the number.</p></li>
-      <li><div class="hd"><b>A bot on Telegram and WhatsApp</b><i>$1,500 once</i></div><p>Takes bookings, answers the same five questions people always ask, reminds them the day before, hands you the rest.</p></li>
+      <li><div class="hd"><b>Your site, built and live</b><i>from $1,000</i></div><p>Written, designed, on your own domain, fast, and installable as an app from day one. That is PWA: your icon on the home screen, opens full screen, still opens with no signal. No App Store, no review, no yearly fee. Every button drops the lead into your WhatsApp, Telegram and email.</p></li>
+      <li><div class="hd"><b>A bot on Telegram and WhatsApp</b><i>from $1,000 +&nbsp;$60&nbsp;/&nbsp;mo</i></div><p>Takes bookings, answers the same five questions people always ask, reminds them the day before, hands you the rest.</p></li>
+      <li><div class="hd"><b>A full agent</b><i>from $1,850 +&nbsp;$90&nbsp;/&nbsp;mo</i></div><p>Everything the bot does, plus voice messages, four languages, a CRM and an alert to you on every lead.</p></li>
       <li><div class="hd"><b>See it in your room</b><i>from $1,200</i></div><p>Web AR. Your customer points the phone at the wall and the sofa, the fridge or the washing machine stands there at real size. Nothing to install. Plus $180 per product we build.</p></li>
       <li><div class="hd"><b>Change it yourself</b><i>$300 once</i></div><p>You get a code word. Type it on your own page and the prices and the hours become editable, right there. Bigger things stay with us.</p></li>
       <li><div class="hd"><b>Numbers you can act on</b><i>$300 once</i></div><p>Who came, what they clicked, where they left. One short report a month, in words, not charts you have to decode.</p></li>
@@ -325,7 +325,7 @@ footer{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:26px;b
 
     <div class="kicker" style="margin-top:20px">then we keep it alive</div>
     <ul class="plans">
-      <li><div class="hd"><b>Care</b><i>$29 / mo</i></div><p>Hosting, domain renewal, backups, we watch that it stays up. Two changes a month, you send them on WhatsApp.</p></li>
+      <li><div class="hd"><b>Care</b><i>$50 / mo</i></div><p>Hosting, domain renewal, backups, we watch that it stays up. Two changes a month, you send them on WhatsApp.</p></li>
       <li class="pick"><div class="hd"><b>Connected</b><i>$79 / mo</i></div><p>Care, plus the assistant answering on the page and every lead pushed to WhatsApp, Telegram and email. Five changes a month.</p></li>
       <li><div class="hd"><b>Growth</b><i>$149 / mo</i></div><p>Connected, plus the numbers once a month and one change made because of them. First month free.</p></li>
     </ul>
@@ -335,7 +335,7 @@ footer{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:26px;b
             .wrap was never closed at all; the browser patched it up silently,
             which is how the order panel on the front page broke once before -->
 
-<footer>Built by <a href="/" style="color:var(--tx)">GenVidPro</a> &middot; twelve looks, one engine &middot; the file is yours, free &middot; <a href="https://wa.me/972545517210" target="_blank" rel="noopener" style="color:var(--tx)">WhatsApp</a></footer>
+<footer>Built by <a href="/" style="color:var(--tx)">GenVidPro</a> &middot; twelve looks, one engine &middot; the file is yours, free &middot; <a href="https://wa.me/972539760820" data-gvp-service="general" target="_blank" rel="noopener" style="color:var(--tx)">WhatsApp</a></footer>
 </div><!-- /.wrap -->
 
 <script src="tpl-engine.js?v=23"></script>
@@ -509,9 +509,20 @@ document.getElementById("dl").onclick=function(){
 document.getElementById("live").onclick=function(){
  var t=TPL.filter(function(x){return x.id===S.tpl})[0];
  var f=FONTS.filter(function(x){return x.id===S.font})[0];
- var msg="Hi Roman, I built a site in your builder.\nName: "+S.name+"\nLine: "+S.tag+"\nPlace: "+S.city+"\nLook: "+t.n+" / "+f.n+" / "+S.acc+" + "+S.acc2+" / "+S.logo+" / "+S.mode+"\nCan you put it online for me?";
- window.open("https://wa.me/972545517210?text="+encodeURIComponent(msg),"_blank","noopener");
+ /* 23.09.2026: to the WhatsApp sales agent as service "site". The first line follows the page
+    language; the look travels as text for Roman and behind a ref code for the agent. */
+ var hi=BHI[String(document.documentElement.lang||"en").slice(0,2).toLowerCase()]||BHI.en;
+ var msg=hi+"\nName: "+S.name+"\nLine: "+S.tag+"\nPlace: "+S.city+"\nLook: "+t.n+" / "+f.n+" / "+S.acc+" + "+S.acc2+" / "+S.logo+" / "+S.mode+"\nCan you put it online for me?";
+ if(window.GVPWA){GVPWA.open("site",{source:"builder",text:msg,context:{answers:{business:S.name+(S.tag?" - "+S.tag:""),template:t.n,niche:S.cat,city:S.city},note:("font "+f.n+", colours "+S.acc+" + "+S.acc2+", logo "+S.logo+", "+S.mode+" mode").slice(0,300)}});return;}
+ window.open("https://wa.me/972539760820?text="+encodeURIComponent(msg),"_blank","noopener");
 };
+/* the greeting of that message and the ask for a discount, in the page language */
+var BHI={en:"Hi Roman, I built a site in your builder.",he:"היי רומן, בניתי אתר בבונה האתרים שלכם.",ru:"Здравствуйте, Роман! Сайт собран в вашем конструкторе."};
+(function(){var d=document.getElementById("disc");if(!d)return;
+ var T={en:"Is there any discount you could offer me?",he:"יש אפשרות להנחה?",ru:"Можно ли получить скидку?"};
+ function set(){var l=String(document.documentElement.lang||"en").slice(0,2).toLowerCase();if(!T[l])l="en";d.setAttribute("data-gvp-text",BHI[l]+" "+T[l]);if(window.GVPWA)GVPWA.refresh();}
+ document.addEventListener("gvlang",set);set();
+})();
 ["fName","fTag","fCity"].forEach(function(id){var k={fName:"name",fTag:"tag",fCity:"city"}[id];document.getElementById(id).value=S[k];});
 document.querySelectorAll("#mode button").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.m===S.mode))});
 document.getElementById("pick").value=S.acc;
@@ -558,14 +569,15 @@ document.getElementById("pick").value=S.acc;
 render();
 </script>
 
-<script src="i18n.js?v=15" defer></script>
+<script src="i18n.js?v=17" defer></script>
 <script>/* the twelve tiles and the controls are drawn after the translator has walked the page once; walk again when everything is on */
 addEventListener('load',function(){
   if(window.gvT)setTimeout(gvT,600);
   /* the tiles are redrawn on every category change; translate again after each redraw */
   if(typeof renderNow==='function'){var _r=renderNow;renderNow=function(){var v=_r.apply(this,arguments);if(window.gvT)setTimeout(gvT,0);return v;};}
 });</script>
-<script src="assistant.js?v=5" defer></script>
-<script src="/gv-chrome.js?v=17" defer></script>
+<script src="assistant.js?v=6" defer></script>
+<script src="/gv-chrome.js?v=18" defer></script>
+<script src="/gvp-wa.js?v=1" defer></script>
 </body>
 </html>

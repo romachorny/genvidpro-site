@@ -95,7 +95,7 @@ if(window.self!==window.top){document.documentElement.className+=' gv-framed';
     },
     {
      "@type": "Offer",
-     "price": "2500",
+     "price": "1850",
      "priceCurrency": "USD",
      "itemOffered": {
       "@type": "Service",
@@ -125,17 +125,17 @@ if(window.self!==window.top){document.documentElement.className+=' gv-framed';
     },
     {
      "@type": "Offer",
-     "price": "2500",
+     "price": "2100",
      "priceCurrency": "USD",
      "itemOffered": {
       "@type": "Service",
-      "name": "Brand film, 30 sec",
+      "name": "Brand film, up to 90 sec",
       "description": "Cinematic spot with sound design, voice-over and grade"
      }
     },
     {
      "@type": "Offer",
-     "price": "1200",
+     "price": "1000",
      "priceCurrency": "USD",
      "itemOffered": {
       "@type": "Service",
@@ -155,12 +155,12 @@ if(window.self!==window.top){document.documentElement.className+=' gv-framed';
     },
     {
      "@type": "Offer",
-     "price": "600",
+     "price": "350",
      "priceCurrency": "USD",
      "itemOffered": {
       "@type": "Service",
-      "name": "Platform cuts & captions",
-      "description": "9:16, 1:1, subtitles, thumbnails and title layers"
+      "name": "3 vertical cutdowns",
+      "description": "Three vertical versions of your video for Reels, TikTok and Shorts"
      }
     }
    ]
@@ -2098,7 +2098,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     </details>
     <details class="fold rv" id="contactfold" style="margin-top:10px"><summary class="btn s fold-btn">Contacts <span class="fold-n">4 ways</span></summary>
       <div class="gvc-row" style="margin-top:12px">
-        <a href="https://wa.me/972545517210" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://wa.me/972539760820" data-gvp-service="general" target="_blank" rel="noopener">WhatsApp</a>
         <a href="mailto:genvidpro@gmail.com">Email</a>
         <a href="https://t.me/GenVidPro" target="_blank" rel="noopener">Telegram</a>
         <a href="https://www.linkedin.com/in/genvidpro" target="_blank" rel="noopener">LinkedIn</a>
@@ -2177,12 +2177,11 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
         <div class="total"><span class="k">Total</span><span class="v" id="total">$0</span></div>
         <!-- the ask for a discount sits against the number itself: that is the
              moment the price is being weighed, not three buttons further down -->
-        <a class="gvc-disc" id="ask-disc" href="https://wa.me/972545517210?text=Hi%20Roman%2C%20is%20there%20a%20discount%20for%20my%20package%3F" target="_blank" rel="noopener">Ask for a discount</a>
+        <a class="gvc-disc" id="ask-disc" href="https://wa.me/972539760820" data-gvp-service="order" data-gvp-text="Hi Roman, is there a discount for my package?" target="_blank" rel="noopener">Ask for a discount</a>
         <p class="dep" id="dep"></p>
         <p class="dep" id="gate" style="margin-bottom:10px"></p>
         <a class="btn p" id="send-mail" href="#">Send the brief by email</a>
-        <a class="btn s" id="send-wa" href="#" target="_blank" rel="noopener">Send it on WhatsApp</a>
-        <p class="gift"><b>Gift with every order:</b> a vertical 9:16 cut of your main video, free. Worth $300.</p>
+        <a class="btn s" id="send-wa" href="https://wa.me/972539760820" data-gvp-service="order" target="_blank" rel="noopener">Send it on WhatsApp</a>
       </div>
     </div>
   </div>
@@ -2207,7 +2206,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
 <section class="cta" id="contact">
 <div id="gvbot">
   <div class="gv-cts">
-    <a class="gv-cb" href="https://wa.me/972545517210" target="_blank" rel="noopener"><span class="gv-l">WhatsApp</span></a>
+    <a class="gv-cb" href="https://wa.me/972539760820" data-gvp-service="general" target="_blank" rel="noopener"><span class="gv-l">WhatsApp</span></a>
     <a class="gv-cb" href="mailto:genvidpro@gmail.com"><span class="gv-l">Gmail</span></a>
     <a class="gv-cb" href="https://t.me/GenVidPro" target="_blank" rel="noopener"><span class="gv-l">Telegram</span></a>
     <a class="gv-cb" href="https://www.linkedin.com/in/genvidpro" target="_blank" rel="noopener"><span class="gv-l">LinkedIn</span></a>
@@ -2405,52 +2404,90 @@ rail.addEventListener('click',function(e){if(moved){e.stopPropagation();e.preven
 document.getElementById('lbC').addEventListener('click',closeLb);
 lb.addEventListener('click',function(e){if(e.target===lb)closeLb()});
 addEventListener('keydown',function(e){if(e.key==='Escape')closeLb()});
+/* 23.09.2026, Roma: p is the price in US dollars, pi the price in shekels, shown to a visitor
+   reading the page in Hebrew (the same rule as the WhatsApp agent). Where /services.json has the
+   item both come from it (see the sync below); a site-only price has pi = p x 3.6 rounded DOWN to
+   100, so the registry rule (shekels / 3.6 rounded UP to $50) gives p back.
+   The $600 platform cuts line is gone: vertical versions are the registry add-on "3 vertical
+   cutdowns" (EXTRAS), and the assistant that talks is gone: the full agent took its place. */
 var MODS=[
- {id:'pos',st:'01',t:'Positioning & offer',p:1200,s:'Audience, offer, messages and price story, in writing'},
- {id:'brand',st:'02',t:'Brand identity kit',p:2500,s:'Logo, colour, type, social templates, guidelines, source files'},
- {id:'logoanim',st:'02',t:'Logo animation',p:1600,s:'Intro, loop and vertical versions of your mark'},
- {id:'concept',st:'03',t:'Campaign concept & scripts',p:1500,s:'The idea, the hook, scripts and storyboard'},
- {id:'film',st:'04',t:'Brand film, 30 sec',p:2500,s:'Cinematic spot with sound design, voice-over and grade'},
- {id:'single',st:'04',t:'Single spot, 15–30 sec',p:1200,s:'One product or brand video, vertical or wide, sound and titles included'},
- {id:'prodads',st:'04',t:'Product ads, 3 x 15 sec',p:2200,s:'Three variants built for the feed and A/B testing'},
- {id:'launch',st:'05',t:'Platform cuts & captions',p:600,s:'9:16, 1:1, subtitles, thumbnails and title layers'},
+ {id:'pos',st:'01',t:'Positioning & offer',p:1200,pi:4300,s:'Audience, offer, messages and price story, in writing'},
+ {id:'brand',st:'02',t:'Brand identity kit',p:1850,pi:6500,s:'Logo, colour, type, social templates, guidelines, source files'},
+ {id:'logoanim',st:'02',t:'Logo animation',p:1600,pi:5700,s:'Intro, loop and vertical versions of your mark'},
+ {id:'concept',st:'03',t:'Campaign concept & scripts',p:1500,pi:5400,s:'The idea, the hook, scripts and storyboard'},
+ {id:'film',st:'04',t:'Brand film, up to 90 sec',p:2100,pi:7500,s:'Cinematic spot with sound design, voice-over and grade'},
+ {id:'single',st:'04',t:'Single spot, 15–30 sec',p:1000,pi:3500,s:'One product or brand video, vertical or wide, sound and titles included'},
+ {id:'prodads',st:'04',t:'Product ads, 3 x 15 sec',p:2200,pi:7900,s:'Three variants built for the feed and A/B testing'},
  /* Living art left the price list on 10.09.2026: it is quoted per screen, per
     licence and per number of works, so the page sends a quote instead. The old
     line, if it is ever wanted back:
     {id:'art',st:'07',t:'Live art - animated painting, 10 min loop',p:1600,
      q:{max:8,next:800,next2:600,from:5,one:'painting',many:'paintings'},s:'…'} */
- {id:'site',st:'06',t:'Website, built and live',p:2000,s:'Written, designed, your own domain, fast, installable as an app, leads into WhatsApp'},
- {id:'assist',st:'06',t:'Assistant that talks',p:900,s:'Answers price and hours by voice or text, sends you the lead'},
- {id:'bot',st:'06',t:'Telegram and WhatsApp bot',p:1500,s:'Takes bookings, answers the usual questions, reminds the day before'},
- {id:'ar',st:'06',t:'See it in your room (web AR)',p:1200,s:'Your product at real size in their room, no app. Plus $180 per product'},
- {id:'owner',st:'06',t:'Change it yourself',p:300,s:'A code word on your own page unlocks prices and hours for editing'},
- {id:'stats',st:'06',t:'Numbers you can act on',p:300,s:'Who came, what they clicked, where they left — one report a month, in words'}
+ {id:'site',st:'06',t:'Website, built and live',p:1000,pi:3500,s:'Written, designed, your own domain, fast, installable as an app, leads into WhatsApp'},
+ {id:'bot',st:'06',t:'Telegram and WhatsApp bot',p:1000,pi:3500,s:'Takes bookings, answers the usual questions, reminds the day before · + $60 / month'},
+ {id:'agent',st:'06',t:'Full agent',p:1850,pi:6500,s:'Voice, four languages, a CRM and alerts to you · + $90 / month'},
+ {id:'ar',st:'06',t:'See it in your room (web AR)',p:1200,pi:4300,s:'Your product at real size in their room, no app. Plus $180 per product'},
+ {id:'owner',st:'06',t:'Change it yourself',p:300,pi:1000,s:'A code word on your own page unlocks prices and hours for editing'},
+ {id:'stats',st:'06',t:'Numbers you can act on',p:300,pi:1000,s:'Who came, what they clicked, where they left — one report a month, in words'}
 ];
 var EXTRAS=[
- {id:'lang',t:'Extra language',p:200,s:'Second language track or subtitles'},
- {id:'ads',t:'Paid-ads licence, 30 days',p:700,s:'Unlimited paid distribution for a month'},
- {id:'rev',t:'Extra revision round',p:250,s:'One more pass beyond the two included'},
+ {id:'cuts',t:'3 vertical cutdowns',p:350,pi:1200,s:'Three vertical versions of your video for Reels, TikTok and Shorts'},
+ {id:'lang',t:'Extra language',p:200,pi:700,s:'Second language track or subtitles'},
+ {id:'ads',t:'Paid-ads licence, 30 days',p:700,pi:2500,s:'Unlimited paid distribution for a month'},
+ {id:'rev',t:'Extra revision round',p:250,pi:900,s:'One more pass beyond the two included'},
  {id:'rush',t:'Rush delivery',p:0,pct:.3,s:'Everything moves to the front of the queue'}
 ];
+/* Connected and Growth have no shekel price (Roma, 23.09.2026: leave them as they are), so they
+   stay in dollars in every language */
 var PLANS=[
- {id:'care',t:'Care',p:29,s:'Hosting, domain, backups, uptime, two changes a month'},
+ {id:'care',t:'Care',p:50,pi:150,s:'Hosting, domain, backups, uptime, two changes a month'},
  {id:'conn',t:'Connected',p:79,s:'Care plus the assistant and leads pushed to WhatsApp, Telegram and email'},
  {id:'growth',t:'Growth',p:149,s:'Connected plus monthly numbers and one change made from them — first month free'}
 ];
+/* 23.09.2026: six of these prices are kept in /services.json, the registry the WhatsApp agent
+   quotes from. The numbers above are the fallback; once the registry loads it wins and the list
+   is drawn again, so the page and the agent never name two different prices. */
+(function(){
+ if(!window.fetch)return;
+ fetch('/services.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(j){
+  if(!j||!j.services)return;
+  function sv(id){for(var i=0;i<j.services.length;i++){if(j.services[i].id===id)return j.services[i]}return null}
+  function op(s,id){var o=(sv(s)||{}).options||[];for(var i=0;i<o.length;i++){if(o[i].id===id)return o[i]}return null}
+  function num(o,k){var v=Number(o&&o[k]);return isFinite(v)&&v>0?Math.round(v):0}
+  /* the registry item behind each line, and the pair of fields it is read from */
+  var SRC={single:op('video','ad_spot'),film:op('video','brand_film'),brand:op('brand','identity'),site:sv('site'),
+    bot:op('automation','bot'),agent:op('automation','agent'),cuts:op('video','cutdowns')};
+  var care=op('site','care'),ch=false;
+  function set(o,src,ku,ki){var u=num(src,ku),i=num(src,ki);
+    if(u&&u!==o.p){o.p=u;ch=true} if(i&&i!==o.pi){o.pi=i;ch=true}}
+  MODS.concat(EXTRAS).forEach(function(m){if(SRC[m.id])set(m,SRC[m.id],'price_usd','price_ils')});
+  PLANS.forEach(function(pl){if(pl.id==='care'&&care)set(pl,care,'monthly_usd','monthly_ils')});
+  if(ch)render();
+ }).catch(function(){});
+})();
 var STARTS=[
- {id:'zero',t:'Just a product',s:'No brand, no idea how to sell it yet',mods:['pos','brand','logoanim','concept','film','prodads','launch']},
- {id:'brandy',t:'Brand, no campaign',s:'The look exists, the ads do not',mods:['concept','film','prodads','launch']},
+ {id:'zero',t:'Just a product',s:'No brand, no idea how to sell it yet',mods:['pos','brand','logoanim','concept','film','prodads']},
+ {id:'brandy',t:'Brand, no campaign',s:'The look exists, the ads do not',mods:['concept','film','prodads']},
  {id:'one',t:'One piece only',s:'You know exactly what you need',mods:['single']}
 ];
 var state={start:null,mods:{},extras:{},plan:null};
 var gS=document.getElementById('g-start'),gM=document.getElementById('g-mod'),gE=document.getElementById('g-extra');
-function money(n){return '$'+n.toLocaleString('en-US')}
+/* 23.09.2026: a visitor reading the page in Hebrew sees every price and the total in shekels,
+   everyone else in dollars */
+function ils(){var l=window.gvLang?window.gvLang():document.documentElement.lang;return String(l||'en').slice(0,2).toLowerCase()==='he'}
+function usdS(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function ilsS(n){return Math.round(n).toLocaleString('en-US')+' ₪'}
+function money(n){return ils()?ilsS(n):usdS(n)}
+function priceOf(o){return ils()&&o.pi?o.pi:o.p}
+/* a monthly plan: Connected and Growth have no shekel price and stay in dollars */
+function planAmt(pl){return ils()&&pl.pi?ilsS(pl.pi):usdS(pl.p)}
+function planMo(pl){return planAmt(pl)+(ils()?' לחודש':' / mo')}
 function opt(on,title,sub,price,k,qty){return '<button class="opt'+(on?' on':'')+'" data-k="'+k+'"><span class="tick"></span><div class="t">'+title+'</div><div class="s">'+sub+'</div>'+(qty||'')+(price?'<div class="pr">'+price+'</div>':'')+'</button>'}
 /* how many paintings are in the order right now: true means one */
 function modN(m){var c=state.mods[m.id];if(!c)return 0;return (m.q&&c!==true)?c:1;}
 function modP(m){
-  if(!m.q)return m.p;
-  var c=Math.max(modN(m),1),t=m.p;
+  if(!m.q)return priceOf(m);
+  var c=Math.max(modN(m),1),t=priceOf(m);
   /* a ladder, not a flat rate: the more works in one screen, the cheaper each next one */
   for(var i=2;i<=c;i++){t+=(m.q.next2&&i>=m.q.from)?m.q.next2:m.q.next;}
   return t;
@@ -2461,7 +2498,7 @@ function render(){
     var c=modN(m);
     var q=(m.q&&c)?'<div class="qty"><span class="qb" data-q="'+m.id+':-" role="button" aria-label="one less">&minus;</span><b>'+c+' '+(c===1?m.q.one:m.q.many)+'</b><span class="qb" data-q="'+m.id+':+" role="button" aria-label="one more">+</span>'+(c>1?'<i class="qe">'+money(Math.round(modP(m)/c))+' each</i>':'')+'</div>':'';
     return opt(!!c,m.st+' - '+m.t,m.s,money(modP(m)),'m:'+m.id,q)}).join('');
-  gE.innerHTML=EXTRAS.map(function(e){return opt(!!state.extras[e.id],e.t,e.s,e.pct?'+'+(e.pct*100)+'%':'+'+money(e.p),'e:'+e.id)}).join('')+'<div class="planlab">Keep it alive — monthly, cancel any month</div><div class="planrow">'+PLANS.map(function(pl){return opt(state.plan===pl.id,pl.t+' — care plan',pl.s,money(pl.p)+' / mo','p:'+pl.id)}).join('')+'</div>';
+  gE.innerHTML=EXTRAS.map(function(e){return opt(!!state.extras[e.id],e.t,e.s,e.pct?'+'+(e.pct*100)+'%':'+'+money(priceOf(e)),'e:'+e.id)}).join('')+'<div class="planlab">Keep it alive — monthly, cancel any month</div><div class="planrow">'+PLANS.map(function(pl){return opt(state.plan===pl.id,pl.t+' — care plan',pl.s,planMo(pl),'p:'+pl.id)}).join('')+'</div>';
   document.querySelectorAll('#g-mod .qb').forEach(function(q){q.addEventListener('click',function(e){
     e.stopPropagation();e.preventDefault();
     var a=q.getAttribute('data-q').split(':'),m=MODS.filter(function(x){return x.id===a[0]})[0];
@@ -2481,6 +2518,9 @@ function render(){
   calc();
 }
 window.calc=calc;
+/* the WhatsApp texts follow the page language, and so does the currency (shekels in Hebrew):
+   draw the list and the total again on a switch */
+document.addEventListener('gvlang',function(){render()});
 window.W3_KEY='33ac8d6d-a278-461b-99cb-86e73b69ca88';
 window.lastOrderText='';window.lastOrderTotal='';
 window.pickStart=function(v){state.start=v;state.mods={};var st=STARTS.filter(function(s){return s.id===v})[0];if(st)st.mods.forEach(function(m){state.mods[m]=1});render()};
@@ -2494,10 +2534,10 @@ function calc(){
   var off=n>=5?.15:(n>=3?.1:0);
   var disc=Math.round(base*off);
   EXTRAS.forEach(function(e){if(!state.extras[e.id])return;
-    if(e.pct){pct+=e.pct;rows.push([e.t,'+'+(e.pct*100)+'%',''])}else{add+=e.p;rows.push([e.t,'+'+money(e.p),''])}});
+    if(e.pct){pct+=e.pct;rows.push([e.t,'+'+(e.pct*100)+'%',''])}else{var ep=priceOf(e);add+=ep;rows.push([e.t,'+'+money(ep),''])}});
   if(off){rows.push(['Package discount - '+(off*100)+'%','-'+money(disc),'off'])}
   var plan=PLANS.filter(function(x){return x.id===state.plan})[0];
-  if(plan){rows.push([plan.t+' care plan, monthly',money(plan.p)+' / mo','mo'])}
+  if(plan){rows.push([plan.t+' care plan, monthly',planMo(plan),'mo'])}
   /* the concept tapped in the brand ring, named at the top of the summary so the
      tap is seen to have done something; it also travels with the order letter */
   if(window.gvConcept&&n){rows.unshift(['Logo concept: '+window.gvConcept,'chosen',''])}
@@ -2508,12 +2548,25 @@ function calc(){
   document.getElementById('dep').textContent=n?('Deposit to start: '+money(Math.round(total/2))+' — the rest on delivery. Timeline: '+(n>=5?'3–5 weeks':(n>=3?'2–3 weeks':'3–7 days'))+'.'):'50% to start, 50% on delivery.';
   var name=briefVal('q1'),mail=briefVal('q3'),brief=briefVal('q5');
   var txt='New order — GenVidPro\n\n'+rows.map(function(r){return '• '+r[0]+' — '+r[1]}).join('\n')+
-    '\n\nTotal: '+money(total)+'\nDeposit: '+money(Math.round(total/2))+(plan?'\nCare plan: '+plan.t+' — '+money(plan.p)+' / month':'')+
+    '\n\nTotal: '+money(total)+'\nDeposit: '+money(Math.round(total/2))+(plan?'\nCare plan: '+plan.t+' — '+planAmt(plan)+' / month':'')+
     '\n\nBRIEF\n'+briefText();
   window.lastOrderText=txt; window.lastOrderTotal=money(total);
   document.getElementById('send-mail').href='mailto:genvidpro@gmail.com?subject='+encodeURIComponent('New order - '+money(total))+'&body='+encodeURIComponent(txt);
-  var wa=document.getElementById('send-wa'); if(wa){wa.href='https://wa.me/972545517210?text='+encodeURIComponent(txt)}
-  var ad=document.getElementById('ask-disc'); if(ad){var who=briefVal('q1')||'a new client'; var dtxt='Hi Roman, this is '+who+'. I am looking at '+(n?rows.filter(function(r){return r[2]!=='off'&&r[2]!=='mo'}).map(function(r){return r[0]}).join(', '):'a package')+' for '+money(total)+'. Is there any extra discount you could offer me?'; ad.href='https://wa.me/972545517210?text='+encodeURIComponent(dtxt); var sd=document.getElementById('stick-disc'); if(sd)sd.href=ad.href}
+  /* 23.09.2026: the order and the ask for a discount go to the WhatsApp sales agent as service
+     "order" (gvp-wa.js adds the tag line, the agent files it as a ready lead). The order itself
+     stays in English for Roman; the first line follows the page language, so the agent answers
+     the visitor in it. */
+  var L2=String(document.documentElement.lang||'en').slice(0,2).toLowerCase();
+  var HEAD={he:'הזמנה חדשה, GenVidPro',ru:'Новый заказ, GenVidPro'};
+  var wtxt=HEAD[L2]?txt.replace(/^[^\n]*/,function(){return HEAD[L2]}):txt;
+  function waOrder(el,t){if(!el)return;el.setAttribute('data-gvp-service','order');el.setAttribute('data-gvp-text',t);
+    el.href=window.GVPWA?GVPWA.link('order',{text:t,source:'site'}):'https://wa.me/972539760820?text='+encodeURIComponent(t)}
+  waOrder(document.getElementById('send-wa'),wtxt);
+  var who=briefVal('q1'),items=n?rows.filter(function(r){return r[2]!=='off'&&r[2]!=='mo'}).map(function(r){return r[0]}).join(', '):'';
+  var dtxt=L2==='he'?('היי רומן'+(who?', כאן '+who:'')+'.'+(items?' בחבילה: '+items+', בסך הכול '+money(total)+'.':'')+' יש אפשרות להנחה נוספת?'):
+    L2==='ru'?('Здравствуйте, Роман!'+(who?' Это '+who+'.':'')+(items?' Смотрю пакет: '+items+', итого '+money(total)+'.':'')+' Можно ли получить дополнительную скидку?'):
+    ('Hi Roman, this is '+(who||'a new client')+'. I am looking at '+(items||'a package')+' for '+money(total)+'. Is there any extra discount you could offer me?');
+  waOrder(document.getElementById('ask-disc'),dtxt); waOrder(document.getElementById('stick-disc'),dtxt);
   var done=(typeof briefDone==='function')?briefDone():0, need=(typeof REQ!=='undefined')?REQ.length:0, ok=done>=need;
   var rn=document.getElementById('req-n'); if(rn){rn.textContent=done+'/'+need}
   if(ok&&window.gvpEv)gvpEv('brief_done');
@@ -2528,7 +2581,7 @@ function calc(){
   if(item.length>120){item=item.slice(0,117)+'...'}
   var pp='https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business='+encodeURIComponent('romachorny@gmail.com')+
     '&item_name='+encodeURIComponent('GenVidPro deposit 50% — '+item)+
-    '&amount='+dep+'&currency_code=USD&no_shipping=1&no_note=0'+
+    '&amount='+dep+'&currency_code='+(ils()?'ILS':'USD')+'&no_shipping=1&no_note=0'+
     '&return='+encodeURIComponent('https://genvidpro.com/thanks.html')+
     '&cancel_return='+encodeURIComponent('https://genvidpro.com/');
   var ppb=document.getElementById('send-pp');
@@ -2562,7 +2615,7 @@ function drawLogos(){
   lgrid.innerHTML=LV.map(function(v,ix){return '<div class="lcard" data-ix="'+ix+'"><div class="lmark">'+v.h(n,i)+'</div><span class="lname">'+v.t+'</span></div>'}).join('');
   lgrid.querySelectorAll('.lcard').forEach(function(c){c.addEventListener('click',function(){
     var st=LV[+c.getAttribute('data-ix')].t;
-    state.start='zero';state.mods={};['pos','brand','logoanim','concept','film','prodads','launch'].forEach(function(m){state.mods[m]=1});
+    state.start='zero';state.mods={};['pos','brand','logoanim','concept','film','prodads'].forEach(function(m){state.mods[m]=1});
     var fb=document.getElementById('q2'); if(fb){fb.value=raw}
     var fs=document.getElementById('q29'); if(fs){fs.value='Logo direction from the simulator: '+st}
     render();
@@ -2771,7 +2824,7 @@ render();
 <!-- the sticky bar is the third place a running total is shown, so the ask for a
      discount stands next to that number too; on a phone it is the only total on
      screen while the brief is being filled in -->
-<div class="stick" id="stick"><span class="stk">Your package</span><b id="stick-total">$0</b><a class="gvc-disc gvc-disc-sm" id="stick-disc" href="https://wa.me/972545517210?text=Hi%20Roman%2C%20is%20there%20a%20discount%20for%20my%20package%3F" target="_blank" rel="noopener" aria-label="Ask for a discount"></a><a href="#order" class="btn p sm" id="stick-go">Review &amp; send</a></div>
+<div class="stick" id="stick"><span class="stk">Your package</span><b id="stick-total">$0</b><a class="gvc-disc gvc-disc-sm" id="stick-disc" href="https://wa.me/972539760820" data-gvp-service="order" data-gvp-text="Hi Roman, is there a discount for my package?" target="_blank" rel="noopener" aria-label="Ask for a discount"></a><a href="#order" class="btn p sm" id="stick-go">Review &amp; send</a></div>
 <script>
 (function(){var st=document.getElementById('stick'),ord=document.getElementById('order'),sum=document.querySelector('#order .sum'); if(!st||!ord)return;
 function upd(){var r=ord.getBoundingClientRect(),sr=sum?sum.getBoundingClientRect():null; var inside=r.top<window.innerHeight*0.5&&r.bottom>window.innerHeight; var sumVisible=sr&&sr.top<window.innerHeight&&sr.bottom>0; st.classList.toggle('show',inside&&!sumVisible&&(window.orderN||0)>0)}
@@ -2904,11 +2957,21 @@ a.addEventListener('click',function(e){
   .then(function(r){if(!r.ok){window.gvpLeadStage=prev;window.gvpLeadSent=prev>0}})
   .catch(function(){window.gvpLeadStage=prev;window.gvpLeadSent=prev>0});
  }
+ /* 23.09.2026: when /chat marks a lead, the chat shows one button to the WhatsApp sales agent,
+    with the services talked about and the visitor's last words behind a ref code. The button
+    moves to the bottom of the log with every new lead answer. */
+ function waHand(j){
+  if(!window.GVPWA||!GVPWA.chatButton)return;
+  var old=log.querySelector('.gvp-chat-wa'); if(old)log.appendChild(old);
+  var mine=hist.filter(function(m){return m.role==='user'}).slice(-2).map(function(m){return m.content}).join(' | ').slice(0,300);
+  GVPWA.chatButton(log,{services:(j&&j.services)||[],note:(j&&j.note)||mine,source:'ask-chat'});
+  log.scrollTop=log.scrollHeight;
+ }
  form.addEventListener('submit',function(e){e.preventDefault();var q=inp.value.trim();if(!q)return;inp.value='';add(q,'me');hist.push({role:'user',content:q}); if(window.gvpEv)gvpEv('claudia_msg',{},true);
   var w=add('…','bot wait');
   fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:hist,s:window.GVP_SID,notified:!!window.gvpLeadSent,p:window.gvpPlace?window.gvpPlace():{path:location.pathname}})})
   .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
-  .then(function(o){ if(o.ok&&o.j.reply){w.textContent=o.j.reply;w.className='hm bot';hist.push({role:'assistant',content:o.j.reply}); if(window.gvSay)window.gvSay(o.j.reply); if(o.j.lead)notifyLead(!!o.j.contact)}
+  .then(function(o){ if(o.ok&&o.j.reply){w.textContent=o.j.reply;w.className='hm bot';hist.push({role:'assistant',content:o.j.reply}); if(window.gvSay)window.gvSay(o.j.reply); if(o.j.lead){notifyLead(!!o.j.contact);waHand(o.j)}}
    else{w.textContent=msgOff();w.className='hm bot'} })
   .catch(function(){w.textContent=msgNo();w.className='hm bot'});
  });
@@ -3904,8 +3967,9 @@ setTimeout(function(){fitAll();fitSeals();},900);setTimeout(function(){fitAll();
   if(/^#(order|faq|contact)$/.test(location.hash)){show(true,false);try{history.replaceState({gv:'order'},'',location.hash)}catch(e){}}
 })();
 </script>
-<script src="i18n.js?v=15" defer></script>
-<script src="/gv-chrome.js?v=17" defer></script>
+<script src="i18n.js?v=17" defer></script>
+<script src="/gv-chrome.js?v=18" defer></script>
+<script src="/gvp-wa.js?v=1" defer></script>
 <script src="/push.js?v=2" defer></script>
 </body>
 </html>

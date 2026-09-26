@@ -217,9 +217,9 @@ footer{padding:30px 0 110px;color:var(--dim);font-size:12px;border-top:1px solid
 
   <div class="lab m" style="margin-top:22px">How many pieces</div>
   <div class="opts c3" id="scope">
-    <label class="opt on"><input type="radio" name="scope" value="One artwork, 2 minute seamless loop" data-price="1800" checked><span><span class="t">One artwork</span><span class="s">2 minute seamless loop</span><span class="s price">from $1,800</span></span></label>
-    <label class="opt"><input type="radio" name="scope" value="Series of 3" data-price="4500"><span><span class="t">Series of 3</span><span class="s">Three works, one programme</span><span class="s price">from $4,500 &nbsp;($1,500 per work, save 17%)</span></span></label>
-    <label class="opt"><input type="radio" name="scope" value="Series of 8, full set" data-price="9600"><span><span class="t">Series of 8</span><span class="s">The full set for a screen</span><span class="s price">from $9,600 &nbsp;($1,200 per work, save 33%)</span></span></label>
+    <label class="opt on"><input type="radio" name="scope" value="One artwork, 2 minute seamless loop" data-price="850" data-price-ils="2900" checked><span><span class="t">One artwork</span><span class="s">2 minute seamless loop</span><span class="s price">from $850</span></span></label>
+    <label class="opt"><input type="radio" name="scope" value="Series of 3" data-price="2100" data-price-ils="7500"><span><span class="t">Series of 3</span><span class="s">Three works, one programme</span><span class="s price">from $2,100</span></span></label>
+    <label class="opt"><input type="radio" name="scope" value="Series of 8, full set" data-price="0"><span><span class="t">Series of 8</span><span class="s">The full set for a screen</span><span class="s price">price: Roman will confirm</span></span></label>
   </div>
 
   <div class="lab m" style="margin-top:22px">Formats</div>
@@ -411,6 +411,8 @@ function chips(){
   }));
   box.innerHTML=all.length?('<div class="m" style="width:100%">Chosen: '+all.length+'</div>'+all.join('')):'';
   if(window.gvT)gvT();
+  /* the works chosen travel with the ask for a discount */
+  touched=true;estimate();
 }
 $('chosen').addEventListener('click',function(e){
   var d=e.target.closest('[data-drop]'),u=e.target.closest('[data-updrop]');
@@ -475,7 +477,40 @@ document.querySelectorAll('.opt input').forEach(function(inp){
 });
 
 /* ---------- the estimate ---------- */
-function money(n){return '$'+Math.round(n).toLocaleString('en-US')}
+/* 23.09.2026: a visitor reading the page in Hebrew sees the estimate in shekels (registry
+   price_ils: one work 2,900, series of 3 7,500), everyone else in dollars */
+function ils(){var l=window.gvLang?window.gvLang():document.documentElement.lang;return String(l||'en').slice(0,2).toLowerCase()==='he'}
+function money(n){n=Math.round(n).toLocaleString('en-US');return ils()?n+' ₪':'$'+n}
+/* 23.09.2026: the ask for a discount goes to the WhatsApp sales agent as service "originals",
+   in the page language, and what the visitor chose travels behind a ref code. It is one link
+   for the life of the page, so a code is made once per change rather than once per redraw,
+   and only after the visitor has chosen something. The series of 8 has no set price: Roman
+   confirms it, and the estimate says so instead of a number. */
+var discBox=document.createElement('div');
+discBox.innerHTML='<a class="gvc-disc" id="ask-disc" target="_blank" rel="noopener" href="https://wa.me/972539760820" data-gvp-service="originals" data-gvp-source="living-paintings">Ask for a discount</a>';
+var disc=discBox.firstChild,discKey='',touched=false;
+var DISC={
+  en:function(s,e){return 'Hi Roman, I am looking at a living painting, '+s+', estimate '+e+'. Is there any discount you could offer me?'},
+  he:function(s,e){return 'היי רומן, מדובר בציור חי, '+s+', הערכה '+e+'. יש אפשרות להנחה?'},
+  ru:function(s,e){return 'Здравствуйте, Роман! Смотрю живую картину: '+s+', оценка '+e+'. Можно ли получить скидку?'}
+};
+var TBC={en:'Roman will confirm',he:'רומן יאשר',ru:'Роман подтвердит'};
+function discSync(scope,sum){
+  var l=String(document.documentElement.lang||'en').slice(0,2).toLowerCase();if(!DISC[l])l='en';
+  var dtxt=DISC[l](scope,sum?money(sum):TBC[l]);
+  disc.setAttribute('data-gvp-text',dtxt);
+  if(!window.GVPWA){disc.href='https://wa.me/972539760820?text='+encodeURIComponent(dtxt);return}
+  GVPWA.refresh();
+  if(!touched)return;
+  var works=picked.map(function(p){return p.title}).concat(uploads.map(function(u){return u.name}));
+  var fm=checked('fmt');
+  var ctx={answers:{artwork:(works.length?works.join(', '):(checked('kind')[0]||'')).slice(0,200),estimate:sum?money(sum):'Roman will confirm'},
+    note:(scope+'; '+(fm.length?fm.join(', '):'no format chosen')+'; '+(checked('fmt4k').length?'4K master':'Full HD')+'; '+(checked('lic')[0]||'Non-exclusive')+' licence').slice(0,300)};
+  var ot=/^One artwork/.test(scope)?'loop':(/^Series of 3/.test(scope)?'series3':'');
+  if(ot)ctx.answers.orig_type=ot;
+  var key=JSON.stringify(ctx);
+  if(key!==discKey){discKey=key;GVPWA.setContext(disc,ctx)}
+}
 function estimate(){
   var kind=checked('kind')[0]||'A painting brought to life';
   var painting=kind.indexOf('painting')>=0;
@@ -483,25 +518,24 @@ function estimate(){
   var q=$('quote');
   if(!painting){q.innerHTML='Custom work &mdash; we price it after we understand the brief. Quote within 24 hours.';return null;}
   var sc=document.querySelector('input[name="scope"]:checked');
-  var base=sc?parseInt(sc.getAttribute('data-price'),10):0;
-  if(!base){q.innerHTML='We send a quote within 24 hours.';return null;}
-  var sum=base;
-  if(checked('fmt4k').length)sum*=1.3;
-  if((checked('lic')[0]||'')==='Exclusive')sum*=2.5;
-  sum=Math.round(sum/100)*100;
-  var h='<b>Estimate: '+money(sum)+'</b><span class="q2">Final quote within 24 hours.</span>';
+  if(!sc){q.innerHTML='We send a quote within 24 hours.';return null;}
+  var base=parseInt(sc.getAttribute(ils()?'data-price-ils':'data-price'),10)||0,sum=base;
+  if(sum){
+    if(checked('fmt4k').length)sum*=1.3;
+    if((checked('lic')[0]||'')==='Exclusive')sum*=2.5;
+    /* a multiplied price is rounded to the hundred; the base price is shown as it is ($850) */
+    if(sum!==base)sum=Math.round(sum/100)*100;
+  }
+  var h='<b>Estimate: '+(sum?money(sum):'Roman will confirm')+'</b><span class="q2">Final quote within 24 hours.</span>';
   if(/Series of 8/.test(sc.value)&&checked('fmt').indexOf('Ultrawide for LED wall')>=0){
     h+='<div class="q3">Planning a full 30 minute programme for a venue? We price that separately.</div>';
   }
-  /* the same ask for a discount that stands by the price on the front page, with
-     the number and the scope already written into the message */
-  var dtxt='Hi Roman, I am looking at a living painting, '+(sc.value||'')+', estimate '+money(sum)+
-    '. Is there any discount you could offer me?';
-  h+='<a class="gvc-disc" id="ask-disc" target="_blank" rel="noopener" href="https://wa.me/972545517210?text='+
-    encodeURIComponent(dtxt)+'">Ask for a discount</a>';
-  q.innerHTML=h;if(window.gvT)gvT();return sum;
+  q.innerHTML=h;q.appendChild(disc);discSync(sc.value||'',sum);
+  if(window.gvT)gvT();return sum||null;
 }
-document.querySelectorAll('.opt input').forEach(function(inp){inp.addEventListener('change',estimate)});
+document.querySelectorAll('.opt input').forEach(function(inp){inp.addEventListener('change',function(){touched=true;estimate()})});
+/* the discount text follows the page language */
+document.addEventListener('gvlang',function(){estimate()});
 estimate();
 
 /* ---------- sending ---------- */
@@ -545,7 +579,7 @@ $('form').addEventListener('submit',function(e){
   lines.push('MASTER: '+(checked('fmt4k').length?'4K (extra)':'Full HD'));
   lines.push('LICENCE: '+(checked('lic')[0]||'—'));
   var est=estimate();
-  lines.push('ESTIMATE SHOWN: '+(est?money(est):'none (custom work)'));
+  lines.push('ESTIMATE SHOWN: '+(est?money(est):(wantsPainting?'Roman will confirm':'none (custom work)')));
   lines.push('');
   lines.push('NAME: '+val('name'));
   lines.push('EMAIL: '+val('email'));
@@ -577,7 +611,8 @@ $('form').addEventListener('submit',function(e){
 });
 })();
 </script>
-<script src="/assistant.js?v=5" defer></script>
-<script src="/i18n.js?v=15" defer></script>
-<script src="/gv-chrome.js?v=17" defer></script>
+<script src="/assistant.js?v=6" defer></script>
+<script src="/i18n.js?v=17" defer></script>
+<script src="/gv-chrome.js?v=18" defer></script>
+<script src="/gvp-wa.js?v=1" defer></script>
 </body></html>

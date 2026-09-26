@@ -16,7 +16,7 @@
   if (window.__gvChrome) return;
   window.__gvChrome = 1;
 
-  var WA   = 'https://wa.me/972545517210';
+  var WA   = 'https://wa.me/972539760820';   // the WhatsApp sales agent; gvp-wa.js adds the text
   var MAIL = 'mailto:genvidpro@gmail.com';
   var TG   = 'https://t.me/GenVidPro';
   var LI   = 'https://www.linkedin.com/in/genvidpro';
@@ -322,7 +322,7 @@
     var cap = withCap ? '<div class="gvc-cap">Talk to a human</div>' : '';
     w.innerHTML = cap +
       '<div class="gvc-row">' +
-      '<a href="' + WA + '" target="_blank" rel="noopener">WhatsApp</a>' +
+      '<a href="' + WA + '" data-gvp-service="general" target="_blank" rel="noopener">WhatsApp</a>' +
       '<a href="' + MAIL + '">Email</a>' +
       '<a href="' + TG + '" target="_blank" rel="noopener">Telegram</a>' +
       '<a href="' + LI + '" target="_blank" rel="noopener">LinkedIn</a>' +

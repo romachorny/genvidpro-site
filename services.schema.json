@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://genvidpro.com/services.schema.json",
+  "title": "GenVidPro service registry",
+  "type": "object",
+  "required": ["version", "wa_number", "languages", "work_link", "currency_rule", "bundle_rule", "fallback", "categories", "goals", "intents", "texts", "services"],
+  "$defs": {
+    "l10n": {
+      "type": "object",
+      "required": ["he", "en", "ru", "ar"],
+      "properties": {
+        "he": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 },
+        "ru": { "type": "string", "minLength": 1 },
+        "ar": { "type": "string", "minLength": 1 }
+      }
+    },
+    "l10nList": {
+      "type": "object",
+      "required": ["he", "en", "ru", "ar"],
+      "properties": {
+        "he": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "en": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "ru": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "ar": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,30}$" },
+    "price": { "type": "integer", "minimum": 1 },
+    "choice": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "label": { "$ref": "#/$defs/l10n" } }
+    },
+    "question": {
+      "type": "object",
+      "required": ["id", "type", "text"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "enum": ["text", "buttons", "list"] },
+        "text": { "$ref": "#/$defs/l10n" },
+        "choices": { "type": "array", "minItems": 2, "maxItems": 10, "items": { "$ref": "#/$defs/choice" } },
+        "choices_from": { "enum": ["options"] },
+        "add_unsure": { "type": "boolean" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "text" } } }, "then": { "not": { "anyOf": [ { "required": ["choices"] }, { "required": ["choices_from"] } ] } } },
+        { "if": { "properties": { "type": { "enum": ["buttons", "list"] } } }, "then": { "anyOf": [ { "required": ["choices"] }, { "required": ["choices_from"] } ] } }
+      ]
+    },
+    "option": {
+      "type": "object",
+      "required": ["id", "kind", "names"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["from", "addon", "monthly"] },
+        "names": { "$ref": "#/$defs/l10n" },
+        "short": { "$ref": "#/$defs/l10n" },
+        "note": { "$ref": "#/$defs/l10n" },
+        "price_ils": { "$ref": "#/$defs/price" },
+        "price_usd": { "$ref": "#/$defs/price" },
+        "monthly_ils": { "$ref": "#/$defs/price" },
+        "monthly_usd": { "$ref": "#/$defs/price" }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "enum": ["from", "addon"] } } }, "then": { "required": ["price_ils", "price_usd"] } },
+        { "if": { "properties": { "kind": { "const": "monthly" } } }, "then": { "required": ["monthly_ils", "monthly_usd"] } }
+      ]
+    },
+    "service": {
+      "type": "object",
+      "required": ["id", "tag", "active", "category", "names", "keywords", "pitch", "included", "timeline", "price_ils", "price_usd", "options", "brief_questions", "never", "work_link"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "tag": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{1,30}$" },
+        "active": { "type": "boolean" },
+        "order": { "type": "integer" },
+        "category": { "$ref": "#/$defs/id" },
+        "names": { "$ref": "#/$defs/l10n" },
+        "short": { "$ref": "#/$defs/l10n" },
+        "keywords": { "$ref": "#/$defs/l10nList" },
+        "pitch": { "$ref": "#/$defs/l10n" },
+        "included": { "$ref": "#/$defs/l10n" },
+        "timeline": { "$ref": "#/$defs/l10n" },
+        "price_ils": { "$ref": "#/$defs/price" },
+        "price_usd": { "$ref": "#/$defs/price" },
+        "monthly_ils": { "$ref": "#/$defs/price" },
+        "monthly_usd": { "$ref": "#/$defs/price" },
+        "options": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/option" } },
+        "brief_questions": { "type": "array", "minItems": 4, "maxItems": 6, "items": { "$ref": "#/$defs/question" } },
+        "never": { "type": "array", "items": { "type": "string" } },
+        "work_link": { "type": "string", "pattern": "^https://" }
+      }
+    }
+  },
+  "properties": {
+    "version": { "type": "string" },
+    "wa_number": { "const": "972539760820" },
+    "languages": { "const": ["he", "en", "ru", "ar"] },
+    "owner": { "$ref": "#/$defs/l10n" },
+    "work_link": { "const": "https://genvidpro.com/work" },
+    "order_tag": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{1,30}$" },
+    "general_tag": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{1,30}$" },
+    "currency_rule": {
+      "type": "object",
+      "required": ["ils_if_language", "ils_if_country_code", "usd_from_ils", "format"],
+      "properties": {
+        "usd_from_ils": {
+          "type": "object",
+          "required": ["divide_by", "round_up_to"],
+          "properties": { "divide_by": { "const": 3.6 }, "round_up_to": { "const": 50 } }
+        }
+      }
+    },
+    "bundle_rule": {
+      "type": "object",
+      "required": ["tiers"],
+      "properties": {
+        "tiers": {
+          "type": "array", "minItems": 1,
+          "items": { "type": "object", "required": ["min_services", "percent"], "properties": { "min_services": { "type": "integer", "minimum": 2 }, "percent": { "type": "number", "exclusiveMinimum": 0, "maximum": 50 } } }
+        }
+      }
+    },
+    "fallback": { "$ref": "#/$defs/l10n" },
+    "categories": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "names"], "properties": { "id": { "$ref": "#/$defs/id" }, "names": { "$ref": "#/$defs/l10n" } } } },
+    "goals": { "type": "array", "minItems": 2, "maxItems": 10, "items": { "type": "object", "required": ["id", "text", "categories"], "properties": { "id": { "$ref": "#/$defs/id" }, "text": { "$ref": "#/$defs/l10n" }, "categories": { "type": "array", "items": { "$ref": "#/$defs/id" } }, "keywords": { "$ref": "#/$defs/l10nList" } } } },
+    "intents": { "type": "object", "required": ["price", "timeline", "included", "vat", "discount", "human", "work", "menu", "thanks", "injection"], "additionalProperties": { "$ref": "#/$defs/l10nList" } },
+    "texts": { "type": "object" },
+    "services": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/service" } }
+  }
+}

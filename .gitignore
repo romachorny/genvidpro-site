@@ -1,0 +1,8 @@
+# Media binaries live on the server, not in git. ops/media.sha256 lists every one
+# with its checksum; ops/fetch-media.sh restores them.
+*.mp4
+# Local tooling
+.wrangler/
+__pycache__/*.pyc
+.claude/
+node_modules/

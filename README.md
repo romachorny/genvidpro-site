@@ -36,14 +36,9 @@ No framework, no build step, no bundler. Plain HTML, CSS and JavaScript, served 
 
 ## Deploy
 
+Published from roma-server only, from this tree, by `ops/deploy.sh`. The laptop copy is a mirror and does not deploy. How it works and why: [`ops/README.md`](ops/README.md).
 
-```
-wrangler pages deploy . --project-name genvidpro
-```
-
-
-Media (`videos/`, `media/`) is intentionally not committed: masters live outside the repository and are published separately.
-
+Videos (`*.mp4`) are not committed; `ops/media.sha256` lists every one with its checksum and `ops/fetch-media.sh` restores them.
 
 ## How this is built
 

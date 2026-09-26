@@ -173,6 +173,11 @@
           hist.push({ role: 'assistant', content: o.j.reply });
           if (window.gvSay) window.gvSay(o.j.reply);
           if (o.j.lead) notifyLead(!!o.j.contact);
+          /* 23.09.2026: a lead gets one button to the WhatsApp agent, carrying what was said */
+          if (o.j.lead && window.GVPWA && window.GVPWA.chatButton) {
+            var wa = window.GVPWA.chatButton(log, { services: o.j.services || [], note: o.j.note || q, source: 'ask-chat' });
+            if (wa) { log.appendChild(wa); log.scrollTop = log.scrollHeight; }
+          }
         } else { w.textContent = t().off; w.className = 'gvpa-m bot'; }
       })
       .catch(function () { w.textContent = t().no; w.className = 'gvpa-m bot'; });

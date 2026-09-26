@@ -90,7 +90,7 @@ figure:hover .cap,figure:focus-visible .cap{opacity:1}
   <h2>Want one of these for your brand?</h2>
   <p>Tell me the product and the deadline. First answer within 24 hours.</p>
   <div class="cta">
-    <a class="p" href="https://wa.me/972545517210?text=Hi%20Roman%2C%20I%20saw%20your%20work%20page" target="_blank" rel="noopener">Start on WhatsApp</a>
+    <a class="p" href="https://wa.me/972539760820" data-gvp-service="video" target="_blank" rel="noopener">Start on WhatsApp</a>
     <a class="s" href="/#order">Build an order</a>
     <a class="s" href="mailto:genvidpro@gmail.com">genvidpro@gmail.com</a>
   </div>
@@ -136,11 +136,11 @@ var grid = document.getElementById('grid');
 /* justified rows: inside a row every tile keeps its own shape and they all
    end up the same height, because the width is shared in proportion to the
    aspect ratio (flex-grow = ratio, basis 0) */
-var LAYOUT = [[14,15],[0],[1],[2],[3,4],[5,6],[7,12],[8,9,10,11],[13]];
+var LAYOUT = [[0],[1],[2],[3,4],[14,15],[5,6],[7,12],[8,9,10,11],[13]];
 /* On a phone the wide films take the full width and the four vertical ones stand
    in pairs. One vertical tile at full width is 690 px tall on a 390-px phone, so
    those four were 2 800 px of scrolling for four works; in pairs it is half that. */
-var LAYOUT_M = [[14],[15],[0],[1],[2],[3],[4],[5],[6],[7],[8,9],[10,11],[12],[13]];
+var LAYOUT_M = [[0],[1],[2],[3],[4],[5],[14,15],[6],[7],[8,9],[10,11],[12],[13]];
 var rows = (mob ? LAYOUT_M : LAYOUT).map(function(r){ return r.map(function(i){ return W[i]; }); });
 
 rows.forEach(function(items){
@@ -252,6 +252,7 @@ lb.addEventListener('click', function(e){ if(e.target === lb) closeIt(); });
 addEventListener('keydown', function(e){ if(e.key === 'Escape') closeIt(); });
 </script>
 
-<script src="gv-chrome.js?v=17" defer></script>
-<script src="assistant.js?v=5" defer></script>
+<script src="gv-chrome.js?v=18" defer></script>
+<script src="/gvp-wa.js?v=1" defer></script>
+<script src="assistant.js?v=6" defer></script>
 </body></html>

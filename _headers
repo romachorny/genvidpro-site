@@ -1,0 +1,110 @@
+# The service worker and the manifest must never be held in a cache: a stale
+# worker would keep serving last week's site to a phone that already has it.
+/sw.js
+  Cache-Control: no-cache
+  Service-Worker-Allowed: /
+
+/manifest.json
+  Cache-Control: no-cache
+
+# The pages and the template engine must revalidate on every visit. Pages was
+# serving them with max-age=14400, so a fix took four hours to reach anyone who
+# had already opened the site that morning: 09.09.2026 Roma was still looking at
+# a builder with twelve categories an hour after five were deployed. no-cache
+# does not mean "download again", it means "ask first" — a 304 is a few bytes.
+/tpl-engine.js
+  Cache-Control: no-cache
+
+# The translator changes with the pages it translates. It was held for four hours,
+# so 10.09.2026 a fix to it never reached a phone that had opened the site an hour
+# earlier: the header and the footer went on being translated. no-cache means
+# "ask first", and the answer is a 304 of a few bytes.
+/i18n.js
+  Cache-Control: no-cache
+
+/assistant.js
+  Cache-Control: no-cache
+
+/gv-chrome.js
+  Cache-Control: no-cache
+
+# 15.09.2026: push.js changes with the pages it serves and was held for four hours
+/push.js
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
+
+/builder.html
+  Cache-Control: no-cache
+
+/
+  Cache-Control: no-cache
+
+/builder
+  Cache-Control: no-cache
+
+# Films and stills never change under the same name; let the edge and the browser
+# keep them for a week instead of asking again every four hours.
+/living-paintings
+  Cache-Control: no-cache
+
+/living-paintings.html
+  Cache-Control: no-cache
+
+/work
+  Cache-Control: no-cache
+
+/work.html
+  Cache-Control: no-cache
+
+/terms
+  Cache-Control: no-cache
+
+/terms.html
+  Cache-Control: no-cache
+
+/privacy
+  Cache-Control: no-cache
+
+/privacy.html
+  Cache-Control: no-cache
+
+/videos/*
+  Cache-Control: public, max-age=604800
+
+/media/*
+  Cache-Control: public, max-age=604800
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Everything the page needs comes from this domain, with two exceptions written out
+# below: the order letter goes to Web3Forms, and the styles and scripts are inline,
+# so they need 'unsafe-inline'. Anything else a stranger manages to inject — an
+# outside script, a beacon to their own server — the browser refuses. The builder
+# renders its templates in same-origin srcdoc frames, so frame-src allows 'self'
+# and blob:, and the templates pull their typefaces from Google Fonts.
+# microphone=(self) is deliberate: the dictation button in the chat needs it.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' blob: https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://genvidpro.com https://api.microlink.io https://iad.microlink.io https://images.metmuseum.org https://upload.wikimedia.org https://thumb.wikimedia.org https://commons.wikimedia.org; media-src 'self' blob: data: https://genvidpro.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.web3forms.com https://cloudflareinsights.com; form-action 'self' https://api.web3forms.com https://wa.me https://api.whatsapp.com; frame-src 'self' blob: data: https:; object-src 'none'; frame-ancestors 'self' https://genvidpro.com https://www.genvidpro.com https://*.genvidpro.pages.dev; base-uri 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: microphone=(self), camera=(), geolocation=(), payment=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000
+# 15.09.2026: X-Frame-Options: DENY is gone and frame-ancestors is no longer 'none'.
+# Both forbade our own "see your site on three screens" tool from showing
+# genvidpro.com. Clickjacking stays closed: only this site may frame this site.
+
+# 23.09.2026: the service registry is read by gvp-wa.js on app.genvidpro.com and by the
+# WhatsApp agent on roma-server. Cross-origin read is fine: it holds public prices only.
+/services.json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300
+
+/services.schema.json
+  Access-Control-Allow-Origin: *
+
+/gvp-wa.js
+  Cache-Control: no-cache
+  Access-Control-Allow-Origin: *
