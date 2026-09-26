@@ -43,7 +43,11 @@ while IFS= read -r f; do
     if [ "$code" = "404" ] || [ "$code" = "403" ]; then continue; fi
     miss=$((miss+1)); printf '%-44s HTTP %s\n' "$f" "$code" >> "$TMP/report.txt"; continue
   fi
-  norm < "$f" > "$TMP/a" 2>/dev/null
+  # Сравниваем ПОСЛЕДНЮЮ ВЫЛОЖЕННУЮ точку (HEAD), а не рабочие правки: смысл сторожа в том,
+  # чтобы поймать «на сайте есть то, чего в дереве нет» — то есть чужую выкладку поверх нас.
+  # Свои несохранённые правки это не дрейф, они как раз и едут следующей выкладкой.
+  git show "HEAD:$f" > "$TMP/head" 2>/dev/null || cp "$f" "$TMP/head"
+  norm < "$TMP/head" > "$TMP/a" 2>/dev/null
   norm < "$TMP/live" > "$TMP/b" 2>/dev/null
   if cmp -s "$TMP/a" "$TMP/b"; then same=$((same+1)); else
     diff_n=$((diff_n+1))
@@ -51,6 +55,8 @@ while IFS= read -r f; do
   fi
 done < <(git ls-files)
 
+dirty="$(git status --porcelain -- . | grep -vE '^\?\? ops/' | wc -l)"
+[ "$dirty" -gt 0 ] && echo "несохранённых правок в дереве: $dirty (они поедут этой выкладкой, это не дрейф)"
 echo "совпало: $same | расходится: $diff_n | недоступно: $miss"
 if [ "$diff_n" -gt 0 ] || [ "$miss" -gt 0 ]; then
   echo "----- расхождения -----"

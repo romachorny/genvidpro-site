@@ -2558,7 +2558,7 @@ function calc(){
      stays in English for Roman; the first line follows the page language, so the agent answers
      the visitor in it. */
   var L2=String(document.documentElement.lang||'en').slice(0,2).toLowerCase();
-  var HEAD={he:'הזמנה חדשה, GenVidPro',ru:'Новый заказ, GenVidPro'};
+  var HEAD={he:'הזמנה חדשה, GenVidPro',ru:'Новый заказ, GenVidPro',ar:'طلب جديد، GenVidPro'};
   var wtxt=HEAD[L2]?txt.replace(/^[^\n]*/,function(){return HEAD[L2]}):txt;
   function waOrder(el,t){if(!el)return;el.setAttribute('data-gvp-service','order');el.setAttribute('data-gvp-text',t);
     el.href=window.GVPWA?GVPWA.link('order',{text:t,source:'site'}):'https://wa.me/972539760820?text='+encodeURIComponent(t)}
@@ -2566,6 +2566,7 @@ function calc(){
   var who=briefVal('q1'),items=n?rows.filter(function(r){return r[2]!=='off'&&r[2]!=='mo'}).map(function(r){return r[0]}).join(', '):'';
   var dtxt=L2==='he'?('היי רומן'+(who?', כאן '+who:'')+'.'+(items?' בחבילה: '+items+', בסך הכול '+money(total)+'.':'')+' יש אפשרות להנחה נוספת?'):
     L2==='ru'?('Здравствуйте, Роман!'+(who?' Это '+who+'.':'')+(items?' Смотрю пакет: '+items+', итого '+money(total)+'.':'')+' Можно ли получить дополнительную скидку?'):
+    L2==='ar'?('مرحباً رومان'+(who?'، أنا '+who:'')+'.'+(items?' الباقة: '+items+'، بالمجموع '+money(total)+'.':'')+' هل يمكن الحصول على خصم إضافي؟'):
     ('Hi Roman, this is '+(who||'a new client')+'. I am looking at '+(items||'a package')+' for '+money(total)+'. Is there any extra discount you could offer me?');
   waOrder(document.getElementById('ask-disc'),dtxt); waOrder(document.getElementById('stick-disc'),dtxt);
   var done=(typeof briefDone==='function')?briefDone():0, need=(typeof REQ!=='undefined')?REQ.length:0, ok=done>=need;

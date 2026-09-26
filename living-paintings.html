@@ -492,9 +492,10 @@ var disc=discBox.firstChild,discKey='',touched=false;
 var DISC={
   en:function(s,e){return 'Hi Roman, I am looking at a living painting, '+s+', estimate '+e+'. Is there any discount you could offer me?'},
   he:function(s,e){return 'היי רומן, מדובר בציור חי, '+s+', הערכה '+e+'. יש אפשרות להנחה?'},
-  ru:function(s,e){return 'Здравствуйте, Роман! Смотрю живую картину: '+s+', оценка '+e+'. Можно ли получить скидку?'}
+  ru:function(s,e){return 'Здравствуйте, Роман! Смотрю живую картину: '+s+', оценка '+e+'. Можно ли получить скидку?'},
+  ar:function(s,e){return 'مرحباً رومان، أنظر إلى لوحة حية، '+s+'، التقدير '+e+'. هل يمكن الحصول على خصم؟'}
 };
-var TBC={en:'Roman will confirm',he:'רומן יאשר',ru:'Роман подтвердит'};
+var TBC={en:'Roman will confirm',he:'רומן יאשר',ru:'Роман подтвердит',ar:'رومان سيؤكد'};
 function discSync(scope,sum){
   var l=String(document.documentElement.lang||'en').slice(0,2).toLowerCase();if(!DISC[l])l='en';
   var dtxt=DISC[l](scope,sum?money(sum):TBC[l]);

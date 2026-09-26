@@ -517,9 +517,9 @@ document.getElementById("live").onclick=function(){
  window.open("https://wa.me/972539760820?text="+encodeURIComponent(msg),"_blank","noopener");
 };
 /* the greeting of that message and the ask for a discount, in the page language */
-var BHI={en:"Hi Roman, I built a site in your builder.",he:"היי רומן, בניתי אתר בבונה האתרים שלכם.",ru:"Здравствуйте, Роман! Сайт собран в вашем конструкторе."};
+var BHI={en:"Hi Roman, I built a site in your builder.",he:"היי רומן, בניתי אתר בבונה האתרים שלכם.",ru:"Здравствуйте, Роман! Сайт собран в вашем конструкторе.",ar:"مرحباً رومان، بنيت موقعاً في منشئ المواقع لديكم."};
 (function(){var d=document.getElementById("disc");if(!d)return;
- var T={en:"Is there any discount you could offer me?",he:"יש אפשרות להנחה?",ru:"Можно ли получить скидку?"};
+ var T={en:"Is there any discount you could offer me?",he:"יש אפשרות להנחה?",ru:"Можно ли получить скидку?",ar:"هل يمكن الحصول على خصم؟"};
  function set(){var l=String(document.documentElement.lang||"en").slice(0,2).toLowerCase();if(!T[l])l="en";d.setAttribute("data-gvp-text",BHI[l]+" "+T[l]);if(window.GVPWA)GVPWA.refresh();}
  document.addEventListener("gvlang",set);set();
 })();
