@@ -55,6 +55,12 @@
 /work
   Cache-Control: no-cache
 
+/learn
+  Cache-Control: no-cache
+
+/learn.html
+  Cache-Control: no-cache
+
 /work.html
   Cache-Control: no-cache
 

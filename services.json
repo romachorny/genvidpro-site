@@ -1,6 +1,6 @@
 {
   "$schema": "https://genvidpro.com/services.schema.json",
-  "version": "2026-09-26.3",
+  "version": "2026-09-26.4",
   "updated": "2026-09-26",
   "wa_number": "972539760820",
   "languages": ["he", "en", "ru", "ar"],
@@ -650,7 +650,7 @@
           ] }
       ],
       "never": ["we sell Claude subscriptions", "we give you an Anthropic licence", "you get a certificate"],
-      "work_link": "https://genvidpro.com/automation"
+      "work_link": "https://genvidpro.com/learn"
     },
     {
       "id": "os_build",

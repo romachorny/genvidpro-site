@@ -405,6 +405,7 @@
     'BUILD YOUR BRAND, FREE': 'לבנות מותג, בחינם ',
     'BUILD IT AND INSTALL IT': 'לבנות ולהתקין ',
     'no app store': 'בלי חנות אפליקציות',
+    'claude lessons': 'שיעורי Claude',
     'twelve templates, free, live in minutes, installs like an app': 'שתים עשרה תבניות, בחינם, באוויר תוך דקות, מותקן כמו אפליקציה',
     'No site yet? Build one free, in minutes →': 'עדיין אין אתר? בנו אחד בחינם, תוך דקות ←',
     // thanks and 404
@@ -961,6 +962,7 @@
     'ORDER YOUR VIDEO': 'ЗАКАЗАТЬ ВИДЕО ',
     'BUILD IT AND INSTALL IT': 'СОБРАТЬ И УСТАНОВИТЬ ',
     'no app store': 'без магазина приложений',
+    'claude lessons': 'уроки Claude',
     'twelve templates, free, live in minutes, installs like an app': 'двенадцать шаблонов, бесплатно, сайт живой через минуты, ставится как приложение',
     'No site yet? Build one free, in minutes →': 'Ещё нет сайта? Соберите бесплатно за несколько минут →',
     // thanks and 404

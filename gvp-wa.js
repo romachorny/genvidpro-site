@@ -53,7 +53,7 @@
     if (s) return s;
     if (location.hostname === 'app.genvidpro.com' || /gvpro\.pages\.dev$/.test(location.hostname)) return 'app';
     var p = location.pathname.replace(/\.html$/, '').replace(/\/+$/, '') || '/';
-    var map = { '/': 'site', '/index': 'site', '/work': 'work', '/automation': 'automation', '/living-paintings': 'living-paintings', '/builder': 'builder', '/app': 'site' };
+    var map = { '/': 'site', '/index': 'site', '/work': 'work', '/automation': 'automation', '/learn': 'learn', '/living-paintings': 'living-paintings', '/builder': 'builder', '/app': 'site' };
     return map[p] || 'other';
   }
   function svc(id) {
