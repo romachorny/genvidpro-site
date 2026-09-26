@@ -1405,7 +1405,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
          orange wash: it is the money, so it is the second loudest thing here. -->
     <a class="gv-hp gv-hpw" href="#art" id="gvPanelArt"><span class="gv-w">Originals</span><span class="gv-c">films and living art</span></a>
     <a class="gv-hp gv-hpr" href="#gvs1" id="gvPanelVideo"><span class="gv-w">Video</span><span class="gv-c">ads &middot; brand films</span></a>
-    <a class="gv-hp gv-hpw" href="#gvs3" id="gvPanelSite"><span class="gv-w">Site</span><span class="gv-c">built in minutes</span></a>
+    <a class="gv-hp gv-hpw" href="https://app.genvidpro.com" id="gvPanelSite"><span class="gv-w">Site</span><span class="gv-c">built in minutes</span></a>
     <a class="gv-hp gv-hpr" href="#gvs2" id="gvPanelBrand"><span class="gv-w">Brand</span><span class="gv-c">identity &middot; logo</span></a>
   </div>
   <!-- 27.09.2026: eight services in two rows of four, red and white alternate like a chessboard
@@ -3810,11 +3810,12 @@ function gvGoTo(sel){
      arrived after 0.9 s it jumps there at once. */
   setTimeout(function(){if(Math.abs(window.pageYOffset-y)>40)window.scrollTo({top:y,behavior:'instant'});},900);
 }
-/* 21.09.2026: App now opens its own page /app, so it is out of this list again.
+/* 27.09.2026: Site now opens app.genvidpro.com, so it is out of this list too.
+   21.09.2026: App now opens its own page /app, so it is out of this list again.
    15.09.2026: App was left out of this list, so its button did a bare anchor jump that
    parked the address field of the three screens under the fixed header on a phone,
    where the header took the tap */
-[['gvPanelVideo','#gvs1'],['gvPanelBrand','#gvs2'],['gvPanelSite','#gvs3'],['gvPanelArt','#art']].forEach(function(pair){
+[['gvPanelVideo','#gvs1'],['gvPanelBrand','#gvs2'],['gvPanelArt','#art']].forEach(function(pair){
   var el=document.getElementById(pair[0]);
   if(el)el.addEventListener('click',function(e){e.preventDefault();gvGoTo(pair[1]);});
 });
