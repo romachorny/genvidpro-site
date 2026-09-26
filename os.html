@@ -1,0 +1,90 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build my OS — GenVidPro</title>
+<link rel="icon" href="favicon.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="description" content="The system Roman runs his own studio on, built for your business: one server around the clock, Claude doing the tasks, you in control from Telegram by voice or text.">
+<meta property="og:title" content="Build my OS — GenVidPro">
+<meta property="og:description" content="Your business, its own OS. One server, Claude doing the work, you in control from Telegram.">
+<meta property="og:image" content="https://genvidpro.com/media/build-my-os.jpg">
+<meta property="og:url" content="https://genvidpro.com/os">
+<meta name="twitter:card" content="summary_large_image">
+<script>if(location.protocol!=='file:'&&'serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('/sw.js')})}</script>
+<style>
+@font-face{font-family:'Anton';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/anton-400-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-400-normal-latin.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-600-normal-latin.woff2) format('woff2')}
+*{box-sizing:border-box}
+html,body{margin:0;background:#0A0A0A;color:#F2F2F0}
+body{font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+main{max-width:1180px;margin:0 auto;padding:clamp(70px,9vw,120px) clamp(16px,4vw,40px) clamp(40px,6vw,80px)}
+.kicker{font-family:monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#46FFA0;margin:0 0 12px}
+.kicker em{font-style:normal;color:#0A0A0A;background:#FFC861;border-radius:999px;padding:2px 8px;margin-left:8px;letter-spacing:.08em}
+h1{font-family:Anton,Impact,sans-serif;font-weight:400;margin:0 0 14px;line-height:.94;
+   font-size:clamp(38px,8.4vw,92px);text-transform:uppercase;letter-spacing:.01em}
+h1 span{color:#46FFA0}
+.lead{font-size:clamp(16px,2vw,21px);line-height:1.55;color:#C9C9C5;max-width:780px;margin:0 0 clamp(26px,4vw,44px)}
+.film{position:relative;background:#050C09;border-radius:6px;overflow:hidden;border:1px solid #173226;margin:0 0 clamp(22px,3.4vw,40px);
+      box-shadow:0 0 60px rgba(70,255,160,.08)}
+.film video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#050C09}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:clamp(20px,3.4vw,44px);align-items:start}
+@media(max-width:860px){.split{grid-template-columns:1fr}}
+.pts{list-style:none;margin:0;padding:0}
+.pts li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid #1C1C1C;font-size:15px;line-height:1.5}
+.pts li:last-child{border-bottom:0}
+.pts b{color:#46FFA0;font-weight:600;flex:0 0 auto;font-family:monospace}
+.pts .gate b{color:#FFC861}
+.num{font-family:Anton,Impact,sans-serif;font-size:34px;line-height:1;color:#46FFA0;margin:0 0 4px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.8vw,20px);margin:clamp(26px,4vw,44px) 0}
+@media(max-width:720px){.cards{grid-template-columns:1fr}}
+.card{background:#0A1812;border:1px solid #173226;border-radius:6px;padding:clamp(16px,2.2vw,22px)}
+.card p{margin:0;color:#C9C9C5;font-size:14px;line-height:1.5}
+.cta{display:block;text-align:center;text-decoration:none;background:#46FFA0;color:#050C09;
+     font-family:Anton,Impact,sans-serif;font-size:clamp(18px,2.6vw,26px);letter-spacing:.04em;text-transform:uppercase;
+     padding:clamp(16px,2.4vw,22px);border-radius:999px;margin-top:8px;box-shadow:0 0 34px rgba(70,255,160,.35)}
+.cta span{display:block;font-family:Inter,sans-serif;font-size:13px;letter-spacing:0;text-transform:none;font-weight:400;opacity:.75;margin-top:4px}
+.note{font-size:13px;color:#8DB8A2;margin:14px 0 0;line-height:1.5}
+.back{display:inline-block;margin-top:clamp(26px,4vw,44px);color:#46FFA0;text-decoration:none;font-size:14px}
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">GenVidPro · Automation<em>NEW</em></p>
+  <h1>Your business.<br><span>Its own OS.</span></h1>
+  <p class="lead">The system I run my own studio on, built for your business. One server that works around the clock,
+  Claude doing the tasks, and you in control from Telegram, by voice or text. The film below is my real setup.</p>
+
+  <div class="film">
+    <video src="videos/build-my-os.mp4" poster="media/build-my-os.jpg" controls playsinline preload="metadata"></video>
+  </div>
+
+  <div class="split">
+    <div>
+      <ul class="pts">
+        <li><b>01</b><span>One control room in Telegram. Say it or type it, the work gets done.</span></li>
+        <li><b>02</b><span>A WhatsApp agent answers your clients at any hour, in Hebrew, English, Russian and Arabic.</span></li>
+        <li><b>03</b><span>Mail, leads and daily reports sorted and brought to you, no manual checking.</span></li>
+        <li class="gate"><b>04</b><span>Money, sending, deletion, access and publishing always wait for your word.</span></li>
+        <li><b>05</b><span>Your own server, encrypted backups every night, a self-check after every restart.</span></li>
+      </ul>
+    </div>
+    <div>
+      <a class="cta" href="https://wa.me/972539760820" data-gvp-service="os_build" data-gvp-source="os" target="_blank" rel="noopener">
+        Build my OS<span>WhatsApp, a short brief with our agent, answer within 24 hours</span></a>
+      <p class="note">We agree together what goes in. The server runs on your own account, so the system stays yours.</p>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card"><p class="num">24/7</p><p>Agents on duty while you sleep, drive or rest</p></div>
+    <div class="card"><p class="num">5</p><p>Kinds of action that never run without your yes</p></div>
+    <div class="card"><p class="num">2 to 4</p><p>Weeks from the first brief to a system that runs by itself</p></div>
+  </div>
+
+  <a class="back" href="/">&larr; genvidpro.com</a>
+</main>
+<script src="gv-chrome.js?v=18" defer></script>
+<script src="/gvp-wa.js?v=3" defer></script>
+</body></html>
