@@ -59,3 +59,37 @@ Everything in the publish set is served. Files that must not be readable (`/wran
 `/deploy.cmd`, `/deploy-log.txt`, `/watermark_all.py`, `/scripts/*`, `/__pycache__/*`) are
 closed by one-line functions in `functions/` that answer 404. A new private file in the root
 needs either such a function or an exclusion in step 3 of `ops/deploy.sh`.
+
+## Личные уведомления (28.09.2026)
+
+Гость открывает `https://genvidpro.com/?c=имя`, ставит сайт на домашний экран и жмёт
+одну кнопку — дальше Рома пишет ему прямо на телефон из Телеграма.
+
+| Что | Где |
+|---|---|
+| Карточка, подписка, панель «Messages» | `push.js` (грузится на каждой странице через `gv-chrome.js`) |
+| Приём подписки + приветственный пуш | `functions/api/push/subscribe.js` |
+| Дверь для сервера (список, подписки, чистка, журнал) | `functions/api/push/admin.js`, ключ `PUSH_KEY` |
+| Что показывать в панели | `functions/api/push/messages.js`, по токену, не по имени |
+| Показ уведомления и нажатие | `sw.js` |
+| Хранилище | D1 `gvp-push`, схема `ops/push-schema.sql` |
+| Отправка с сервера | `~/work/gvp-push/send.js` (Node + web-push), обёртка `~/bin/gvp-push.sh` |
+| Команды в Телеграме | `~/work/tg-hook/app.py`: `/push list`, `/push <имя> <текст>`, `/push all <текст>` |
+| Ключи | `~/.secrets/vapid.env` (600) и секреты Pages `VAPID_PRIVATE`, `PUSH_KEY` |
+
+Чего не видно из кода:
+- **D1, а не KV.** Сначала было KV, и список подписчиков отставал на 8–30 секунд
+  (замерено 28.09.2026). Гость нажимает кнопку, Рома тут же шлёт ему сообщение —
+  и бот полминуим отвечал «никого с таким именем нет». D1 читает то, что только что записал.
+- **Тело пуша шифруется по-настоящему** (RFC 8291, aes128gcm) — и в воркере, и на сервере.
+  Пустой пуш с чтением «последнего сообщения» из общего места, как было раньше, при двух
+  гостях отдал бы Давиду письмо Анны.
+- **Приветствие шлёт сам воркер**, не сервер: палец ещё на экране, а уведомление уже пришло.
+- **Публичный ключ VAPID написан в двух местах** — `push.js` и `subscribe.js`. Меняются вместе.
+  Переменная Pages типа `plain_text`, заведённая через API, до деплоя не доехала.
+- **Проверка без телефона:** ни headless Chrome, ни headless Firefox на сервере не умеют
+  подписаться на пуш («Registration failed - permission denied»). Настоящая проверка —
+  канал в autopush Mozilla, поднятый из Node по вебсокету: это честный push service,
+  который проверяет подпись VAPID и отдаёт тело обратно. Стенды: `~/work/tmp/pushtest`.
+- **Локальный запуск — только по https** (`ops/push-dev.sh`): у сайта в CSP стоит
+  `upgrade-insecure-requests`, и по http сервис-воркер не устанавливается вовсе.
