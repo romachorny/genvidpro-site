@@ -122,9 +122,9 @@ var CAT={
   call:"Call the shop", msg:"Message the shop",
   titles:{fade:"On the shelf",pole:"On the board",salon:"The range",neon:"Open this evening",poster:"Four things",zine:"Cut out and keep",mag:"The bestsellers",kiosk:"Pick one and collect",bands:"Four shelves",gold:"The four we are known for",grid:"On the shelf",mono:"The four we are known for"},
   services:[
-   ["iPhone 16 Pro","&#8362;4,290","in stock","Sealed, two years, set up at the counter."],
-   ["MacBook Air M4","&#8362;5,190","in stock","512 GB. We move your old machine over free."],
-   ["Sony WH-1000XM6","&#8362;1,390","2 left","Tried on at the counter before you pay."],
+   ["Flagship phone","&#8362;4,290","in stock","Sealed, two years, set up at the counter."],
+   ["Thin laptop, 13\u2033","&#8362;5,190","in stock","512 GB. We move your old machine over free."],
+   ["Over-ear headphones","&#8362;1,390","2 left","Tried on at the counter before you pay."],
    ["Screen repair","&#8362;350","same day","Original part, done while you have coffee."],
    ["Battery swap","&#8362;240","40 min","Health back to 100%, old cell recycled."],
    ["Trade-in","free","15 min","Bring the old one, we take it off the price."]],
@@ -140,9 +140,9 @@ var CAT={
    tags:"phones &middot; laptops &middot; audio &middot; repairs", cta:"Hold this one for me",
    want:"Can you hold the {a}, {b}, for me today?",
    foot:"Send us the model on WhatsApp and we answer with the price and whether it is in the shop, same hour."},
-  looks:[["item-01","iPhone 16 Pro","desert titanium"],["item-02","MacBook Air","M4, 512 GB"],["item-03","Sony XM6","over-ear, black"],
-         ["item-04","iPad Air","11 inch, blue"],["item-05","Apple Watch","series 10"],["item-06","Anker power bank","20 000 mAh"],
-         ["item-07","Samsung S25","ultra, grey"],["item-08","Logitech MX","master mouse"],["item-09","Screen repair","done in an hour"]]
+  looks:[["item-01","Flagship phone","desert titanium"],["item-02","Thin laptop","13 inch, 512 GB"],["item-03","Over-ear headphones","black"],
+         ["item-04","Tablet","11 inch, blue"],["item-05","Smart watch","44 mm, steel"],["item-06","Power bank","20 000 mAh"],
+         ["item-07","Big-screen phone","ultra, grey"],["item-08","Wireless mouse","for long days"],["item-09","Screen repair","done in an hour"]]
  },
 
  yoga:{
@@ -189,7 +189,7 @@ var CAT={
  },
 
  home:{
-  name:"Furniture Room", tag:"Sofas, oak tables and lamps that make a room", city:"48 Hamasger St, Tel Aviv",
+  name:"Furniture Room", tag:"Sofas, oak tables and lamps that make a room feel finished", city:"48 Hamasger St, Tel Aviv",
   trade:"furniture store", kicker:"furniture &amp; light", small:"made and found",
   seal:"EST. 2015 &middot; SOFAS &middot; OAK &middot; LIGHT &middot; ",
   book:"Ask about a piece", bookNow:"Ask about a piece", appt:"Book a room visit", bookShort:"Ask",
