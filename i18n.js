@@ -1416,7 +1416,7 @@
     document.querySelectorAll('a[href*="app.genvidpro.com"]').forEach(function (a) {
       if (a.dataset.gvhref === undefined) a.dataset.gvhref = a.getAttribute('href') || '';
       var base = a.dataset.gvhref.split('?')[0].split('#')[0];
-      a.setAttribute('href', lang === 'en' ? a.dataset.gvhref : base + '?lang=' + lang);
+      a.setAttribute('href', base + '?lang=' + lang);   // English too: the site's language is the choice just made
     });
     isolateLatin(lang);
     /* anything that writes its own words (the three screens, the assistant) redraws */
