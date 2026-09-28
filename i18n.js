@@ -424,6 +424,12 @@
     'BUILD IT AND INSTALL IT': 'לבנות ולהתקין ',
     'no app store': 'בלי חנות אפליקציות',
     'claude lessons': 'שיעורי Claude',
+    /* 28.09.2026: three captions on the home buttons had no entry and stayed English in
+       every language. 'your own automation · new' was the key until the NEW badge moved
+       into its own span, so the key stopped matching the text on the button. */
+    'orders in whatsapp': 'הזמנות בוואטסאפ',
+    'your own automation': 'אוטומציה משלך',
+    'selected films': 'סרטים נבחרים',
     'your own automation · new': 'אוטומציה משלך · חדש',
     'twelve templates, free, live in minutes, installs like an app': 'שתים עשרה תבניות, בחינם, באוויר תוך דקות, מותקן כמו אפליקציה',
     'No site yet? Build one free, in minutes →': 'עדיין אין אתר? בנו אחד בחינם, תוך דקות ←',
@@ -1000,6 +1006,9 @@
     'BUILD IT AND INSTALL IT': 'СОБРАТЬ И УСТАНОВИТЬ ',
     'no app store': 'без магазина приложений',
     'claude lessons': 'уроки Claude',
+    'orders in whatsapp': 'заказы в whatsapp',
+    'your own automation': 'своя автоматизация',
+    'selected films': 'избранные фильмы',
     'your own automation · new': 'своя автоматизация · новое',
     'twelve templates, free, live in minutes, installs like an app': 'двенадцать шаблонов, бесплатно, сайт живой через минуты, ставится как приложение',
     'No site yet? Build one free, in minutes →': 'Ещё нет сайта? Соберите бесплатно за несколько минут →',
