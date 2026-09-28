@@ -22,6 +22,13 @@
    this repository. */
 
 const SUBJECT = 'mailto:genvidpro@gmail.com';
+/* The public half of the VAPID pair — the same string push.js hands to the browser,
+   public by definition. It is written here as well because a Pages plain_text
+   variable set through the API did not survive into the deployment (28.09.2026:
+   the welcome push quietly did not go out, and nothing said why). The private half
+   is the secret VAPID_PRIVATE and is never in this repository. Rotating the pair
+   means changing this line and push.js together. */
+const PUB = 'BJ5IzzJPTq4l8pgQHaVIMjlCg11ANg7S6u3UbWcMxZQAKZOkad5WFD69HCLDrITAQvPnDJE-SxgzO3_m34xQAFk';
 const MAX_DEVICES = 10;          // one name, ten phones — past that it is somebody scripting
 const RATE_PER_MIN = 20;         // per IP
 const WELCOME = { title: 'GenVidPro', body: "You're connected. Roma can now message you here." };
@@ -157,15 +164,17 @@ export async function onRequestPost({ request, env }) {
 
   /* The welcome message, then the same words into the in-app panel. */
   const msg = { id: 'w' + Date.now(), title: WELCOME.title, body: WELCOME.body, url: '/', ts: Date.now() };
-  let delivered = false, status = 0;
-  const pub = env.VAPID_PUBLIC, priv = env.VAPID_PRIVATE;
-  if (pub && priv) {
+  let delivered = false, status = 0, why = '';
+  const pub = env.VAPID_PUBLIC || PUB, priv = env.VAPID_PRIVATE;
+  if (!priv) why = 'no VAPID_PRIVATE bound to this deployment';
+  else {
     try {
       const r = await push(rec, { title: msg.title, body: msg.body, url: '/', tag: 'gvp-welcome', id: msg.id }, pub, priv);
       status = r.status;
       delivered = r.status >= 200 && r.status < 300;
+      if (!delivered) why = 'the push service answered ' + r.status + ' ' + (await r.text()).slice(0, 120);
       if (r.status === 404 || r.status === 410) await env.EVENTS.delete('psub:' + name + ':' + h);
-    } catch (_) { status = 0; }
+    } catch (e) { status = 0; why = String((e && e.message) || e).slice(0, 160); }
   }
   try {
     const log = JSON.parse(await env.EVENTS.get('pmsg:' + name) || '[]');
@@ -173,9 +182,12 @@ export async function onRequestPost({ request, env }) {
     await env.EVENTS.put('pmsg:' + name, JSON.stringify(log.slice(0, 30)));
   } catch (_) {}
 
-  return Response.json({ ok: true, name, token, welcome: delivered, status }, {
-    headers: { 'cache-control': 'no-store' }
-  });
+  /* Why a welcome did not go out is said out loud only to whoever holds PUSH_KEY —
+     the server and nobody else. A guest gets ok/true and a notification, or ok/true
+     and no notification, and either way never an error on their screen. */
+  const answer = { ok: true, name, token, welcome: delivered, status };
+  if (why && env.PUSH_KEY && request.headers.get('x-push-key') === env.PUSH_KEY) answer.why = why;
+  return Response.json(answer, { headers: { 'cache-control': 'no-store' } });
 }
 
 export const onRequestGet = () => new Response('POST only', { status: 405 });
