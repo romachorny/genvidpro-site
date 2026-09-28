@@ -1315,6 +1315,13 @@
     '#gvc-bar,#gvc-foot';
   var SKIP_TAG = /^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|OPTION|IFRAME|VIDEO|CANVAS)$/;
 
+  /* 28.09.2026: the gate was "is there a dictionary", and MORE.ar holds three lines kept
+     ready for the day Arabic is offered. So ?lang=ar passed, the page turned right-to-left
+     with English in it, and localStorage kept it that way on every page after. The app's
+     TERMS and PRIVACY links carry the app's own language, and the app speaks Arabic — so
+     that was one tap away. Only a language this switch actually offers is accepted now;
+     adding one to LANGS opens it here too, in one place. */
+  function offered(l) { for (var i = 0; i < LANGS.length; i++) if (LANGS[i][0] === l) return true; return false; }
   var cur = 'en';
   try { cur = localStorage.getItem('gvlang') || 'en'; } catch (e) {}
   /* 16.09.2026, Roma: TERMS and PRIVACY opened from the GVPro app came up in Hebrew while the
@@ -1325,10 +1332,10 @@
     var q = /[?&#]lang=([a-z-]{2,5})/i.exec(location.search + location.hash);
     if (q) {
       var want = q[1].toLowerCase();
-      if (want === 'en' || DICT[want]) { cur = want; localStorage.setItem('gvlang', cur); }
+      if (offered(want)) { cur = want; localStorage.setItem('gvlang', cur); }
     }
   } catch (e) {}
-  if (cur !== 'en' && !DICT[cur]) cur = 'en';
+  if (!offered(cur)) cur = 'en';
   /* 15.09.2026: Hebrew was shown with lang="he" and dir="ltr", on a studio that sells
      fixing exactly that. The page direction follows the language, set before the page
      paints so a Hebrew visitor never sees it flip. */
