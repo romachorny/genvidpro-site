@@ -1403,6 +1403,14 @@
       i.setAttribute('dir', isRtl(lang) ? 'rtl' : 'auto');
       i.style.textAlign = isRtl(lang) ? 'right' : '';
     });
+    /* 28.09.2026: the SITE button on the home page opened the app in English even when the
+       visitor was reading the site in Hebrew or Russian — the app had no way of knowing. It
+       reads ?lang= now, so the language walks across with the click. */
+    document.querySelectorAll('a[href*="app.genvidpro.com"]').forEach(function (a) {
+      if (a.dataset.gvhref === undefined) a.dataset.gvhref = a.getAttribute('href') || '';
+      var base = a.dataset.gvhref.split('?')[0].split('#')[0];
+      a.setAttribute('href', lang === 'en' ? a.dataset.gvhref : base + '?lang=' + lang);
+    });
     isolateLatin(lang);
     /* anything that writes its own words (the three screens, the assistant) redraws */
     try { document.dispatchEvent(new CustomEvent('gvlang', { detail: { lang: lang } })); } catch (e) {}
