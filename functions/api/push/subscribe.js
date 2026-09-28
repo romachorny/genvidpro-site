@@ -127,13 +127,17 @@ export function cleanName(raw) {
 }
 
 export async function onRequestPost({ request, env }) {
-  if (!env.EVENTS) return Response.json({ ok: false, error: 'no store' }, { status: 503 });
+  if (!env.PUSHDB) return Response.json({ ok: false, error: 'no store' }, { status: 503 });
 
-  const ip = request.headers.get('cf-connecting-ip') || '0';
-  const rk = 'prate:' + (await hash12(ip));
-  const used = parseInt(await env.EVENTS.get(rk) || '0', 10) || 0;
-  if (used >= RATE_PER_MIN) return Response.json({ ok: false, error: 'slow down' }, { status: 429 });
-  await env.EVENTS.put(rk, String(used + 1), { expirationTtl: 60 });
+  /* The speed bump stays in KV: a counter that is a little out of date only makes
+     the limit looser, and it costs no row in the database a guest will never read. */
+  if (env.EVENTS) {
+    const ip = request.headers.get('cf-connecting-ip') || '0';
+    const rk = 'prate:' + (await hash12(ip));
+    const used = parseInt(await env.EVENTS.get(rk) || '0', 10) || 0;
+    if (used >= RATE_PER_MIN) return Response.json({ ok: false, error: 'slow down' }, { status: 429 });
+    await env.EVENTS.put(rk, String(used + 1), { expirationTtl: 60 });
+  }
 
   let q;
   try { q = await request.json(); } catch (_) { return Response.json({ ok: false, error: 'bad json' }, { status: 400 }); }
@@ -154,13 +158,21 @@ export async function onRequestPost({ request, env }) {
     ts: Date.now(), seen: Date.now()
   };
 
-  const mine = await env.EVENTS.list({ prefix: 'psub:' + name + ':' });
-  if (mine.keys.length >= MAX_DEVICES && !mine.keys.some(k => k.name.endsWith(':' + h)))
+  const mine = await env.PUSHDB.prepare('SELECT COUNT(*) AS n FROM subs WHERE name = ? AND h <> ?')
+    .bind(name, h).first();
+  if (mine && mine.n >= MAX_DEVICES)
     return Response.json({ ok: false, error: 'too many devices' }, { status: 429 });
 
   const token = b64u(crypto.getRandomValues(new Uint8Array(18)));
-  await env.EVENTS.put('psub:' + name + ':' + h, JSON.stringify(rec));
-  await env.EVENTS.put('ptok:' + token, JSON.stringify({ name, h }));
+  await env.PUSHDB.batch([
+    env.PUSHDB.prepare(
+      'INSERT INTO subs (h, name, endpoint, p256dh, auth, platform, lang, ua, ts, seen) ' +
+      'VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?9) ' +
+      'ON CONFLICT(h) DO UPDATE SET name=?2, p256dh=?4, auth=?5, platform=?6, lang=?7, ua=?8, seen=?9')
+      .bind(h, name, endpoint, rec.p256dh, rec.auth, rec.platform, rec.lang, rec.ua, rec.ts),
+    env.PUSHDB.prepare('INSERT OR REPLACE INTO tokens (token, name, h, ts) VALUES (?,?,?,?)')
+      .bind(token, name, h, rec.ts)
+  ]);
 
   /* The welcome message, then the same words into the in-app panel. */
   const msg = { id: 'w' + Date.now(), title: WELCOME.title, body: WELCOME.body, url: '/', ts: Date.now() };
@@ -173,13 +185,12 @@ export async function onRequestPost({ request, env }) {
       status = r.status;
       delivered = r.status >= 200 && r.status < 300;
       if (!delivered) why = 'the push service answered ' + r.status + ' ' + (await r.text()).slice(0, 120);
-      if (r.status === 404 || r.status === 410) await env.EVENTS.delete('psub:' + name + ':' + h);
+      if (r.status === 404 || r.status === 410) await env.PUSHDB.prepare('DELETE FROM subs WHERE h = ?').bind(h).run();
     } catch (e) { status = 0; why = String((e && e.message) || e).slice(0, 160); }
   }
   try {
-    const log = JSON.parse(await env.EVENTS.get('pmsg:' + name) || '[]');
-    log.unshift(msg);
-    await env.EVENTS.put('pmsg:' + name, JSON.stringify(log.slice(0, 30)));
+    await env.PUSHDB.prepare('INSERT INTO msgs (id, name, title, body, url, ts) VALUES (?,?,?,?,?,?)')
+      .bind(msg.id, name, msg.title, msg.body, msg.url, msg.ts).run();
   } catch (_) {}
 
   /* Why a welcome did not go out is said out loud only to whoever holds PUSH_KEY —

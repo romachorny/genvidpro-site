@@ -14,7 +14,21 @@ compatibility_date = "2026-09-05"
 binding = "EVENTS"
 id = "f2e23da908244bb39ed0c3be854ce83b"
 
+# 28.09.2026: the personal notifications keep their subscribers here and not in KV.
+# KV needed 8 to 30 seconds before a brand new subscriber showed up in a list, and the
+# whole point of this is that Roma sends the guest a message the moment they sign up.
+# Schema and the why: ops/push-schema.sql.
+[[d1_databases]]
+binding = "PUSHDB"
+database_name = "gvp-push"
+database_id = "fcc906ab-d6b2-4f25-88c8-bd02d8a075ae"
+
 [env.preview]
 [[env.preview.kv_namespaces]]
 binding = "EVENTS"
 id = "f2e23da908244bb39ed0c3be854ce83b"
+
+[[env.preview.d1_databases]]
+binding = "PUSHDB"
+database_name = "gvp-push"
+database_id = "fcc906ab-d6b2-4f25-88c8-bd02d8a075ae"
