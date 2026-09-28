@@ -570,7 +570,7 @@
   function loadPush() {
     if (document.querySelector('script[src^="/push.js"],script[src^="push.js"]')) return;
     var s = document.createElement('script');
-    s.src = '/push.js?v=2';
+    s.src = '/push.js?v=3';
     s.defer = true;
     document.head.appendChild(s);
   }

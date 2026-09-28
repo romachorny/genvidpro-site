@@ -3,10 +3,13 @@
    without touching anybody else's phone. Only an endpoint already saved in the
    store is accepted, otherwise this would be a free relay for strangers. */
 
-const VAPID_PUB = 'BHspUallzbuJ1vcdFmgVwKE5mL3oUwPJy8Nw2fpf3pj_ua0Vw2L5egow1_Yf340HYAgra5UzDkV5pgKx03TJ1Q0';
-// The private half should live in the Pages secret VAPID_PK8; until that secret exists the
-// key below is used. Once the secret is set, delete this constant (15.09.2026).
-const VAPID_PK8 = 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg_KfMgLbS3GX6UBopv4IQ0YIgREzMH0ftBavN6EKcY4yhRANCAAR7KVGpZc27idb3HRZoFcChOZi96FMDycvDcNn6X96Y_7mtFcNi-XoKMNf2H9-NB2AIK2uVMw5FeaYCsdN0ydUN';
+const VAPID_PUB = 'BJ5IzzJPTq4l8pgQHaVIMjlCg11ANg7S6u3UbWcMxZQAKZOkad5WFD69HCLDrITAQvPnDJE-SxgzO3_m34xQAFk';
+/* 28.09.2026: the signing key was a pkcs8 constant sitting right here, in a public
+   repository — anybody who read this file could push to Roma's subscribers. The pair
+   was thrown away and a new one made; the private half is the Pages secret
+   VAPID_PRIVATE (raw base64url, as web-push writes it) and exists nowhere in git.
+   With no secret these two endpoints simply do not send, which is the right way to
+   fail. */
 const VAPID_SUB = 'mailto:genvidpro@gmail.com';
 
 function b64u(bytes) {
@@ -28,8 +31,11 @@ async function authFor(endpoint, pk8) {
     exp: Math.floor(Date.now() / 1000) + 43200,
     sub: VAPID_SUB
   })));
-  const key = await crypto.subtle.importKey('pkcs8', unb64u(pk8),
-    { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
+  const p = unb64u(VAPID_PUB);
+  const key = await crypto.subtle.importKey('jwk', {
+    kty: 'EC', crv: 'P-256', ext: true,
+    x: b64u(p.slice(1, 33)), y: b64u(p.slice(33, 65)), d: pk8
+  }, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
   const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, key,
     new TextEncoder().encode(head + '.' + body));
   return 'vapid t=' + head + '.' + body + '.' + b64u(sig) + ', k=' + VAPID_PUB;
@@ -47,7 +53,7 @@ async function hash(s) {
 
 export async function onRequestPost({ request, env }) {
   if (!env.EVENTS) return new Response('no store', { status: 503 });
-  const pk8 = String(env.VAPID_PK8 || VAPID_PK8).trim();
+  const pk8 = String(env.VAPID_PRIVATE || '').trim();
   if (!pk8) return new Response('no signing key', { status: 503 });
   let q;
   try { q = await request.json(); } catch (_) { return new Response('bad json', { status: 400 }); }

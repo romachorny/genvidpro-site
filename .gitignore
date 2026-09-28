@@ -6,3 +6,7 @@
 __pycache__/*.pyc
 .claude/
 node_modules/
+
+# local-only secrets for "wrangler pages dev" — never deployed, never committed
+.dev.vars
+.wrangler/

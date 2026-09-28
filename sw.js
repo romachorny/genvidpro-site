@@ -7,7 +7,7 @@
    Отдаём их из сети напрямую, как раньше. Шрифты (688 КБ) кешируем — без них
    офлайн-страница разъезжается. */
 
-const CACHE = 'gvp-v7';
+const CACHE = 'gvp-v8';
 const CORE = ['/', '/index.html', '/builder.html', '/tpl-engine.js', '/icon-192.png', '/icon-512.png'];
 const NO_STORE = /^\/(videos|media)\//;
 
@@ -31,7 +31,11 @@ self.addEventListener('fetch', e => {
      an update of the worker itself, an aborted request - turned into an image
      answered with HTML, which the browser shows as a broken picture. Now the
      browser talks to the network for them directly, as if there were no worker. */
-  if (NO_STORE.test(url.pathname) || url.pathname === '/ev' || url.pathname === '/chat' || url.pathname.indexOf('/push') === 0) return;
+  /* 28.09.2026: /api/ joins the list. A cached answer from /api/push/messages would
+     show yesterday's messages in the panel, and a cached /api/push/subscribe would be
+     worse than that. */
+  if (NO_STORE.test(url.pathname) || url.pathname === '/ev' || url.pathname === '/chat' ||
+      url.pathname.indexOf('/push') === 0 || url.pathname.indexOf('/api/') === 0) return;
   const skip = false;
   e.respondWith(
     fetch(e.request)
@@ -64,6 +68,9 @@ self.addEventListener('push', e => {
   e.waitUntil((async () => {
     let d = null;
     if (e.data) { try { d = e.data.json(); } catch (_) { try { d = { body: e.data.text() }; } catch (_) {} } }
+    /* No payload at all is the old empty-poke shape, kept so a subscription made
+       before 28.09.2026 still shows something instead of Chrome's own "this site
+       has been updated in the background". */
     if (!d) { try { d = await fetch('/push-latest', { cache: 'no-store' }).then(r => r.json()); } catch (_) {} }
     d = d || {};
     await self.registration.showNotification(d.title || 'GenVidPro', {
@@ -76,6 +83,10 @@ self.addEventListener('push', e => {
       renotify: true,
       data: { url: d.url || '/' }
     });
+    /* An app that is already open should light up its own Messages panel rather
+       than wait for the next load. */
+    const list = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const c of list) { try { c.postMessage({ gvp: 'push' }); } catch (_) {} }
   })());
 });
 
