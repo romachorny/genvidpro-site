@@ -2196,6 +2196,12 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
         <p class="dep" id="gate" style="margin-bottom:10px"></p>
         <a class="btn p" id="send-mail" href="#">Send the brief by email</a>
         <a class="btn s" id="send-wa" href="https://wa.me/972539760820" data-gvp-service="order" target="_blank" rel="noopener">Send it on WhatsApp</a>
+        <!-- 29.09.2026: the deposit button. The script above has always built its link —
+             half the total, ILS or USD, the chosen services in the item name — gated it with
+             the other two until the five required questions are answered, and logged the
+             click; the anchor itself was never written, so the site could not take a
+             deposit. It goes to PayPal's own payment page and carries nothing else. -->
+        <a class="btn s" id="send-pp" href="#" target="_blank" rel="noopener">Pay 50% deposit — PayPal</a>
       </div>
     </div>
   </div>
