@@ -1,0 +1,8 @@
+{
+  "name": "gvp-render",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": { "wrangler": "^4" },
+  "dependencies": { "@cloudflare/puppeteer": "^1.1.0" }
+}

@@ -1,0 +1,20 @@
+# The browser behind the site checker. Deployed on its own, never with the site:
+# ops/deploy.sh publishes genvidpro.com from a clean copy of the tracked files, and
+# this needs node_modules bundled. Publish it with ops/render-deploy.sh.
+name = "gvp-render"
+main = "src/index.js"
+compatibility_date = "2026-09-28"
+compatibility_flags = ["nodejs_compat"]
+# No public URL and no route: the only caller is genvidpro.com's /preview, over the
+# service binding declared in the site's wrangler.toml. Nothing here faces the internet.
+workers_dev = false
+
+# Chromium on Cloudflare's network, driven by @cloudflare/puppeteer.
+[browser]
+binding = "BROWSER"
+
+# Same namespace the site already uses. Keys here: rr:<url> the 24 h cache of a check,
+# brms:<utc-day> the browser milliseconds spent that day.
+[[kv_namespaces]]
+binding = "EVENTS"
+id = "f2e23da908244bb39ed0c3be854ce83b"

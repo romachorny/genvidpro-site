@@ -1672,6 +1672,10 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
   };
   var narrow = function(){ return matchMedia('(max-width:899px)').matches; };
   var shells = {}, current = 'desktop', site = '', title = '', frameable = true, hasHtml = true, checks = null, shotsOk = 0;
+  /* blocked: their firewall answered instead of the site. busy: the day's browser budget
+     is spent, so the findings were read from the page's code. shots: the server's browser
+     drew this address today and the phone screens can be its own picture. */
+  var blocked = false, busy = false, shots = false;
   var state = 'idle', errKey = '', seq = 0;
 
   function plural(n, one, few, many){ var a=n%10, b=n%100; return a===1&&b!==11?one:(a>=2&&a<=4&&(b<10||b>=20)?few:many); }
@@ -1682,6 +1686,9 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       checking:'checking the address', empty:'your site here', opening:'opening your site',
       slowT:'Still opening', slow:'This site is taking a long time to open. It may be heavy, or slow on a phone signal.',
       recon:'reconstructed preview, scripts off',
+      realshot:'as our server’s phone browser drew it',
+      blockedT:'This site blocked the check', blocked2:'Its firewall answered us with a refusal page instead of the site, so there is nothing here we could honestly judge. It is a setting on their side, not a fault of the site. Roman can check it on a real phone — send the address on WhatsApp.',
+      busy:' The browser check is busy right now, so these findings are read from the page’s code rather than from a drawn page. Try again later for the full check.',
       badAddr:'That does not look like a web address. Try it as yourbrand.com.',
       unreach:'We could not reach that address. Check the spelling, or try again in a moment.',
       tooMany:'That is a lot of checks in one hour. Try again a little later.',
@@ -1692,6 +1699,11 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       tab:{desktop:'Desktop',iphone:'iPhone',android:'Android'},
       f:{
         vp:'no phone layout', lock:'zoom is locked', https:'no https',
+        off:function(n){ return 'runs '+n+' px off the side'; },
+        tiny:function(n){ return 'type as small as '+n+' px'; },
+        tap:function(n){ return n+' target'+(n===1?'':'s')+' too small to tap'; },
+        zeros:'counters stuck at zero', overlap:'text on top of text',
+        emptyb:function(n){ return n+' empty block'+(n===1?'':'s'); },
         rtl:function(s){ return (s==='ar'?'Arabic':'Hebrew')+' laid out left to right'; },
         fixed:function(n){ return 'fixed width '+n+' px'; },
         install:'cannot be installed on a phone', call:'no one-tap call',
@@ -1700,6 +1712,12 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
         kb:function(n){ return n+' KB of html'; }
       },
       v:{
+        off:function(n){ return ['It runs off the side of the phone.','Something on this page is '+n+' pixels wider than the screen, so a phone shows it with a strip missing and the visitor has to drag it sideways to read a line.']; },
+        tiny:function(n){ return ['The type is too small to read.','The smallest text here is '+n+' pixels on a phone. Below about twelve, a visitor has to pinch and zoom to read a price or a phone number, and most of them do not.']; },
+        tap:function(n){ return ['The buttons are too small for a thumb.',n+' of the things meant to be tapped are under 44 pixels, the size Apple and Google both ask for, so a thumb keeps hitting the wrong one.']; },
+        zeros:['The counters never started.','The numbers this page is proud of are all showing zero, because the script that counts them up never ran. A visitor reads "0 clients, 0 projects" as a dead business.'],
+        overlap:['Text is printed over text.','Lines of this page land on top of each other on a phone, which no one reads as a design choice, only as broken.'],
+        emptyb:function(n){ return ['There are empty holes in the page.','On a phone, '+n+' block'+(n===1?' is':'s are')+' as wide as the screen and completely empty — a picture or a section that did not load, and the visitor scrolls past nothing.']; },
         vp:['No phone layout.','A phone lays this page out at desktop width and then shrinks it, so it opens the size of a postage stamp and has to be pinched to read.'],
         rtl:function(s){ return [(s==='ar'?'Arabic':'Hebrew')+' text, left to right page.','The page is written in '+(s==='ar'?'Arabic':'Hebrew')+' but laid out left to right, so menus, lists and punctuation stand the wrong way round for the very people it is written for.']; },
         https:['No https.','Every browser marks a page like this as not secure, and some of them warn the visitor before they reach it.'],
@@ -1715,6 +1733,9 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       checking:'בודקים את הכתובת', empty:'האתר שלכם כאן', opening:'פותחים את האתר שלכם',
       slowT:'עדיין נפתח', slow:'האתר הזה נפתח לאט מאוד. אולי הוא כבד, או איטי בקליטה של טלפון.',
       recon:'תצוגה משוחזרת, בלי סקריפטים',
+      realshot:'כפי שדפדפן הטלפון של השרת שלנו צייר אותו',
+      blockedT:'האתר חסם את הבדיקה', blocked2:'חומת האש שלו החזירה לנו דף סירוב במקום את האתר, ולכן אין כאן מה לשפוט ביושר. זו הגדרה אצלם, לא תקלה באתר. רומן יכול לבדוק בטלפון אמיתי — שלחו כתובת בוואטסאפ.',
+      busy:' בדיקת הדפדפן עסוקה כרגע, ולכן הממצאים נקראים מהקוד של העמוד ולא מעמוד מצוייר. נסו שוב מאוחר יותר לבדיקה המלאה.',
       badAddr:'זו לא נראית כמו כתובת אתר. נסו בצורה yourbrand.com.',
       unreach:'לא הצלחנו להגיע לכתובת הזו. בדקו את האיות, או נסו שוב בעוד רגע.',
       tooMany:'זה הרבה בדיקות בשעה אחת. נסו שוב קצת מאוחר יותר.',
@@ -1725,6 +1746,11 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       tab:{desktop:'מחשב',iphone:'iPhone',android:'Android'},
       f:{
         vp:'אין תצוגה לטלפון', lock:'הגדלה חסומה', https:'אין https',
+        off:function(n){ return 'בורח '+n+' פיקסלים הצידה'; },
+        tiny:function(n){ return 'אותיות קטנות כמו '+n+' פיקסלים'; },
+        tap:function(n){ return n+' כפתורים קטנים מדי ללחיצה'; },
+        zeros:'מונים תקועים על אפס', overlap:'טקסט על גבי טקסט',
+        emptyb:function(n){ return n+' אזורים ריקים'; },
         rtl:function(s){ return (s==='ar'?'ערבית':'עברית')+' מוצגת משמאל לימין'; },
         fixed:function(n){ return 'רוחב קבוע של '+n+' פיקסלים'; },
         install:'אי אפשר להתקין בטלפון', call:'אין חיוג בלחיצה',
@@ -1733,6 +1759,12 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
         kb:function(n){ return n+' KB של HTML'; }
       },
       v:{
+        off:function(n){ return ['העמוד בורח הצידה.','משהו בעמוד רחב ב-'+n+' פיקסלים מהמסך, ולכן בטלפון חלק נחתך וצריך לגרור לצדדים כדי לקרוא שורה.']; },
+        tiny:function(n){ return ['האותיות קטנות מדי.','הטקסט הקטן ביותר כאן הוא '+n+' פיקסלים בטלפון. מתחת לכ-12 צריך להגדיל עם האצבעות כדי לקרוא מחיר או מספר טלפון, ורובם לא טורחים.']; },
+        tap:function(n){ return ['הכפתורים קטנים מדי לאצבע.','ב-'+n+' מהדברים שנועדו ללחיצה יש פחות מ-44 פיקסלים, המידה שאפל וגוגל מבקשות, ולכן האצבע פוגעת בלא נכון.']; },
+        zeros:['המונים מעולם לא התחילו.','המספרים שהעמוד מתגאה בהם עומדים על אפס, כי הסקריפט שמעלה אותם לא רץ. מבקר קורא "0 לקוחות, 0 פרויקטים" כעסק מת.'],
+        overlap:['טקסט מודפס על גבי טקסט.','שורות נוחתות זו על זו בטלפון, ואף אחד לא קורא את זה כעיצוב, רק כתקלה.'],
+        emptyb:function(n){ return ['יש חורים ריקים בעמוד.','בטלפון '+n+' אזורים ברוחב המסך ריקים לגמרי — תמונה או מקטע שלא נטען, והמבקר גולל על פני כלום.']; },
         vp:['אין תצוגה לטלפון.','הטלפון פורש את העמוד ברוחב של מחשב ואז מקטין אותו, כך שהוא נפתח קטנטן וצריך להגדיל עם האצבעות כדי לקרוא.'],
         rtl:function(s){ return [(s==='ar'?'ערבית':'עברית')+' משמאל לימין.','העמוד כתוב ב'+(s==='ar'?'ערבית':'עברית')+' אבל בנוי משמאל לימין, ולכן תפריטים, רשימות וסימני פיסוק עומדים הפוך בדיוק בשביל האנשים שהוא נכתב עבורם.']; },
         https:['אין https.','כל דפדפן מסמן עמוד כזה כלא מאובטח, וחלקם מזהירים את המבקר עוד לפני שהוא נכנס.'],
@@ -1748,6 +1780,9 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       checking:'проверяем адрес', empty:'здесь будет ваш сайт', opening:'открываем ваш сайт',
       slowT:'Всё ещё открывается', slow:'Этот сайт открывается очень долго. Возможно, он тяжёлый или медленный на мобильной связи.',
       recon:'восстановленная копия, скрипты отключены',
+      realshot:'как его нарисовал телефонный браузер нашего сервера',
+      blockedT:'Этот сайт заблокировал проверку', blocked2:'Его файрвол вернул нам страницу отказа вместо сайта, так что судить тут честно не о чем. Это их настройка, а не поломка сайта. Роман может проверить его на настоящем телефоне — пришлите адрес в WhatsApp.',
+      busy:' Проверка браузером сейчас занята, поэтому находки считаны из кода страницы, а не с нарисованной. Попробуйте позже для полной проверки.',
       badAddr:'Это не похоже на адрес сайта. Попробуйте в виде yourbrand.com.',
       unreach:'Не удалось открыть этот адрес. Проверьте написание или попробуйте ещё раз через минуту.',
       tooMany:'Слишком много проверок за час. Попробуйте чуть позже.',
@@ -1758,6 +1793,11 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       tab:{desktop:'Компьютер',iphone:'iPhone',android:'Android'},
       f:{
         vp:'нет мобильной вёрстки', lock:'масштаб заблокирован', https:'нет https',
+        off:function(n){ return 'уезжает за край на '+n+' px'; },
+        tiny:function(n){ return 'шрифт от '+n+' px'; },
+        tap:function(n){ return n+' '+plural(n,'кнопка мелкая','кнопки мелкие','кнопок мелкие')+' для пальца'; },
+        zeros:'счётчики застряли на нуле', overlap:'текст поверх текста',
+        emptyb:function(n){ return n+' '+plural(n,'пустой блок','пустых блока','пустых блоков'); },
         rtl:function(s){ return (s==='ar'?'арабский':'иврит')+' слева направо'; },
         fixed:function(n){ return 'фиксированная ширина '+n+' px'; },
         install:'нельзя установить на телефон', call:'нет звонка в одно касание',
@@ -1766,6 +1806,12 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
         kb:function(n){ return n+' KB html'; }
       },
       v:{
+        off:function(n){ return ['Страница уезжает за край экрана.','Что-то на этой странице шире экрана на '+n+' пикселей, поэтому на телефоне кусок срезан, а читать приходится, таская её вбок.']; },
+        tiny:function(n){ return ['Шрифт слишком мелкий.','Самый мелкий текст здесь — '+n+' пикселей на телефоне. Меньше двенадцати — и цену или телефон приходится растягивать пальцами, а большинство просто уходит.']; },
+        tap:function(n){ return ['Кнопки мелкие для пальца.','У '+n+' элементов, которые надо нажимать, меньше 44 пикселей — размера, который просят и Apple, и Google, и палец попадает не туда.']; },
+        zeros:['Счётчики так и не запустились.','Цифры, которыми страница гордится, стоят на нуле: скрипт, который их крутит, не заработал. Посетитель читает «0 клиентов, 0 проектов» как мёртвый бизнес.'],
+        overlap:['Текст напечатан поверх текста.','Строки на телефоне ложатся друг на друга, и это никто не читает как задумку — только как поломку.'],
+        emptyb:function(n){ return ['В странице пустые дыры.','На телефоне '+n+' блоков шириной во весь экран совсем пусты — картинка или блок, который не загрузился, и человек листает пустоту.']; },
         vp:['Нет мобильной вёрстки.','Телефон раскладывает страницу по ширине компьютера и уменьшает её, поэтому она открывается крошечной и читать приходится, растягивая пальцами.'],
         rtl:function(s){ return [(s==='ar'?'Арабский':'Иврит')+' слева направо.','Страница написана на '+(s==='ar'?'арабском':'иврите')+', но свёрстана слева направо, поэтому меню, списки и знаки препинания стоят задом наперёд для тех, для кого она написана.']; },
         https:['Нет https.','Любой браузер помечает такую страницу как небезопасную, а некоторые предупреждают ещё до входа.'],
@@ -1804,6 +1850,30 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
   function findings(c){
     var f = [];
     if(!c) return f;
+    if(c.rendered){
+      /* Measured on the page a real browser drew at 390 x 844. Every one of these is
+         something a visitor feels in the first three seconds, which is why none of them
+         are about the code: they are about what is on the screen. */
+      if(c.overflow > 8) f.push({k:'off',bad:1,s:100,a:c.overflow});
+      if(c.rtl) f.push({k:'rtl',bad:1,s:95,a:c.rtl});
+      if(c.https === false) f.push({k:'https',bad:1,s:90});
+      if(c.zeros >= 2) f.push({k:'zeros',bad:1,s:88});
+      if(c.overlaps >= 2) f.push({k:'overlap',bad:1,s:86});
+      if(c.emptyBig >= 1) f.push({k:'emptyb',bad:1,s:84,a:c.emptyBig});
+      if(!c.call) f.push({k:'call',bad:1,s:75});
+      if(!c.install) f.push({k:'install',bad:1,s:70});
+      if(c.minFont > 0 && c.minFont < 12) f.push({k:'tiny',bad:1,s:60,a:c.minFont});
+      if(c.tapsSmall >= 3) f.push({k:'tap',bad:1,s:55,a:c.tapsSmall});
+      if(c.lazyMissing >= 5) f.push({k:'lazy',bad:1,s:40,a:c.lazyMissing});
+      f.sort(function(x,y){ return y.s - x.s; });
+      var plainR = [{k:'tap',a:c.tapsSmall},{k:'tiny',a:c.minFont},{k:'lazy',a:c.lazyMissing}];
+      for(var j=0;j<plainR.length && f.length<4;j++){
+        if(plainR[j].a && !f.some(function(x){ return x.k === plainR[j].k; })) f.push(plainR[j]);
+      }
+      return f.slice(0,4);
+    }
+    /* Read from the HTML, because the browser could not run. Fewer things, and only the
+       ones the code can actually prove. */
     if(c.vp === 'missing') f.push({k:'vp',bad:1,s:100});
     else if(c.vp === 'locked') f.push({k:'lock',bad:1,s:55});
     if(c.rtl) f.push({k:'rtl',bad:1,s:95,a:c.rtl});
@@ -1822,6 +1892,16 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     return f.slice(0,4);
   }
   function showFacts(){
+    /* 29.09.2026, musach-victor.co.il: its firewall answers a check with "The requested
+       URL was rejected", and that page reads as a site with no Hebrew, no phone link and
+       no manifest. We were handing a working business a list of faults invented by its own
+       firewall. A refusal is now said out loud and nothing is judged. */
+    if(blocked){
+      facts.innerHTML = ''; facts.hidden = true;
+      verdict.innerHTML = bdi('<b>' + esc(L('blockedT')) + '</b> ' + esc(L('blocked2')));
+      verdict.hidden = false;
+      return;
+    }
     if(!checks){ facts.hidden = true; verdict.hidden = true; return; }
     var list = findings(checks);
     facts.innerHTML = list.map(function(x){
@@ -1895,6 +1975,34 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     sc.dataset.filled = '1';
     var scr = sc.querySelector('.gv3-scr'), d = DEV[k];
     var e = scr.querySelector('.gv3-empty'); if(e) e.remove();
+
+    /* 29.09.2026: the phone screens are no longer this browser pretending to be a phone.
+       A site that gives phones a different page decides by user agent, so a live frame in
+       a visitor's desktop browser shows the desktop site squeezed into a phone, and the
+       outside screenshot service asks as a desktop too. Both of them lie about the very
+       thing this screen exists to show. This is the picture our own Chromium took at
+       390 x 844 with a phone's user agent: the page a real phone is handed. If it does not
+       come back, the old way takes over and nothing is lost. */
+    if(shots && k !== 'desktop'){
+      var ow = waiting(scr);
+      var pic = new Image();
+      pic.className = 'gv3-shot';
+      pic.alt = L('realshot');
+      pic.onload = function(){
+        if(!scr.isConnected) return;
+        if(ow.parentNode) ow.remove();
+        scr.appendChild(pic);
+        var cap = document.createElement('span'); cap.className = 'gv3-rc'; cap.textContent = L('realshot');
+        scr.appendChild(cap);
+      };
+      pic.onerror = function(){
+        if(ow.parentNode) ow.remove();
+        shots = false; sc.dataset.filled = ''; fill(k);
+      };
+      pic.src = '/preview?pic=phone&u=' + encodeURIComponent(site);
+      return;
+    }
+
     /* an http page inside https is blocked by every browser, so it goes the rebuilt way too */
     var rebuilt = !frameable || /^http:/i.test(site);
     /* 29.09.2026, creativity32.com: a site that sends phones their own page decides by user
@@ -2002,7 +2110,9 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     if(state === 'idle') say(esc(L('note0')));
     else if(state === 'loading') say(DOT + ' ' + esc(L('checking')));
     else if(state === 'error') say('<b>' + esc(L(errKey)) + '</b>', 1);
-    else if(state === 'shown') say(L('shown', esc(title || site)) + ((frameable && !/^http:/i.test(site)) ? '' : esc(L(shotsOk ? 'shotNote' : 'blocked'))));
+    else if(state === 'shown') say(L('shown', esc(title || site)) +
+      ((frameable && !/^http:/i.test(site)) ? '' : esc(L(shotsOk ? 'shotNote' : 'blocked'))) +
+      (busy && !blocked ? esc(L('busy')) : ''));
   }
 
   function ask(){
@@ -2010,6 +2120,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     if(!valid(raw) || state === 'loading'){ sync(); if(!raw) inp.focus(); return; }
     var my = ++seq;
     state = 'loading'; site = ''; title = ''; checks = null; frameable = true; hasHtml = true; shotsOk = 0;
+    blocked = false; busy = false; shots = false;
     facts.innerHTML = ''; facts.hidden = true; verdict.innerHTML = ''; verdict.hidden = true; next.hidden = true;
     sync(); words(); layout();
     get(0);
@@ -2037,6 +2148,9 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
           frameable = j.frameable !== false;
           hasHtml = j.html !== false;
           checks = j.checks || null;
+          blocked = j.blocked === true;
+          busy = j.busy === true;
+          shots = j.shots === true;
           state = 'shown'; sync(); words();
           layout();
           showFacts();

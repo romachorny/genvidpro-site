@@ -2,7 +2,9 @@
 //
 // Behind the "see your site on three screens" tool in the APP block.
 //
-//   GET /preview?u=<address>             -> {ok, url, title, frameable, why, checks}
+//   GET /preview?u=<address>             -> {ok, url, title, frameable, why, checks, blocked, busy}
+//   GET /preview?u=<address>&pic=phone|desktop -> image/jpeg, the server-rendered screen
+//   GET /preview?budget=1               -> {usedMs, capMs, pct} of today's free browser time
 //   GET /preview?u=<address>&render=1    -> text/html, a reconstructed copy of the page
 //   GET /preview?u=<address>&shot=mobile|desktop -> image/jpeg (PageSpeed screenshot, kept
 //                                            for the record, the page no longer asks for it)
@@ -24,6 +26,15 @@
 // It is served from here rather than written into srcdoc because a srcdoc frame
 // inherits the CSP of genvidpro.com, which would block every stylesheet and picture
 // of a stranger's site; opening that policy up for the whole site was the worse deal.
+//
+// 29.09.2026: the findings no longer come from the HTML. A real Chromium renders the
+// page at a phone's size (390 x 844, DPR 3, phone user agent) and at 1440 x 900, and the
+// faults are measured on what it painted — because Wix, Base44, Lovable, Duda and every
+// React app ship an empty shell in the HTML and build the site in the browser. That
+// browser is the gvp-render Worker (render/ in this repo), reached over a service
+// binding; it has no public address of its own. Reading the HTML is kept underneath, for
+// the minutes when the day's free browser budget is gone: then the check still answers,
+// it just says less, and it says which it did.
 //
 // The address comes from a stranger's keyboard, so it is checked before anything is
 // fetched: http and https only, no loopback, no private range, no cloud metadata
@@ -233,7 +244,12 @@ async function checksOf(html, finalUrl, headers) {
   const rtlDir = dirRtl(htmlTag) || dirRtl(bodyTag) || /(^|[}\s,])(html|body)[^{}]*\{[^}]*direction\s*:\s*rtl/i.test(css);
 
   const rule = widestRule(css);
-  const fixedW = Math.max(rule.w, inlineWidest(html));
+  /* 29.09.2026, dalba.co.il: ".boxed-layout #wrap { width: 1280px }" earned it "fixed
+     width 1280 px" while the site is perfectly fine on a phone — a later rule narrows it.
+     Reading widths out of a stylesheet cannot know that; only a rendered page can. So in
+     this fallback the width is only held against a page that has no phone layout at all,
+     where it is corroborated. When the browser ran, its measured overflow replaces it. */
+  const fixedW = vp === 'missing' ? Math.max(rule.w, inlineWidest(html)) : 0;
 
   const imgTags = html.match(/<img\b[^>]*>/gi) || [];
   const lazyMissing = imgTags.filter(t => !/loading\s*=\s*["']?lazy/i.test(t) && !/data-(lazy-)?src|lazyload/i.test(t)).length;
@@ -255,7 +271,11 @@ async function checksOf(html, finalUrl, headers) {
     lazyMissing,
     reqs: scripts + linkTags,
     kb: Math.round(html.length / 1024),
-    https: finalUrl.indexOf('https://') === 0
+    https: finalUrl.indexOf('https://') === 0,
+    // filled in by the caller: whether the same site also answers, unencrypted, at http
+    httpOpen: false,
+    // these come from the HTML, not from a browser that drew the page
+    rendered: false
   };
 }
 
@@ -263,6 +283,56 @@ function titleOf(html) {
   const m = /<title[^>]*>([\s\S]{0,200}?)<\/title>/i.exec(html || '');
   if (!m) return '';
   return m[1].replace(/\s+/g, ' ').trim().slice(0, 90);
+}
+
+
+// ---- the browser, the firewall, and http ------------------------------------------
+
+/* A firewall's refusal parses like any other page and says nothing. musach-victor.co.il
+   answers a check with F5's "The requested URL was rejected", and reading it as a site
+   reported a healthy business as having no phone link, no manifest and no Hebrew. A
+   refusal is not a verdict: it is reported as one, and no findings are shown. */
+const BLOCK_RE = /the requested url was rejected|request rejected|access denied|you have been blocked|attention required|just a moment|checking your browser|incapsula|imperva|sucuri website firewall|error 102[0-9]|ddos protection by|are you a robot|verify you are human|enable javascript and cookies to continue/i;
+function blockedHtml(html, status) {
+  const t = titleOf(html) + ' ' + textOf(html).replace(/\s+/g, ' ').slice(0, 600);
+  if (BLOCK_RE.test(t)) return true;
+  if (status === 403 || status === 401 || status === 406 || status === 429) {
+    const words = textOf(html).replace(/\s+/g, ' ').trim().length;
+    if (words < 400 && (html.match(/<a\b/gi) || []).length < 3) return true;
+  }
+  return false;
+}
+
+/* Is the same site also served, unencrypted, at http. bar-nikuy.co.il answers both and
+   redirects neither, so the visitor who types the bare name lands on http and every
+   browser marks it "not secure" — while a check that only ever asked for https called it
+   fine. What the visitor gets is what counts. */
+async function httpIsOpen(u) {
+  if (u.protocol !== 'https:') return true;
+  try {
+    const r = await fetch('http://' + u.host + u.pathname, {
+      redirect: 'manual', signal: AbortSignal.timeout(6000),
+      headers: { 'User-Agent': 'Mozilla/5.0 (Linux; Android 14; Pixel 8) Mobile Safari/537.36 GenVidPro-preview' }
+    });
+    if (r.status >= 300 && r.status < 400) {
+      const loc = String(r.headers.get('location') || '');
+      return !/^https:/i.test(loc) && !/^\/\//.test(loc);
+    }
+    return r.status === 200;
+  } catch (e) { return false; }
+}
+
+/* The render Worker. No public address: it is only reachable through this binding.
+   Anything it cannot do — no binding, out of daily browser budget, a page it could not
+   open — comes back as a plain answer and the HTML reading takes over. */
+async function askRender(env, u, pic) {
+  if (!env.RENDER) return null;
+  const q = 'https://gvp-render/?u=' + encodeURIComponent(u.toString()) + (pic ? '&pic=' + pic : '');
+  try {
+    const r = await env.RENDER.fetch(q, { signal: AbortSignal.timeout(50000) });
+    if (pic) return r;
+    return await r.json();
+  } catch (e) { return pic ? null : { ok: false, why: 'render_failed' }; }
 }
 
 // ---- the reconstructed page -------------------------------------------------------
@@ -307,6 +377,19 @@ export async function onRequestGet({ request, env }) {
     return new Response(JSON.stringify({ ok: false, why: 'forbidden' }), { status: 403, headers: JSON_H });
   }
   const url = new URL(request.url);
+
+  // How much of the day's free browser time is gone. Read by the server's watcher, which
+  // tells Roma at 70 % so the move to the paid plan is a decision and not a surprise.
+  if (url.searchParams.get('budget') === '1') {
+    if (!env.RENDER) return new Response(JSON.stringify({ ok: false, why: 'no_render' }), { headers: JSON_H });
+    try {
+      const r = await env.RENDER.fetch('https://gvp-render/budget');
+      return new Response(await r.text(), { headers: JSON_H });
+    } catch (e) {
+      return new Response(JSON.stringify({ ok: false, why: 'render_unreachable' }), { headers: JSON_H });
+    }
+  }
+
   const u = clean(url.searchParams.get('u'));
   if (!u) {
     return new Response(JSON.stringify({ ok: false, why: 'bad_address' }), { status: 400, headers: JSON_H });
@@ -324,6 +407,23 @@ export async function onRequestGet({ request, env }) {
   const shot = url.searchParams.get('shot');
   if (shot === 'mobile' || shot === 'desktop') return screenshot(u, shot, env);
 
+  // The phone and desktop screens as the server's own browser drew them. Served from the
+  // render Worker's 24 h cache; it never renders on this path, so a missing picture just
+  // means the check has not run for this address today.
+  const pic = url.searchParams.get('pic');
+  if (pic === 'phone' || pic === 'desktop') {
+    const r = await askRender(env, u, pic);
+    if (!r || !r.ok) return new Response(JSON.stringify({ ok: false, why: 'no_shot' }), { status: 404, headers: JSON_H });
+    return new Response(r.body, {
+      headers: { 'Content-Type': 'image/jpeg', 'Cache-Control': 'private, max-age=3600', 'X-Content-Type-Options': 'nosniff' }
+    });
+  }
+
+  /* Both at once. The browser takes seconds; the plain fetch is what tells us whether a
+     frame of ours will be allowed and is the fallback if the browser cannot run. */
+  const renderP = askRender(env, u);
+  const httpOpenP = httpIsOpen(u);
+
   let r;
   try {
     r = await fetchPage(u);
@@ -336,7 +436,7 @@ export async function onRequestGet({ request, env }) {
     if (render) return new Response('Upstream ' + r.status, { status: 502, headers: { 'Content-Type': 'text/plain' } });
     return new Response(JSON.stringify({ ok: false, why: 'status_' + r.status, retry: r.status >= 500 }), { headers: JSON_H });
   }
-  const finalUrl = r.url || u.toString();
+  let finalUrl = r.url || u.toString();
   const ct = String(r.headers.get('content-type') || '');
   let html = '';
   if (ct.indexOf('html') !== -1 || !ct) {
@@ -357,22 +457,56 @@ export async function onRequestGet({ request, env }) {
   }
 
   const pol = framePolicy(r.headers, hostOf(finalUrl));
-  let title = '', checks = null;
+  let title = '', checks = null, blocked = false, busy = false, shots = false;
+  const rend = await renderP;
+
+  if (rend && rend.ok) {
+    // The browser drew the page. Everything below is measured on what it painted.
+    title = rend.title || '';
+    blocked = !!rend.blocked;
+    checks = rend.checks || null;
+    shots = !blocked;
+    if (rend.url) finalUrl = rend.url;
+  } else {
+    busy = !!(rend && rend.why === 'busy');
+  }
+
+  // A firewall's refusal, seen either by the browser or in the HTML, ends it here: the
+  // site said nothing about itself, so neither do we.
+  if (!blocked && html) blocked = blockedHtml(html, r.status);
+  if (blocked) {
+    return new Response(JSON.stringify({
+      ok: true, url: finalUrl, title, frameable: pol.frameable, why: pol.why,
+      checks: null, blocked: true, busy, html: !!html, shots: false
+    }), { headers: JSON_H });
+  }
+
   // 15.09.2026: sigal-yoga.co.il sends a full 190 KB page to a visitor and an empty body to
   // our Cloudflare worker (its bot protection). Checking an empty page reported "no phone
   // layout" about a site that has one. An empty or stub page is not judged at all: the
   // visitor still gets the live screens, just no findings we cannot stand behind.
   const thin = !html || (html.length < 2500 && !/<body[\s>]/i.test(html)) || !/<(p|div|section|main|a|img|h1|h2)\b/i.test(html);
   if (thin) html = html && html.length ? html : '';
-  if (html && !thin) {
+  if (!checks && html && !thin) {
     try {
       // Wix puts <title> after 150 KB of inline styles
-      title = titleOf(html.slice(0, 300000));
+      if (!title) title = titleOf(html.slice(0, 300000));
       checks = await checksOf(html, finalUrl, r.headers);
     } catch (e) {}
   }
+  if (!title && html && !thin) title = titleOf(html.slice(0, 300000));
+
+  // http is asked about the same way whichever path got us here: it is about what the
+  // visitor's browser does with the bare name, not about what we chose to request.
+  if (checks) {
+    const httpOpen = await httpOpenP;
+    checks.httpOpen = httpOpen;
+    if (httpOpen) checks.https = false;
+  }
+
   return new Response(JSON.stringify({
-    ok: true, url: finalUrl, title, frameable: pol.frameable, why: pol.why, checks, html: !!html
+    ok: true, url: finalUrl, title, frameable: pol.frameable, why: pol.why,
+    checks, blocked: false, busy, html: !!html, shots
   }), { headers: JSON_H });
 }
 

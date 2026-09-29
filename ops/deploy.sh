@@ -5,6 +5,8 @@
 # Why a build dir: wrangler uploads everything in the folder it runs from, and a run from any
 # folder other than the one holding functions/ and wrangler.toml silently ships without the
 # functions bundle (/chat and /ev answer 405). The build dir IS that root, minus .git, ops/ and docs.
+# render/ is left out too: it is a Worker of its own with its own node_modules and its own
+# deploy (ops/render-deploy.sh), and its source has no business being served as site files.
 set -euo pipefail
 MSG="${1:?usage: ops/deploy.sh \"what changed\"}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$ROOT"
@@ -40,7 +42,7 @@ VERSION="$(python3 -c "import json;print(json.load(open('services.json'))['versi
 # 3. Build dir = exact publish set: tracked files + manifest videos, nothing else
 BUILD="$(mktemp -d "${TMPDIR:-/tmp}/gvp-deploy.XXXXXX")"; trap 'rm -rf "$BUILD"' EXIT
 { git ls-files; awk '{print $3}' ops/media.sha256; } \
-  | grep -vE '^(ops/|README\.md$|\.gitignore$|\.github/)' | sort -u \
+  | grep -vE '^(ops/|render/|README\.md$|\.gitignore$|\.github/)' | sort -u \
   | while read -r f; do mkdir -p "$BUILD/$(dirname "$f")"; cp -p "$f" "$BUILD/$f"; done
 [ -f "$BUILD/functions/chat.js" ] && [ -f "$BUILD/wrangler.toml" ] || die "build dir lost functions/"
 
