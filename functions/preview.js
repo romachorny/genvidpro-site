@@ -177,13 +177,21 @@ function textOf(html) {
 async function checksOf(html, finalUrl, headers) {
   const head = html.slice(0, 200000);
   const vpTag = /<meta[^>]+name\s*=\s*["']?viewport["']?[^>]*>/i.exec(head);
-  let vp = 'missing';
+  let vp = 'missing', vpW = 0;
   if (vpTag) {
     // width=device-width is the usual spelling, but initial-scale=1 on its own does
     // the same job and plenty of sites write only that.
+    // 29.09.2026, creativity32.com: Wix (and other builders with a separate phone site)
+    // answer a phone with its own page and a fixed viewport, width=320. That page IS the
+    // phone layout, drawn 320 wide and stretched to the screen. Reading it as "no phone
+    // layout" told a studio its good phone site was broken, and it opens fine on any phone.
+    // A fixed width up to 600 is a phone layout; 700 and up is a desktop page and stays missing.
     const t = vpTag[0];
-    if (/device-width|initial-scale\s*=\s*1/i.test(t)) {
+    const fw = /(?:^|[\s,;"'])width\s*=\s*(\d{3,4})\b/i.exec(t);
+    const phoneW = fw && +fw[1] >= 240 && +fw[1] <= 600 ? +fw[1] : 0;
+    if (/device-width|initial-scale\s*=\s*1/i.test(t) || phoneW) {
       vp = /user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?\b/i.test(t) ? 'locked' : 'ok';
+      if (phoneW && !/device-width/i.test(t)) vpW = phoneW;
     }
   }
 
@@ -234,6 +242,9 @@ async function checksOf(html, finalUrl, headers) {
 
   return {
     vp,
+    // set only for a separate phone page served by user agent: the page draws those
+    // phone frames from our phone-agent copy, a visitor's desktop browser would get the desktop site
+    vpW,
     rtl: rtlScript && !rtlDir ? rtlScript : '',
     rtlText: rtlScript,
     fixedW,
@@ -355,7 +366,8 @@ export async function onRequestGet({ request, env }) {
   if (thin) html = html && html.length ? html : '';
   if (html && !thin) {
     try {
-      title = titleOf(html.slice(0, 20000));
+      // Wix puts <title> after 150 KB of inline styles
+      title = titleOf(html.slice(0, 300000));
       checks = await checksOf(html, finalUrl, r.headers);
     } catch (e) {}
   }

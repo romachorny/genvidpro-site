@@ -1872,6 +1872,9 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       var f = scr.querySelector('.gv3-vp');
       if(f){
         var lw = (k === 'desktop' || !checks || checks.vp !== 'missing') ? d.w : 980;
+        /* 29.09.2026: a separate phone page (Wix, width=320) is laid out at its own width
+           and stretched to the screen, exactly as the phone does it. */
+        if(k !== 'desktop' && checks && checks.vpW) lw = checks.vpW;
         f.style.width = lw + 'px';
         f.style.height = Math.ceil(d.h * (lw / d.w)) + 'px';
         f.style.transform = 'scale(' + (w / lw).toFixed(4) + ')';
@@ -1894,6 +1897,12 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     var e = scr.querySelector('.gv3-empty'); if(e) e.remove();
     /* an http page inside https is blocked by every browser, so it goes the rebuilt way too */
     var rebuilt = !frameable || /^http:/i.test(site);
+    /* 29.09.2026, creativity32.com: a site that sends phones their own page decides by user
+       agent, so a live frame in a desktop browser shows the desktop site squeezed into a phone.
+       Its phone frames are drawn from the copy our server fetched as a phone, which is the page
+       a real phone gets. No screenshot here: the screenshot service asks as a desktop browser. */
+    var phoneCopy = !rebuilt && k !== 'desktop' && !!(checks && checks.vpW) && hasHtml;
+    if(phoneCopy) rebuilt = true;
     if(rebuilt && !hasHtml){
       var n = document.createElement('div'); n.className = 'gv3-over';
       n.innerHTML = '<b>' + esc(L('noHtmlT')) + '</b>' + esc(L('noHtml'));
@@ -1918,7 +1927,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
          thing this screen is for. A real Chrome screenshot at this screen's own size is asked for
          instead, by the visitor's own browser, so the free daily allowance spent is theirs; the
          reconstruction stays underneath for when no screenshot comes back. */
-      shot(k, scr, sc, rc);
+      if(!phoneCopy) shot(k, scr, sc, rc);
     } else {
       f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
       f.setAttribute('referrerpolicy', 'no-referrer');
