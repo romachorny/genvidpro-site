@@ -2084,6 +2084,13 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     fit();
   }
 
+  /* 29.09.2026, busi.co.il: "the iPhone frame is almost blank, one slider image, Android is
+     fine." Both phones were right and both were wrong. The site forbids framing, so this
+     outside screenshot stood in for it — and it asked for one screen's worth of page and
+     drew it with object-fit:cover, which crops. The visitor got the top of a slider and no
+     way to see the rest: no wheel, no touch, nothing to scroll, because a cropped picture
+     has nothing underneath. It is the full page now, sized to its own height and scrolled
+     like the live frame next to it, the same as the phone pictures our own browser takes. */
   function shot(k, scr, sc, rc){
     var d = DEV[k], phone = k !== 'desktop', img = new Image();
     img.className = 'gv3-shot';
@@ -2094,11 +2101,13 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       var f = scr.querySelector('.gv3-vp'); if(f) f.remove();
       if(rc && rc.parentNode) rc.remove();
       sc.classList.remove('rebuilt');
+      img.classList.add('full');
+      scr.classList.add('scrolls');
       scr.appendChild(img);
       shotsOk++; words();
     };
     img.src = 'https://api.microlink.io/?url=' + encodeURIComponent(site) +
-      '&screenshot=true&meta=false&embed=screenshot.url' +
+      '&screenshot=true&screenshot.fullPage=true&meta=false&embed=screenshot.url' +
       '&viewport.width=' + d.w + '&viewport.height=' + d.h +
       '&viewport.isMobile=' + (phone ? 'true' : 'false') +
       '&viewport.deviceScaleFactor=' + (phone ? 2 : 1);

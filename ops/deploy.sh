@@ -24,6 +24,10 @@ if python3 -c "import jsonschema" 2>/dev/null; then
     || die "services.json fails services.schema.json"
 fi
 ops/fetch-media.sh --check >/dev/null || die "videos incomplete, run ops/fetch-media.sh"
+# The site checker's pure logic: no network, no browser, under a second. The two slower
+# suites run after the deploy (ops/checker-regress.sh, scripts/regress.mjs); this one is
+# cheap enough to stand between a typo and production, so it does.
+node scripts/preview-unit.mjs >/dev/null || die "scripts/preview-unit.mjs fails, run it to see which case"
 [ -f "$SECRETS" ] || die "$SECRETS missing"
 [ "$(stat -c %a "$SECRETS")" = "600" ] || die "$SECRETS must be chmod 600"
 set -a; . "$SECRETS"; set +a      # CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID; never on a command line

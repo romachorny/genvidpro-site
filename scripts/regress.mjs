@@ -129,6 +129,92 @@ for (const lang of ['he', 'ru', 'en']) {
   await p.close();
 }
 
+/* 7. 29.09.2026, the site checker's three screens.
+      busi.co.il: "the iPhone frame is almost blank, one slider image, Android is fine", and
+      neither phone scrolled with wheel or touch. The site forbids framing, so an outside
+      screenshot stood in for the frame — one screen's worth of page, drawn with
+      object-fit:cover, which crops. A cropped picture has nothing underneath to scroll to.
+      Every screenshot that stands in for a frame must be the full page and must scroll. */
+{
+  const src = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  // every place that puts a screenshot on a screen marks it full and lets the screen scroll
+  const shots = [...src.matchAll(/\.className\s*=\s*'gv3-shot'/g)].length;
+  const fulls = [...src.matchAll(/classList\.add\('full'\)/g)].length;
+  const scrolls = [...src.matchAll(/classList\.add\('scrolls'\)/g)].length;
+  line(shots > 0 && fulls === shots && scrolls === shots,
+    'three screens: every stand-in screenshot is the full page and scrolls',
+    `${shots} screenshot paths, ${fulls} full, ${scrolls} scrolling`);
+  line(/screenshot\.fullPage=true/.test(src),
+    'three screens: the outside screenshot is asked for the whole page, not one screen');
+  line(/\.gv3-scr\.scrolls\{overflow-y:auto/.test(src),
+    'three screens: a scrolling screen really has overflow-y:auto');
+}
+
+/* The three frames, live, in the visitor's own language. 29.09.2026: the desktop frame
+   used the saved language while the phone copies were always fetched in Hebrew, so a
+   visitor reading in English saw an English laptop beside two Hebrew phones. */
+for (const lang of ['he', 'en', 'ru']) {
+  const p = await open(`${BASE}/?lang=${lang}`, 1440, 900);
+  const st = await p.evaluate(async (target) => {
+    const sec = document.getElementById('gvs4');
+    if (!sec) return { no: 'no #gvs4' };
+    sec.scrollIntoView();
+    const inp = document.getElementById('gv3u');
+    const go = document.getElementById('gv3go');
+    if (!inp || !go) return { no: 'no input' };
+    inp.value = target;
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+    go.click();
+    for (let i = 0; i < 60; i++) {
+      await new Promise(r => setTimeout(r, 1000));
+      if (window.gvThree && window.gvThree.state() === 'shown') break;
+    }
+    await new Promise(r => setTimeout(r, 4000));
+    const screens = [...document.querySelectorAll('#gvs4 .gv3-scr')];
+    return {
+      state: window.gvThree ? window.gvThree.state() : '?',
+      n: screens.length,
+      // a screenshot standing in for a frame must never be a cropped one
+      cropped: screens.filter(s => {
+        const img = s.querySelector('.gv3-shot');
+        return img && !img.classList.contains('full');
+      }).length,
+      // the language every frame was opened in
+      langs: screens.map(s => {
+        const f = s.querySelector('iframe');
+        if (!f) return s.querySelector('.gv3-shot') ? 'shot' : 'empty';
+        const m = /[?&](?:lang|al)=([^&]*)/.exec(f.getAttribute('src') || '');
+        return m ? decodeURIComponent(m[1]) : 'none';
+      })
+    };
+  }, 'genvidpro.com');
+
+  line(st.n === 3, `three screens (${lang}): all three frames are built`, JSON.stringify(st));
+  line(st.cropped === 0, `three screens (${lang}): no frame is a cropped screenshot`, `cropped: ${st.cropped}`);
+  const real = (st.langs || []).filter(l => l !== 'empty' && l !== 'shot' && l !== 'none');
+  const oneLang = real.length > 0 && real.every(l => l.slice(0, 2).toLowerCase() === lang ||
+    l.toLowerCase().startsWith(lang));
+  line(oneLang, `three screens (${lang}): every frame opens in the page's language`, (st.langs || []).join(' | '));
+  await p.close();
+}
+
+/* The same widget on a phone: one frame at a time behind the tabs, and never a sideways
+   scroll on the page itself. */
+{
+  const p = await open(`${BASE}/?lang=he`, 390, 844);
+  const st = await p.evaluate(() => {
+    const sec = document.getElementById('gvs4');
+    if (sec) sec.scrollIntoView();
+    return {
+      tabs: [...document.querySelectorAll('#gvs4 .gv3-tab')].map(b => b.dataset.d),
+      hs: document.documentElement.scrollWidth - document.documentElement.clientWidth
+    };
+  });
+  line(st.tabs.length === 3 && st.hs === 0, 'three screens on a phone: three tabs, no sideways scroll',
+    JSON.stringify(st));
+  await p.close();
+}
+
 await browser.close();
 const bad = out.filter(r => !r.ok);
 console.log(`\n${out.length - bad.length} PASS, ${bad.length} FAIL`);

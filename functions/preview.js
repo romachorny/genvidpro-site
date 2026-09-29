@@ -63,7 +63,7 @@ const PRIVATE = [
   /^\[?::1\]?$/, /^\[?fe80:/i, /^\[?fc00:/i, /^\[?fd/i, /^metadata\./i
 ];
 
-function clean(raw) {
+export function clean(raw) {
   let s = String(raw || '').trim();
   if (!s) return null;
   if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
@@ -91,7 +91,7 @@ async function bump(env, key, cap) {
 
 // Will a frame of ours be allowed to show this site. Two headers decide it, and a
 // site may send either or both. Our own site allows 'self', which is us.
-function framePolicy(h, target) {
+export function framePolicy(h, target) {
   const mine = ours(target);
   const xfo = String(h.get('x-frame-options') || '').toLowerCase();
   if (xfo.indexOf('deny') !== -1) return { frameable: false, why: 'x-frame-options: deny' };
@@ -197,6 +197,34 @@ function textOf(html) {
   return html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ');
 }
 
+/* How many things the page actually asks the network for on first open. The chip says
+   "N requests on first open", so it has to be requests.
+
+   29.09.2026: it was `<script` plus `<link`, counted as tags. genvidpro.com has 27 script
+   tags of which 23 are inline — inline script is zero requests — and 14 link tags of which
+   preconnect, dns-prefetch and canonical fetch nothing at all. That came to 41 and earned
+   our own clean site a red "41 requests on first open" chip in its own checker. Only tags
+   that cause a fetch are counted now: a script with a src, a link whose rel actually
+   downloads something, and the images. */
+// rel is a space-separated list of whole words, so it is split rather than searched:
+// "dns-prefetch" contains "prefetch", and a regex with \b happily matched it — a socket
+// being opened early is not a request. Caught by scripts/preview-unit.mjs.
+const FETCHING_REL = ['stylesheet', 'preload', 'modulepreload', 'prefetch', 'prerender',
+  'icon', 'shortcut', 'apple-touch-icon', 'apple-touch-startup-image', 'manifest', 'mask-icon'];
+export function requestCount(html, imgs) {
+  const src = (html.match(/<script\b[^>]*\ssrc\s*=/gi) || []).length;
+  let links = 0;
+  const re = /<link\b[^>]*>/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    const rel = /\srel\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(m[0]);
+    const v = rel ? (rel[2] || rel[3] || rel[4] || '') : '';
+    // no rel at all fetches nothing; preconnect and dns-prefetch open a socket, not a request
+    if (v && v.toLowerCase().split(/\s+/).some(t => FETCHING_REL.indexOf(t) !== -1)) links++;
+  }
+  return src + links + (imgs || 0);
+}
+
 async function checksOf(html, finalUrl, headers) {
   const head = html.slice(0, 200000);
   const vpTag = /<meta[^>]+name\s*=\s*["']?viewport["']?[^>]*>/i.exec(head);
@@ -265,8 +293,6 @@ async function checksOf(html, finalUrl, headers) {
 
   const imgTags = html.match(/<img\b[^>]*>/gi) || [];
   const lazyMissing = imgTags.filter(t => !/loading\s*=\s*["']?lazy/i.test(t) && !/data-(lazy-)?src|lazyload/i.test(t)).length;
-  const scripts = (html.match(/<script\b/gi) || []).length;
-  const linkTags = (html.match(/<link\b/gi) || []).length;
 
   return {
     vp,
@@ -281,7 +307,7 @@ async function checksOf(html, finalUrl, headers) {
     call: /href\s*=\s*["']?\s*tel:/i.test(html) || /wa\.me\/|api\.whatsapp\.com|whatsapp:\/\/|web\.whatsapp\.com|chat\.whatsapp\.com/i.test(html),
     imgs: imgTags.length,
     lazyMissing,
-    reqs: scripts + linkTags,
+    reqs: requestCount(html, imgTags.length),
     kb: Math.round(html.length / 1024),
     https: finalUrl.indexOf('https://') === 0,
     // filled in by the caller: whether the same site also answers, unencrypted, at http
@@ -303,7 +329,7 @@ const ENTITIES = {
   ldquo: '\u201c', rdquo: '\u201d', trade: '\u2122', reg: '\u00ae', copy: '\u00a9',
   deg: '\u00b0', euro: '\u20ac', pound: '\u00a3', times: '\u00d7', divide: '\u00f7'
 };
-function unentity(s) {
+export function unentity(s) {
   return String(s).replace(/&(#[0-9]{1,7}|#x[0-9a-f]{1,6}|[a-z][a-z0-9]{1,9});/gi, (m, g) => {
     if (g.charAt(0) === '#') {
       const n = g.charAt(1).toLowerCase() === 'x' ? parseInt(g.slice(2), 16) : parseInt(g.slice(1), 10);
@@ -315,7 +341,7 @@ function unentity(s) {
   });
 }
 
-function titleOf(html) {
+export function titleOf(html) {
   const m = /<title[^>]*>([\s\S]{0,400}?)<\/title>/i.exec(html || '');
   if (!m) return '';
   return unentity(m[1].replace(/\s+/g, ' ').trim()).replace(/\s+/g, ' ').trim().slice(0, 90);
@@ -329,7 +355,7 @@ function titleOf(html) {
    reported a healthy business as having no phone link, no manifest and no Hebrew. A
    refusal is not a verdict: it is reported as one, and no findings are shown. */
 const BLOCK_RE = /the requested url was rejected|request rejected|access denied|you have been blocked|attention required|just a moment|checking your browser|incapsula|imperva|sucuri website firewall|error 102[0-9]|ddos protection by|are you a robot|verify you are human|enable javascript and cookies to continue/i;
-function blockedHtml(html, status) {
+export function blockedHtml(html, status) {
   const t = titleOf(html) + ' ' + textOf(html).replace(/\s+/g, ' ').slice(0, 600);
   if (BLOCK_RE.test(t)) return true;
   if (status === 403 || status === 401 || status === 406 || status === 429) {
