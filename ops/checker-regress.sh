@@ -28,8 +28,9 @@
 # not merely that the one bug it was written for is gone. dalba and creativity32 used to
 # check "'fixed' not in bad" and "'vp' not in bad" — narrow, and both went green while
 # creativity32 carried a red "837 KB of html" chip nobody had thought to look for. A case
-# that names the chips it forgives can only ever catch the bug it already knows. These two
-# now demand a clean result, which is the thing actually claimed about them.
+# that names the chips it forgives can only ever catch the bug it already knows. They state
+# the whole expected result now — empty for creativity32, exactly {reqs, lazy} for dalba —
+# so a chip nobody thought about cannot hide behind one nobody forgave.
 set -uo pipefail
 SITE="${1:-https://genvidpro.com}"
 cd "$(dirname "$0")/.."
@@ -94,8 +95,13 @@ CASES = [
         lambda j, c, bad: live(j, c, bad) and c and c.get('httpOpen') is True and 'https' in bad),
     ('musach-victor.co.il', 'the firewall blocked us and we say so',
         lambda j, c, bad: j.get('ok') and j.get('blocked') is True and not c),
-    ('dalba.co.il',         'fine on a phone: no red chips at all',
-        lambda j, c, bad: live(j, c, bad) and not bad),
+    # dalba: the bug was "fixed width 1280 px" about a site that is fine on a phone, so no
+    # layout chip may appear. The two that do are true and measured 29.09.2026 — 29 external
+    # scripts plus 44 fetching links plus 7 images is 83 requests on first open, and not one
+    # of those 7 images is lazy. Named exactly, so a new chip fails this, and an honest one
+    # that goes away fails it too; either way somebody looks.
+    ('dalba.co.il',         'fine on a phone; heavy, and only where it really is',
+        lambda j, c, bad: live(j, c, bad) and bad == {'reqs', 'lazy'}),
     ('creativity32.com',    'a working Wix studio: no red chips at all',
         lambda j, c, bad: live(j, c, bad) and not bad and bool(j.get('title'))),
     ('app.base44.com',      'an app shell is read by the browser, not the HTML',
