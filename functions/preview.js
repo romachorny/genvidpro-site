@@ -309,6 +309,12 @@ function blockedHtml(html, status) {
    fine. What the visitor gets is what counts. */
 async function httpIsOpen(u) {
   if (u.protocol !== 'https:') return true;
+  /* Not our own zone. A Worker's subrequest to the zone it runs on is served from inside
+     Cloudflare and never meets the edge rule that redirects http to https, so genvidpro.com
+     answered its own probe with a 200 and earned itself a "not secure" chip it does not
+     deserve. Every other host is measured honestly; checked against curl on 29.09.2026,
+     busi, dalba, creativity32 and wikipedia all 301, bar-nikuy and example.com do not. */
+  if (ours(u.hostname.toLowerCase())) return false;
   try {
     const r = await fetch('http://' + u.host + u.pathname, {
       redirect: 'manual', signal: AbortSignal.timeout(6000),
