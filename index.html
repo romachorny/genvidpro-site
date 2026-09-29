@@ -1839,8 +1839,13 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
      drag the punctuation around them to the wrong side. */
   function bdi(html){
     if(lang() !== 'he') return html;
-    return String(html).split(/(<[^>]+>)/).map(function(part){
-      if(part.charAt(0) === '<') return part;
+    /* 29.09.2026: an escaped ampersand arrives here as "&amp;", and the Latin run inside it
+       was being wrapped too — "&<bdi>amp</bdi>;" — which the browser then prints as the
+       literal text "&amp;". A title with an "&" in it came out wrong in Hebrew and right in
+       English. Entities are atomic here, like tags: neither is text to be isolated. */
+    return String(html).split(/(<[^>]+>|&(?:#[0-9]{1,7}|#x[0-9a-fA-F]{1,6}|[a-zA-Z][a-zA-Z0-9]{1,9});)/).map(function(part){
+      if(!part) return '';
+      if(part.charAt(0) === '<' || part.charAt(0) === '&') return part;
       return part.replace(/[A-Za-z0-9][A-Za-z0-9.·×:%\/-]*(?:\s+[A-Za-z0-9][A-Za-z0-9.·×:%\/-]*)*/g, function(m){ return '<bdi>'+m+'</bdi>'; });
     }).join('');
   }
