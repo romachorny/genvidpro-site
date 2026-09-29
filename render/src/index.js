@@ -57,8 +57,10 @@ function clean(raw) {
   return u;
 }
 
+const AL_OK = /^[A-Za-z0-9,;=.\- ]{2,80}$/;
 const day = () => new Date().toISOString().slice(0, 10);
-const keyOf = (u) => 'rr:' + u.toString().replace(/\/$/, '').toLowerCase();
+const keyOf = (u, al) => 'rr:' + (al ? al.slice(0, 5).replace(/[^a-z-]/gi, '') + ':' : '') +
+  u.toString().replace(/\/$/, '').toLowerCase();
 
 async function budget(env) {
   let used = 0;
@@ -242,11 +244,13 @@ async function open(env) {
   return { browser: await puppeteer.launch(env.BROWSER, { keep_alive: 600000 }), fresh: true };
 }
 
-async function screen(browser, u, dev) {
+async function screen(browser, u, dev, al) {
   const ctx = await browser.createBrowserContext();
   try {
     const page = await ctx.newPage();
     await page.setUserAgent(dev.ua);
+    // the visitor's own language, so the drawn page matches the live one beside it
+    if (al) { try { await page.setExtraHTTPHeaders({ 'Accept-Language': al }); } catch (e) {} }
     await page.setViewport({ width: dev.w, height: dev.h, deviceScaleFactor: dev.dpr, isMobile: dev.mobile, hasTouch: dev.mobile });
     let status = 0, finalUrl = u.toString();
     try {
@@ -258,12 +262,17 @@ async function screen(browser, u, dev) {
     }
     let m = null;
     try { m = await page.evaluate(measure); } catch (e) {}
-    let shot = '';
+    /* The phone screens are scrolled by the visitor, so the phone picture is the whole
+       page, not the first screenful: the frame becomes a window that slides down it. The
+       laptop frame stays a live page and needs only one screen. */
+    let shot = '', shotH = 0;
     try {
-      const b = await page.screenshot({ type: 'jpeg', quality: 55, captureBeyondViewport: false });
+      const full = !!dev.mobile;
+      const b = await page.screenshot({ type: 'jpeg', quality: 55, fullPage: full, captureBeyondViewport: full });
       shot = btoa(String.fromCharCode.apply(null, new Uint8Array(b)));
+      if (full) { try { shotH = await page.evaluate(() => document.documentElement.scrollHeight); } catch (e) {} }
     } catch (e) {}
-    return { m, shot, status, finalUrl };
+    return { m, shot, shotH, status, finalUrl };
   } finally {
     try { await ctx.close(); } catch (e) {}
   }
@@ -316,7 +325,7 @@ async function httpIsOpen(u) {
   } catch (e) { return false; }
 }
 
-async function render(env, u) {
+async function render(env, u, al) {
   const b = await budget(env);
   if (b.usedMs >= CAP_MS * STOP_AT) return { ok: false, why: 'busy', budget: b };
 
@@ -326,8 +335,8 @@ async function render(env, u) {
     const s = await open(env);
     browser = s.browser;
     const httpOpen = await httpIsOpen(u);
-    const phone = await screen(browser, u, PHONE);
-    const desk = await screen(browser, u, DESKTOP);
+    const phone = await screen(browser, u, PHONE, al);
+    const desk = await screen(browser, u, DESKTOP, al);
     const finalUrl = phone.finalUrl || u.toString();
     const blocked = blockedBy(phone.m, phone.status);
     out = {
@@ -337,7 +346,9 @@ async function render(env, u) {
       status: phone.status,
       blocked,
       checks: blocked ? null : checksOf(phone, desk, finalUrl, httpOpen),
-      shots: blocked ? {} : { phone: phone.shot, desktop: desk.shot }
+      shots: blocked ? {} : { phone: phone.shot, desktop: desk.shot },
+      // how tall the phone picture is in the page's own pixels, so the frame knows how far it scrolls
+      shotH: phone.shotH || 0
     };
   } catch (e) {
     const why = /429|time limit|limit exceeded/i.test(String(e && e.message)) ? 'busy' : 'render_failed';
@@ -366,7 +377,8 @@ export default {
     const u = clean(url.searchParams.get('u'));
     if (!u) return new Response(JSON.stringify({ ok: false, why: 'bad_address' }), { status: 400, headers: JSON_H });
 
-    const key = keyOf(u);
+    const al = AL_OK.test(String(url.searchParams.get('al') || '')) ? url.searchParams.get('al') : '';
+    const key = keyOf(u, al);
     const pic = url.searchParams.get('pic');
     let hit = null;
     try { hit = await env.EVENTS.get(key, 'json'); } catch (e) {}
@@ -384,7 +396,7 @@ export default {
       return new Response(JSON.stringify(Object.assign({}, hit, { cached: true, shots: undefined, budget: await budget(env) })), { headers: JSON_H });
     }
 
-    const out = await render(env, u);
+    const out = await render(env, u, al);
     if (out.ok) {
       try { await env.EVENTS.put(key, JSON.stringify(out), { expirationTtl: CACHE_TTL }); } catch (e) {}
     }

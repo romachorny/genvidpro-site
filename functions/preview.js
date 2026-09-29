@@ -6,6 +6,7 @@
 //   GET /preview?u=<address>&pic=phone|desktop -> image/jpeg, the server-rendered screen
 //   GET /preview?budget=1               -> {usedMs, capMs, pct} of today's free browser time
 //   GET /preview?u=<address>&render=1    -> text/html, a reconstructed copy of the page
+//   ...&al=<Accept-Language>             -> read the page in the visitor's own language
 //   GET /preview?u=<address>&shot=mobile|desktop -> image/jpeg (PageSpeed screenshot, kept
 //                                            for the record, the page no longer asks for it)
 //
@@ -121,13 +122,24 @@ function decode(buf, ct) {
   return new TextDecoder('utf-8').decode(buf);
 }
 
-async function fetchPage(u) {
+/* The visitor's own language goes with the request. 29.09.2026: the desktop frame is the
+   live site and answers in whatever language the visitor is reading in, while the phone
+   frames are built from a copy this fetched — and this always asked in Hebrew. So a
+   visitor reading in English saw an English laptop next to two Hebrew phones, or the
+   reverse, and read it as the checker being broken. One language, all three screens. */
+const AL_OK = /^[A-Za-z0-9,;=.\- ]{2,80}$/;
+function acceptLanguage(raw) {
+  const s = String(raw || '').trim();
+  return AL_OK.test(s) ? s : 'he-IL,he;q=0.9,en;q=0.8';
+}
+
+async function fetchPage(u, al) {
   return fetch(u.toString(), {
     redirect: 'follow',
     headers: {
       'User-Agent': 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Mobile Safari/537.36 GenVidPro-preview',
       'Accept': 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8',
-      'Accept-Language': 'he-IL,he;q=0.9,en;q=0.8'
+      'Accept-Language': acceptLanguage(al)
     },
     signal: AbortSignal.timeout(9000)
   });
@@ -279,10 +291,34 @@ async function checksOf(html, finalUrl, headers) {
   };
 }
 
+/* 29.09.2026: the page showed "GenVidPro &amp;amp; Video Studio". A title is HTML, so it
+   arrives as "&amp;" and "&mdash;"; the page then escapes it again on the way to the
+   screen, and one ampersand becomes three. Decoded once here, where the HTML is read, and
+   escaped once there, where it is written. The render Worker needs none of this: it reads
+   document.title, which the browser has already decoded. */
+const ENTITIES = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0', shy: '',
+  mdash: '\u2014', ndash: '\u2013', hellip: '\u2026', middot: '\u00b7', bull: '\u2022',
+  laquo: '\u00ab', raquo: '\u00bb', lsquo: '\u2018', rsquo: '\u2019',
+  ldquo: '\u201c', rdquo: '\u201d', trade: '\u2122', reg: '\u00ae', copy: '\u00a9',
+  deg: '\u00b0', euro: '\u20ac', pound: '\u00a3', times: '\u00d7', divide: '\u00f7'
+};
+function unentity(s) {
+  return String(s).replace(/&(#[0-9]{1,7}|#x[0-9a-f]{1,6}|[a-z][a-z0-9]{1,9});/gi, (m, g) => {
+    if (g.charAt(0) === '#') {
+      const n = g.charAt(1).toLowerCase() === 'x' ? parseInt(g.slice(2), 16) : parseInt(g.slice(1), 10);
+      if (!(n > 0 && n <= 0x10ffff) || (n >= 0xd800 && n <= 0xdfff)) return m;
+      try { return String.fromCodePoint(n); } catch (e) { return m; }
+    }
+    const k = g.toLowerCase();
+    return Object.prototype.hasOwnProperty.call(ENTITIES, k) ? ENTITIES[k] : m;
+  });
+}
+
 function titleOf(html) {
-  const m = /<title[^>]*>([\s\S]{0,200}?)<\/title>/i.exec(html || '');
+  const m = /<title[^>]*>([\s\S]{0,400}?)<\/title>/i.exec(html || '');
   if (!m) return '';
-  return m[1].replace(/\s+/g, ' ').trim().slice(0, 90);
+  return unentity(m[1].replace(/\s+/g, ' ').trim()).replace(/\s+/g, ' ').trim().slice(0, 90);
 }
 
 
@@ -331,9 +367,10 @@ async function httpIsOpen(u) {
 /* The render Worker. No public address: it is only reachable through this binding.
    Anything it cannot do — no binding, out of daily browser budget, a page it could not
    open — comes back as a plain answer and the HTML reading takes over. */
-async function askRender(env, u, pic) {
+async function askRender(env, u, pic, al) {
   if (!env.RENDER) return null;
-  const q = 'https://gvp-render/?u=' + encodeURIComponent(u.toString()) + (pic ? '&pic=' + pic : '');
+  const q = 'https://gvp-render/?u=' + encodeURIComponent(u.toString()) +
+    (pic ? '&pic=' + pic : '') + (al ? '&al=' + encodeURIComponent(al) : '');
   try {
     const r = await env.RENDER.fetch(q, { signal: AbortSignal.timeout(50000) });
     if (pic) return r;
@@ -401,6 +438,7 @@ export async function onRequestGet({ request, env }) {
     return new Response(JSON.stringify({ ok: false, why: 'bad_address' }), { status: 400, headers: JSON_H });
   }
   const render = url.searchParams.get('render') === '1';
+  const al = url.searchParams.get('al');
   const hour = Math.floor(Date.now() / 3600000);
   const ip = request.headers.get('CF-Connecting-IP') || '';
   if (ip && await bump(env, (render ? 'pvr:' : 'pv:') + ip + ':' + hour, render ? RENDER_PER_IP_HOUR : PER_IP_HOUR)) {
@@ -418,7 +456,7 @@ export async function onRequestGet({ request, env }) {
   // means the check has not run for this address today.
   const pic = url.searchParams.get('pic');
   if (pic === 'phone' || pic === 'desktop') {
-    const r = await askRender(env, u, pic);
+    const r = await askRender(env, u, pic, al);
     if (!r || !r.ok) return new Response(JSON.stringify({ ok: false, why: 'no_shot' }), { status: 404, headers: JSON_H });
     return new Response(r.body, {
       headers: { 'Content-Type': 'image/jpeg', 'Cache-Control': 'private, max-age=3600', 'X-Content-Type-Options': 'nosniff' }
@@ -427,12 +465,12 @@ export async function onRequestGet({ request, env }) {
 
   /* Both at once. The browser takes seconds; the plain fetch is what tells us whether a
      frame of ours will be allowed and is the fallback if the browser cannot run. */
-  const renderP = askRender(env, u);
+  const renderP = askRender(env, u, '', al);
   const httpOpenP = httpIsOpen(u);
 
   let r;
   try {
-    r = await fetchPage(u);
+    r = await fetchPage(u, al);
   } catch (e) {
     // retry: a cold first fetch sometimes fails where the second one works
     if (render) return new Response('Unreachable', { status: 502, headers: { 'Content-Type': 'text/plain' } });
@@ -463,7 +501,7 @@ export async function onRequestGet({ request, env }) {
   }
 
   const pol = framePolicy(r.headers, hostOf(finalUrl));
-  let title = '', checks = null, blocked = false, busy = false, shots = false;
+  let title = '', checks = null, blocked = false, busy = false, shots = false, shotH = 0;
   const rend = await renderP;
 
   if (rend && rend.ok) {
@@ -472,6 +510,7 @@ export async function onRequestGet({ request, env }) {
     blocked = !!rend.blocked;
     checks = rend.checks || null;
     shots = !blocked;
+    shotH = rend.shotH || 0;
     if (rend.url) finalUrl = rend.url;
   } else {
     busy = !!(rend && rend.why === 'busy');

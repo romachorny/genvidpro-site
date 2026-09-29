@@ -1518,6 +1518,11 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
 #gvs4 .gv3-over button{border:1px solid var(--gvred);background:transparent;color:var(--gvred);border-radius:100px;padding:9px 16px;
   font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer}
 #gvs4 .gv3-shot{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+/* 29.09.2026: the phone picture is the whole page, and the screen slides down it, so a
+   visitor reads the phone view top to bottom the way the laptop frame already scrolls. */
+#gvs4 .gv3-scr.scrolls{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#gvs4 .gv3-scr.scrolls::-webkit-scrollbar{width:0;height:0}
+#gvs4 .gv3-shot.full{height:auto;object-fit:fill}
 #gvs4 .gv3-dot{width:7px;height:7px;border-radius:50%;background:var(--gvred);animation:gv3p 1.1s infinite}
 /* The empty screen is the point of the block, not a placeholder for one: a laptop and
    two phones standing on the page say what this does before a word is read. */
@@ -1844,6 +1849,26 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
   function say(html, bad){ msg.innerHTML = bdi(html); msg.className = 'gv3-note' + (bad ? ' bad' : ''); }
 
   function valid(raw){ raw = String(raw||'').trim(); return !!raw && raw.indexOf('.') > 0 && raw.indexOf('.') < raw.length - 1; }
+
+  /* 29.09.2026: the laptop frame is the live site, which reads the language the visitor
+     chose; the phone frames were built from a copy the server fetched, and the server
+     always asked in Hebrew. One screen in English beside two in Hebrew reads as a broken
+     tool, not as a language setting. Now the visitor's language goes out with every
+     request, and on our own address it is put in the frame URL as well, because a copy of
+     our site with its scripts off has no way to remember a choice made in localStorage. */
+  var AL = { en:'en-US,en;q=0.9', he:'he-IL,he;q=0.9,en;q=0.8', ru:'ru-RU,ru;q=0.9,en;q=0.8' };
+  function al(){ return AL[lang()] || AL.en; }
+  function oursHost(u){
+    var h = ''; try { h = new URL(u, location.href).hostname.toLowerCase(); } catch(e){ return false; }
+    return h === 'genvidpro.com' || h === 'www.genvidpro.com' || h === location.hostname.toLowerCase() ||
+           h === 'genvidpro.pages.dev' || /\.genvidpro\.pages\.dev$/.test(h);
+  }
+  /* Our own site in the frame is told which language to open in. ?lang= is the site's own
+     switch (i18n.js), so this is the same door a visitor uses, not a special case. */
+  function withLang(u){
+    if(!oursHost(u)) return u;
+    return u + (u.indexOf('?') === -1 ? '?' : '&') + 'lang=' + encodeURIComponent(lang());
+  }
   function sync(){ go.disabled = state === 'loading' || !valid(inp.value); }
 
   /* What is wrong with the page, worst first, and plain facts to fill the row. */
@@ -1991,15 +2016,20 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       pic.onload = function(){
         if(!scr.isConnected) return;
         if(ow.parentNode) ow.remove();
+        /* The picture is the full page, so it is taller than the screen and the screen
+           scrolls down it. A short site that fits needs no scrolling and gets none. */
+        pic.classList.add('full');
+        scr.classList.add('scrolls');
         scr.appendChild(pic);
         var cap = document.createElement('span'); cap.className = 'gv3-rc'; cap.textContent = L('realshot');
         scr.appendChild(cap);
       };
       pic.onerror = function(){
         if(ow.parentNode) ow.remove();
+        scr.classList.remove('scrolls');
         shots = false; sc.dataset.filled = ''; fill(k);
       };
-      pic.src = '/preview?pic=phone&u=' + encodeURIComponent(site);
+      pic.src = '/preview?pic=phone&al=' + encodeURIComponent(al()) + '&u=' + encodeURIComponent(site);
       return;
     }
 
@@ -2025,7 +2055,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       /* no script runs in here at all: an empty sandbox, and the copy is served with
          script-src 'none' on top of it */
       f.setAttribute('sandbox', '');
-      f.src = '/preview?render=1&u=' + encodeURIComponent(site);
+      f.src = '/preview?render=1&al=' + encodeURIComponent(al()) + '&u=' + encodeURIComponent(withLang(site));
       var rc = document.createElement('span'); rc.className = 'gv3-rc'; rc.textContent = L('recon');
       scr.appendChild(rc);
       sc.classList.add('rebuilt');
@@ -2039,7 +2069,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     } else {
       f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
       f.setAttribute('referrerpolicy', 'no-referrer');
-      f.src = site;
+      f.src = withLang(site);
     }
     var slow = setTimeout(function(){
       if(o.parentNode){ o.className = 'gv3-over gv3-slow'; o.innerHTML = '<b>' + esc(L('slowT')) + '</b>' + esc(L('slow')); }
@@ -2070,15 +2100,36 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
   }
 
   /* One at a time on the wire: three copies of one site starting together on a weak
-     link means none of them finishes first. */
+     link means none of them finishes first.
+
+     29.09.2026: and not until the screens are actually on screen. Chrome throttles the
+     rendering of a cross-origin frame that is out of view, and a frame built while it was
+     out of view can come back half-painted — which is what "the iPhone screen was nearly
+     blank while Android was fine" looks like. Waiting for them to be in view also means a
+     visitor who never scrolls this far never fetches three copies of anything. */
   function run(){
-    var order = narrow() ? [current] : ['desktop','iphone','android'], i = 0, my = seq;
-    (function nx(){
-      if(i >= order.length || my !== seq) return;
-      fill(order[i++]);
-      setTimeout(nx, 500);
-    })();
+    var my = seq;
+    function start(){
+      if(my !== seq) return;
+      var order = narrow() ? [current] : ['desktop','iphone','android'], i = 0;
+      (function nx(){
+        if(i >= order.length || my !== seq) return;
+        fill(order[i++]);
+        setTimeout(nx, 500);
+      })();
+    }
     next.hidden = false;
+    if(!('IntersectionObserver' in window)){ start(); return; }
+    var seen = false;
+    var io = new IntersectionObserver(function(es){
+      for(var j=0;j<es.length;j++){
+        if(es[j].isIntersecting && !seen){ seen = true; io.disconnect(); start(); }
+      }
+    }, { rootMargin: '150px' });
+    io.observe(wrap);
+    /* and never leave them unbuilt: if it is already in view, or the observer never fires,
+       the screens still fill. */
+    setTimeout(function(){ if(!seen && my === seq){ seen = true; io.disconnect(); start(); } }, 1500);
   }
 
   function layout(){
@@ -2131,7 +2182,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       state = 'error'; errKey = key; sync(); words(); layout();
     }
     function get(attempt){
-      fetch('/preview?u=' + encodeURIComponent(raw), {cache:'no-store'})
+      fetch('/preview?u=' + encodeURIComponent(raw) + '&al=' + encodeURIComponent(al()), {cache:'no-store'})
         .then(function(r){ return r.json().then(function(j){ return {st:r.status, j:j}; }, function(){ return {st:r.status, j:null}; }); })
         .then(function(o){
           if(my !== seq) return;
