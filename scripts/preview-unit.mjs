@@ -95,6 +95,27 @@ is('requests: quoted, unquoted and multi-value rel all read',
     n <= 40, true);
 }
 
+/* ---- the page weight is what the visitor downloads ----------------------------------
+   creativity32.com was shown a red "837 KB of html". The visitor downloads 154 KB: the
+   site is served compressed, as almost every site is, and this measured the decompressed
+   source and charged the visitor for it. It also ranked backwards — busi.co.il, the poor
+   site in the set, decompresses to 625 KB and stayed under the old 700 line. */
+{
+  const filler = '<p>' + 'the quick brown fox jumps over the lazy dog '.repeat(20000) + '</p>';
+  const kb = await P.transferKb(filler);
+  const raw = Math.round(new TextEncoder().encode(filler).length / 1024);
+  is('weight: repetitive HTML is measured compressed, far under its source length', kb < raw / 5, true);
+  is('weight: and it is not zero', kb > 0, true);
+
+  // the real page, and the real number the chip now shows for it
+  const home = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  const homeKb = await P.transferKb(home);
+  is('weight: our own home page is under the 250 that turns the chip red', homeKb <= 250, true);
+  // measured with curl on 29.09.2026: creativity32 154 KB on the wire, busi 115, genvidpro 93
+  is('weight: our own page lands near the 93 KB curl measured, not the 306 KB of source',
+    homeKb > 60 && homeKb < 140, true);
+}
+
 /* ---- the address comes from a stranger's keyboard ----------------------------------- */
 falsy('address: loopback refused', P.clean('127.0.0.1'));
 falsy('address: a private range refused', P.clean('http://192.168.1.1/'));

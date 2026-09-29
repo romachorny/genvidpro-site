@@ -1714,7 +1714,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
         install:'cannot be installed on a phone', call:'no one-tap call',
         lazy:function(n){ return n+' image'+(n===1?'':'s')+' load at once'; },
         reqs:function(n){ return n+' requests on first open'; },
-        kb:function(n){ return n+' KB of html'; }
+        kb:function(n){ return n+' KB of html downloaded'; }
       },
       v:{
         off:function(n){ return ['It runs off the side of the phone.','Something on this page is '+n+' pixels wider than the screen, so a phone shows it with a strip missing and the visitor has to drag it sideways to read a line.']; },
@@ -1761,7 +1761,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
         install:'אי אפשר להתקין בטלפון', call:'אין חיוג בלחיצה',
         lazy:function(n){ return n+' תמונות נטענות בבת אחת'; },
         reqs:function(n){ return n+' בקשות בפתיחה הראשונה'; },
-        kb:function(n){ return n+' KB של HTML'; }
+        kb:function(n){ return n+' KB של HTML בהורדה'; }
       },
       v:{
         off:function(n){ return ['העמוד בורח הצידה.','משהו בעמוד רחב ב-'+n+' פיקסלים מהמסך, ולכן בטלפון חלק נחתך וצריך לגרור לצדדים כדי לקרוא שורה.']; },
@@ -1808,7 +1808,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
         install:'нельзя установить на телефон', call:'нет звонка в одно касание',
         lazy:function(n){ return n+' '+plural(n,'картинка грузится','картинки грузятся','картинок грузятся')+' сразу'; },
         reqs:function(n){ return n+' '+plural(n,'запрос','запроса','запросов')+' при первом открытии'; },
-        kb:function(n){ return n+' KB html'; }
+        kb:function(n){ return n+' KB html загрузки'; }
       },
       v:{
         off:function(n){ return ['Страница уезжает за край экрана.','Что-то на этой странице шире экрана на '+n+' пикселей, поэтому на телефоне кусок срезан, а читать приходится, таская её вбок.']; },
@@ -1913,7 +1913,12 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
     if(!c.install) f.push({k:'install',bad:1,s:70});
     if(c.reqs > 40) f.push({k:'reqs',bad:1,s:45,a:c.reqs});
     if(c.lazyMissing >= 5) f.push({k:'lazy',bad:1,s:40,a:c.lazyMissing});
-    if(c.kb > 700) f.push({k:'kb',bad:1,s:35,a:c.kb});
+    /* 29.09.2026: this was "> 700", against the decompressed source. It is the downloaded
+       size now (functions/preview.js, transferKb), so the line moves with it. 250 KB of
+       compressed HTML — before a single image, script or font — is past the 95th percentile
+       of the web and is genuinely heavy; the whole regression set measured 28 to 162, so
+       nothing healthy in it goes red, which is the point. */
+    if(c.kb > 250) f.push({k:'kb',bad:1,s:35,a:c.kb});
     f.sort(function(x,y){ return y.s - x.s; });
     var plain = [{k:'reqs',a:c.reqs},{k:'kb',a:c.kb},{k:'lazy',a:c.lazyMissing}];
     for(var i=0;i<plain.length && f.length<4;i++){

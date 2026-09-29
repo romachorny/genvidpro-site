@@ -23,6 +23,13 @@
 #
 # The scoring below mirrors findings() in index.html. If you change the thresholds there,
 # change them here, and the point of this file is that you will notice.
+#
+# 29.09.2026, the lesson that cost a second round: a case must assert what the visitor SEES,
+# not merely that the one bug it was written for is gone. dalba and creativity32 used to
+# check "'fixed' not in bad" and "'vp' not in bad" — narrow, and both went green while
+# creativity32 carried a red "837 KB of html" chip nobody had thought to look for. A case
+# that names the chips it forgives can only ever catch the bug it already knows. These two
+# now demand a clean result, which is the thing actually claimed about them.
 set -uo pipefail
 SITE="${1:-https://genvidpro.com}"
 cd "$(dirname "$0")/.."
@@ -76,7 +83,7 @@ def bad_keys(c):
     if not c.get('install'): f.add('install')
     if (c.get('reqs') or 0) > 40: f.add('reqs')
     if (c.get('lazyMissing') or 0) >= 5: f.add('lazy')
-    if (c.get('kb') or 0) > 700: f.add('kb')
+    if (c.get('kb') or 0) > 250: f.add('kb')
     return f
 
 def live(j, c, bad):     return j.get('ok') and not j.get('blocked')
@@ -87,10 +94,10 @@ CASES = [
         lambda j, c, bad: live(j, c, bad) and c and c.get('httpOpen') is True and 'https' in bad),
     ('musach-victor.co.il', 'the firewall blocked us and we say so',
         lambda j, c, bad: j.get('ok') and j.get('blocked') is True and not c),
-    ('dalba.co.il',         'fine on a phone: no width complaint',
-        lambda j, c, bad: live(j, c, bad) and 'off' not in bad and 'fixed' not in bad),
-    ('creativity32.com',    'Wix phone page counts as a phone layout',
-        lambda j, c, bad: live(j, c, bad) and 'off' not in bad and 'vp' not in bad and bool(j.get('title'))),
+    ('dalba.co.il',         'fine on a phone: no red chips at all',
+        lambda j, c, bad: live(j, c, bad) and not bad),
+    ('creativity32.com',    'a working Wix studio: no red chips at all',
+        lambda j, c, bad: live(j, c, bad) and not bad and bool(j.get('title'))),
     ('app.base44.com',      'an app shell is read by the browser, not the HTML',
         lambda j, c, bad: live(j, c, bad) and bool(c) and c.get('rendered') is True),
     ('genvidpro.com',       'our own site comes out clean',

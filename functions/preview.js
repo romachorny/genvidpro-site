@@ -211,6 +211,33 @@ function textOf(html) {
 // being opened early is not a request. Caught by scripts/preview-unit.mjs.
 const FETCHING_REL = ['stylesheet', 'preload', 'modulepreload', 'prefetch', 'prerender',
   'icon', 'shortcut', 'apple-touch-icon', 'apple-touch-startup-image', 'manifest', 'mask-icon'];
+/* How many kilobytes of HTML the visitor actually downloads.
+
+   29.09.2026, creativity32.com: the chip said "837 KB of html" in red. The visitor
+   downloads 154 KB — the site is served brotli-compressed, as almost every site is, and
+   this was measuring the decompressed source and charging the visitor for it. Worse, it
+   ranked backwards: busi.co.il, the genuinely poor site in this set, decompresses to 625 KB
+   and stayed under the line while a healthy Wix studio went red. Measured against curl on
+   29.09.2026: wire/gzip(6) KB were 154/162, 115/121, 28/24, 33/33, 93/94 for creativity32,
+   busi, dalba, bar-nikuy and genvidpro — so compressing it here tracks the wire within a
+   few per cent, and that is what the number means now.
+
+   The fetch above hands us the decompressed text (a Worker's subrequest always decompresses
+   and drops content-length), so the only way to know the transfer size is to compress it
+   back. If CompressionStream is ever missing, a flat fifth is used rather than the raw
+   length: wrong by a little is recoverable, wrong by five times is what put a red chip on a
+   working business. */
+export async function transferKb(html) {
+  const bytes = new TextEncoder().encode(html);
+  try {
+    const cs = new CompressionStream('gzip');
+    const packed = new Response(new Blob([bytes]).stream().pipeThrough(cs));
+    return Math.round((await packed.arrayBuffer()).byteLength / 1024);
+  } catch (e) {
+    return Math.round(bytes.length / 5 / 1024);
+  }
+}
+
 export function requestCount(html, imgs) {
   const src = (html.match(/<script\b[^>]*\ssrc\s*=/gi) || []).length;
   let links = 0;
@@ -308,7 +335,7 @@ async function checksOf(html, finalUrl, headers) {
     imgs: imgTags.length,
     lazyMissing,
     reqs: requestCount(html, imgTags.length),
-    kb: Math.round(html.length / 1024),
+    kb: await transferKb(html),
     https: finalUrl.indexOf('https://') === 0,
     // filled in by the caller: whether the same site also answers, unencrypted, at http
     httpOpen: false,
