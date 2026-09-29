@@ -30,6 +30,11 @@ ops/fetch-media.sh --check >/dev/null || die "videos incomplete, run ops/fetch-m
 node scripts/preview-unit.mjs >/dev/null || die "scripts/preview-unit.mjs fails, run it to see which case"
 [ -f "$SECRETS" ] || die "$SECRETS missing"
 [ "$(stat -c %a "$SECRETS")" = "600" ] || die "$SECRETS must be chmod 600"
+# Node 22: wrangler 4 refuses to run on 18, which is this server's default, and it refuses
+# at the very last step — after the commit. Same line as ops/render-deploy.sh.
+if [ -s "$HOME/.nvm/nvm.sh" ]; then . "$HOME/.nvm/nvm.sh"; nvm use 22 >/dev/null 2>&1 || true; fi
+case "$(node -v 2>/dev/null)" in v1[89].*|v2[01].*|'') die "wrangler needs Node 22; nvm has it, this shell does not (node $(node -v 2>/dev/null || echo none))";; esac
+
 set -a; . "$SECRETS"; set +a      # CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID; never on a command line
 : "${CLOUDFLARE_API_TOKEN:?}"; : "${CLOUDFLARE_ACCOUNT_ID:?}"
 cf(){ curl -fsS -H @<(printf 'Authorization: Bearer %s\n' "$CLOUDFLARE_API_TOKEN") "$@"; }
