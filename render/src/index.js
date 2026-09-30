@@ -287,8 +287,24 @@ function blockedBy(m, status) {
 
 /* ---- the session ------------------------------------------------------------------ */
 
-/* One browser for both screens, and an existing one wherever possible: a new browser is
-   the expensive part of the budget and Free allows one every 20 seconds. */
+/* One browser for both screens, reusing an idle one when there is one.
+
+   30.09.2026, and this is the thing that actually mattered. This used to launch with
+   keep_alive: 600000 — the maximum, ten minutes — on the theory that a new browser is the
+   expensive part. It is not. The Workers Free plan allows **ten minutes of browser time a
+   day**, and a session is billed for as long as it stays open, not for as long as we are
+   talking to it. So a single fresh launch sat there for ten minutes after we let go and
+   swallowed the entire day's allowance by itself. Our own counter said 209 seconds used
+   while the account had spent the lot and answered everything with 429, which is why the
+   checker quietly fell back to reading HTML for an afternoon and the budget endpoint
+   cheerfully reported 35 %.
+
+   A check takes about twelve seconds. Closed at the end, that is roughly fifty checks a
+   day inside the free allowance instead of one. Launch rate is not the scarce thing here
+   (ten a minute, and this is one button on one sales page) — duration is. So: reuse an
+   idle session if one happens to exist, keep the inactivity window short, and always
+   close. */
+const KEEP_ALIVE_MS = 30000;
 async function open(env) {
   try {
     const list = await puppeteer.sessions(env.BROWSER);
@@ -297,7 +313,7 @@ async function open(env) {
       try { return { browser: await puppeteer.connect(env.BROWSER, s.sessionId), fresh: false }; } catch (e) {}
     }
   } catch (e) {}
-  return { browser: await puppeteer.launch(env.BROWSER, { keep_alive: 600000 }), fresh: true };
+  return { browser: await puppeteer.launch(env.BROWSER, { keep_alive: KEEP_ALIVE_MS }), fresh: true };
 }
 
 async function screen(browser, u, dev, al) {
@@ -440,9 +456,16 @@ async function render(env, u, al) {
     const why = /429|time limit|limit exceeded/i.test(String(e && e.message)) ? 'busy' : 'render_failed';
     out = { ok: false, why, detail: String(e && e.message).slice(0, 200) };
   } finally {
-    // the session stays alive on purpose: the next check connects instead of launching
-    try { if (browser) await browser.disconnect(); } catch (e) {}
+    /* Closed, not merely let go of. disconnect() leaves the browser running and the free
+       plan's ten minutes a day draining; close() ends the session and the billing with it.
+       If close throws, disconnect at least lets the short keep_alive window finish it. */
+    try { if (browser) await browser.close(); }
+    catch (e) { try { if (browser) await browser.disconnect(); } catch (e2) {} }
   }
+  /* Wall time is the honest figure now that the browser is closed at the end: what we are
+     billed for is how long the session was open, and it is open for exactly this. While
+     sessions were left alive it was not — the counter read 209 s on a day the account had
+     already spent its ten minutes, which is the worst kind of wrong for a budget to be. */
   const ms = Date.now() - t0;
   await spend(env, ms);
   out.ms = ms;
