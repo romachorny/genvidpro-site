@@ -49,9 +49,12 @@ REV="$(git rev-parse --short HEAD)"
 VERSION="$(python3 -c "import json;print(json.load(open('services.json'))['version'])")"
 
 # 3. Build dir = exact publish set: tracked files + manifest videos, nothing else
+# The Base44 workspace keeps its environment in the repo root, and wrangler uploads
+# whatever folder it is handed, so AGENTS.md, the compose file and .base44/ are cut
+# out here too — otherwise they are downloadable from genvidpro.com.
 BUILD="$(mktemp -d "${TMPDIR:-/tmp}/gvp-deploy.XXXXXX")"; trap 'rm -rf "$BUILD"' EXIT
 { git ls-files; awk '{print $3}' ops/media.sha256; } \
-  | grep -vE '^(ops/|render/|README\.md$|\.gitignore$|\.github/)' | sort -u \
+  | grep -vE '^(ops/|render/|\.base44/|\.github/|README\.md$|AGENTS\.md$|docker-compose\.base44\.yml$|\.gitignore$)' | sort -u \
   | while read -r f; do mkdir -p "$BUILD/$(dirname "$f")"; cp -p "$f" "$BUILD/$f"; done
 [ -f "$BUILD/functions/chat.js" ] && [ -f "$BUILD/wrangler.toml" ] || die "build dir lost functions/"
 

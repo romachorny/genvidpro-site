@@ -1,7 +1,7 @@
 {
   "previewPort": 3000,
   "healthPath": "/",
-  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d && (nohup ops/fetch-media.sh > /tmp/fetch-media.log 2>&1 &) ; true",
   "secrets": [
     {
       "name": "ANTHROPIC_API_KEY",
