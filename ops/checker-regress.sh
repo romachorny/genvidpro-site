@@ -75,8 +75,9 @@ def bad_keys(c):
         if c.get('https') is False: f.add('https')
         if not c.get('call'): f.add('call')
         if not c.get('install'): f.add('install')
-        if (c.get('smallPct') or 0) > 40: f.add('tiny')
-        if (c.get('tapsSmall') or 0) >= 3: f.add('tap')
+        if (c.get('smallPct') or 0) > 40 and (c.get('textChars') or 0) >= 400: f.add('tiny')
+        ts, tt = c.get('tapsSmall') or 0, c.get('taps') or 0
+        if ts >= 3 and tt > 0 and ts / tt >= 0.2: f.add('tap')
         if (c.get('lazyMissing') or 0) >= 5: f.add('lazy')
         return f
     if c.get('vp') == 'missing': f.add('vp')
@@ -104,8 +105,10 @@ CASES = [
     # scripts plus 44 fetching links plus 7 images is 83 requests on first open, and not one
     # of those 7 images is lazy. Named exactly, so a new chip fails this, and an honest one
     # that goes away fails it too; either way somebody looks.
+    # 'reqs' is an HTML-road chip and there is no browser equivalent, so with the browser on
+    # the honest leftover is the one true thing: 7 images and not one of them lazy.
     ('dalba.co.il',         'fine on a phone; heavy, and only where it really is',
-        lambda j, c, bad: live(j, c, bad) and bad == {'reqs', 'lazy'}),
+        lambda j, c, bad: live(j, c, bad) and bad == ({'lazy'} if c.get('rendered') else {'reqs', 'lazy'})),
     ('creativity32.com',    'a working Wix studio: no red chips at all',
         lambda j, c, bad: live(j, c, bad) and not bad and bool(j.get('title'))),
     # Roma's own Base44 app, not app.base44.com: their marketing front page has enough HTML

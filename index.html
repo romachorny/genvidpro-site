@@ -1902,8 +1902,10 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       if(!c.install) f.push({k:'install',bad:1,s:70});
       /* not the smallest label on the page, but how much of the page is drawn too small:
          Lighthouse's line, and the only one that survives contact with real designs */
-      if(c.smallPct > 40) f.push({k:'tiny',bad:1,s:60,a:c.minFont});
-      if(c.tapsSmall >= 3) f.push({k:'tap',bad:1,s:55,a:c.tapsSmall});
+      if(c.smallPct > 40 && c.textChars >= 400) f.push({k:'tiny',bad:1,s:60,a:c.minFont});
+      /* three small targets out of twenty-six is not a site that is hard to use, it is a
+         site with three small buttons. It has to be a real share of them. */
+      if(c.tapsSmall >= 3 && c.taps > 0 && c.tapsSmall / c.taps >= 0.2) f.push({k:'tap',bad:1,s:55,a:c.tapsSmall});
       if(c.lazyMissing >= 5) f.push({k:'lazy',bad:1,s:40,a:c.lazyMissing});
       f.sort(function(x,y){ return y.s - x.s; });
       var plainR = [{k:'tap',a:c.tapsSmall},{k:'tiny',a:c.minFont},{k:'lazy',a:c.lazyMissing}];

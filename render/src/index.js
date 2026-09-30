@@ -59,7 +59,13 @@ function clean(raw) {
 
 const AL_OK = /^[A-Za-z0-9,;=.\- ]{2,80}$/;
 const day = () => new Date().toISOString().slice(0, 10);
-const keyOf = (u, al) => 'rr:' + (al ? al.slice(0, 5).replace(/[^a-z-]/gi, '') + ':' : '') +
+/* Bump this whenever measure() changes what it measures. The answers are cached for 24
+   hours per address, so without it a fix ships and the checker keeps serving yesterday's
+   numbers for a day — which is exactly what happened on 30.09.2026 between switching the
+   browser on and correcting what it counted. Nothing is deleted; the old keys simply
+   expire on their own. */
+const MEASURE_V = 'v3';
+const keyOf = (u, al) => 'rr:' + MEASURE_V + ':' + (al ? al.slice(0, 5).replace(/[^a-z-]/gi, '') + ':' : '') +
   u.toString().replace(/\/$/, '').toLowerCase();
 
 async function budget(env) {
@@ -243,14 +249,19 @@ function measure() {
   }
 
   return {
-    vw, overflow, widest, widestSel, vp, vpW, smallPct,
+    vw, overflow, widest, widestSel, vp, vpW, smallPct, textChars: totalChars,
     minFont: Math.round(minFont * 10) / 10, minFontText,
     taps, tapsSmall, zeros, overlaps, emptyBig, emptyMax,
     dir: getComputedStyle(document.body || document.documentElement).direction,
     he, ar, latin,
     tel: !!document.querySelector('a[href^="tel:"]'),
     chat: !!document.querySelector('a[href*="wa.me"],a[href*="whatsapp"],a[href*="t.me"],a[href*="m.me"]'),
-    manifest: !!document.querySelector('link[rel~="manifest"]'),
+    /* A site is "installable" to the HTML road if it has a manifest OR registers a service
+       worker, and only the manifest was looked for here. creativity32.com registers one and
+       has no manifest link, so the browser called a site uninstallable that the HTML had
+       called installable — the same site, two answers, depending which road it took. */
+    manifest: !!document.querySelector('link[rel~="manifest"]') ||
+      /serviceWorker\s*\.\s*register/.test(document.documentElement.outerHTML || ''),
     imgs: document.images.length,
     lazyMissing: Array.prototype.filter.call(document.images, (i) => i.loading !== 'lazy').length,
     title: (document.title || '').trim().slice(0, 90),
@@ -305,6 +316,20 @@ async function screen(browser, u, dev, al) {
       // a page that never goes quiet is still a page; whatever is painted is judged
       try { finalUrl = page.url(); } catch (e2) {}
     }
+    /* Let the page finish becoming itself before judging it. 30.09.2026: measuring the
+       moment networkidle2 fired caught our own home page half-built — 170 to 2759
+       characters depending on when you looked — and a share computed over the early
+       scraps said 49 % of the text was tiny when the settled page is 32 %. Scrolling
+       through is what a visitor does, and it is also what wakes lazy content up, so the
+       full-page picture below is the whole page rather than the top of one. */
+    try {
+      await page.evaluate(async () => {
+        const h = document.body ? document.body.scrollHeight : 0;
+        for (let y = 0; y < h; y += 600) { window.scrollTo(0, y); await new Promise(r => setTimeout(r, 100)); }
+        window.scrollTo(0, 0);
+        await new Promise(r => setTimeout(r, 400));
+      });
+    } catch (e) {}
     let m = null;
     try { m = await page.evaluate(measure); } catch (e) {}
     /* The phone screens are scrolled by the visitor, so the phone picture is the whole
@@ -337,8 +362,11 @@ function checksOf(phone, desk, finalUrl, httpOpen) {
     vpW: p.vpW || 0,
     minFont: p.minFont || 0,
     // the share of the page's characters drawn under 12 px; the chip is about this, not
-    // about the single smallest label in a piece of artwork
+    // about the single smallest label in a piece of artwork. textChars says how much text
+    // that share was computed over — a percentage of a handful of words means nothing, and
+    // a page caught mid-build has only a handful.
     smallPct: p.smallPct || 0,
+    textChars: p.textChars || 0,
     taps: p.taps || 0,
     tapsSmall: p.tapsSmall || 0,
     /* Measured and reported, but no longer turned red. 30.09.2026, first day the browser
