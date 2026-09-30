@@ -31,6 +31,12 @@ allow Base44, since the preview runs in an iframe on `app.base44.com`, and `conn
 `genvidpro.com`, because `gvp-wa.js` reads `/services.json` and `/api/ref` from the real site
 whenever it runs anywhere else. **If you add a rule to `_headers`, add it here too** — a header
 that lives in only one of the two files is a header this copy does not send.
+One thing to know before you go looking for a bug: **Base44's preview proxy strips
+`Content-Security-Policy`.** Checked 30.09.2026 on `/`, `/builder`, `/work`, `/services.json`
+and a 404 — the other four (`Strict-Transport-Security`, `X-Content-Type-Options`,
+`Referrer-Policy`, `Permissions-Policy`) come through, the CSP never does, while the same
+config on a plain local nginx sends it. The header is there; something between nginx and the
+browser removes it, most likely so the preview's own iframe and bridge script keep working.
 
 ## What does NOT run here
 
