@@ -48,14 +48,25 @@ def ask(host):
     r = urllib.request.Request(q, headers={
         'Referer': SITE + '/', 'Cache-Control': 'no-store',
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'})
+    # Browser Rendering on the free plan allows three browsers at once and one NEW browser
+    # every 20 seconds. A visitor checks one site and never meets that; this file checks
+    # eight in a row and meets it every time, and then every case "passes" on the HTML road
+    # while telling you nothing about the browser. So it waits for a browser rather than
+    # settling for the fallback, and says plainly when it gave up waiting.
+    # Two tries, never more. /preview also guards itself at 40 lookups an hour per address,
+    # and on 30.09.2026 a four-try loop over eight sites spent that guard instead of the
+    # browser: every case came back 429 from our own edge and the run said nothing about
+    # anything. A test that trips the product's abuse guard is measuring the guard.
     for attempt in (1, 2):
         try:
-            with urllib.request.urlopen(r, timeout=70) as f:
-                return json.load(f)
+            with urllib.request.urlopen(r, timeout=90) as f:
+                j = json.load(f)
         except Exception as e:
-            if attempt == 2:
-                return {'ok': False, 'why': 'request failed: %s' % e}
-            time.sleep(2)
+            return {'ok': False, 'why': 'request failed: %s' % e}
+        if j.get('busy') and attempt == 1:
+            time.sleep(25)      # the 20-second door for a new browser, plus a little
+            continue
+        return j
 
 def bad_keys(c):
     """The red chips, by the same rules the page uses."""
@@ -125,7 +136,10 @@ CASES = [
 
 fails = 0
 print('checker regression against %s\n' % SITE)
-for host, what, ok in CASES:
+for idx, (host, what, ok) in enumerate(CASES):
+    # one NEW browser every 20 seconds on the free plan, and eight sites in a row is the
+    # one workload that meets that limit head on
+    if idx: time.sleep(22)
     j = ask(host)
     c = j.get('checks')
     bad = bad_keys(c)

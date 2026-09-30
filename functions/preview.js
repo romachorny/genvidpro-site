@@ -555,6 +555,7 @@ export async function onRequestGet({ request, env }) {
 
   const pol = framePolicy(r.headers, hostOf(finalUrl));
   let title = '', checks = null, blocked = false, busy = false, shots = false, shotH = 0;
+  let renderWhy = '';
   const rend = await renderP;
 
   if (rend && rend.ok) {
@@ -567,6 +568,11 @@ export async function onRequestGet({ request, env }) {
     if (rend.url) finalUrl = rend.url;
   } else {
     busy = !!(rend && rend.why === 'busy');
+    /* Why the browser did not draw it. 30.09.2026: every check quietly fell back to the
+       HTML for an afternoon and the answer said only "busy", which covers a rate limit, a
+       time limit and a browser that never started. Without this the only way to tell them
+       apart is to redeploy the Worker with logging. Ours alone — the page never shows it. */
+    renderWhy = (rend && (rend.why || '')) + (rend && rend.detail ? ': ' + rend.detail : '');
   }
 
   // A firewall's refusal, seen either by the browser or in the HTML, ends it here: the
@@ -604,7 +610,7 @@ export async function onRequestGet({ request, env }) {
 
   return new Response(JSON.stringify({
     ok: true, url: finalUrl, title, frameable: pol.frameable, why: pol.why,
-    checks, blocked: false, busy, html: !!html, shots
+    checks, blocked: false, busy, html: !!html, shots, renderWhy
   }), { headers: JSON_H });
 }
 
