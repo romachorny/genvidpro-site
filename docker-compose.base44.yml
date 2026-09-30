@@ -5,7 +5,11 @@
 services:
   web:
     image: nginx:alpine
-    restart: on-failure
+    # always, not on-failure: when the sandbox is put to sleep the container is
+    # stopped cleanly (exit 0), and an on-failure policy leaves it down until
+    # someone re-runs the start command by hand. always brings it back with the
+    # Docker daemon, so a woken sandbox serves the site on its own.
+    restart: always
     ports:
       - "3000:80"
     volumes:
