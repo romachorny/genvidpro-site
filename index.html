@@ -1884,15 +1884,25 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
       /* Measured on the page a real browser drew at 390 x 844. Every one of these is
          something a visitor feels in the first three seconds, which is why none of them
          are about the code: they are about what is on the screen. */
-      if(c.overflow > 8) f.push({k:'off',bad:1,s:100,a:c.overflow});
+      /* 30.09.2026, the day the browser was first switched on. Three of these were
+         measuring things they could not judge, and said so about our own clean site:
+         "overlaps" counted 49 collisions that were all deliberate layering, "emptyBig"
+         found 37 empty screens on a working studio, and "tiny" reported the 5.9 px fine
+         print of a blueprint illustration as though it were the body copy. They are
+         measured still (see the render Worker) but no longer painted red — a number shown
+         to a business owner as a verdict on their site has to be one we can stand behind.
+         The viewport chip comes back here: it is what decides whether a phone shows the
+         page or a shrunken picture of it, and the rendered path had lost it. */
+      if(c.vp === 'missing') f.push({k:'vp',bad:1,s:100});
+      else if(c.vp === 'locked') f.push({k:'lock',bad:1,s:55});
+      if(c.overflow > 8) f.push({k:'off',bad:1,s:98,a:c.overflow});
       if(c.rtl) f.push({k:'rtl',bad:1,s:95,a:c.rtl});
       if(c.https === false) f.push({k:'https',bad:1,s:90});
-      if(c.zeros >= 2) f.push({k:'zeros',bad:1,s:88});
-      if(c.overlaps >= 2) f.push({k:'overlap',bad:1,s:86});
-      if(c.emptyBig >= 1) f.push({k:'emptyb',bad:1,s:84,a:c.emptyBig});
       if(!c.call) f.push({k:'call',bad:1,s:75});
       if(!c.install) f.push({k:'install',bad:1,s:70});
-      if(c.minFont > 0 && c.minFont < 12) f.push({k:'tiny',bad:1,s:60,a:c.minFont});
+      /* not the smallest label on the page, but how much of the page is drawn too small:
+         Lighthouse's line, and the only one that survives contact with real designs */
+      if(c.smallPct > 40) f.push({k:'tiny',bad:1,s:60,a:c.minFont});
       if(c.tapsSmall >= 3) f.push({k:'tap',bad:1,s:55,a:c.tapsSmall});
       if(c.lazyMissing >= 5) f.push({k:'lazy',bad:1,s:40,a:c.lazyMissing});
       f.sort(function(x,y){ return y.s - x.s; });

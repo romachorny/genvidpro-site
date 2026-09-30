@@ -63,16 +63,19 @@ def bad_keys(c):
         return set()
     f = set()
     if c.get('rendered'):
+        # mirrors the rendered branch of findings() in index.html. 30.09.2026: overlaps,
+        # emptyBig and zeros are measured but no longer shown, because on the first real
+        # run they condemned our own clean page and a working studio; and the viewport
+        # chip lives here again, because the browser happily lays out at 390 a page that a
+        # phone would shrink, so overflow alone cannot see a missing viewport tag.
+        if c.get('vp') == 'missing': f.add('vp')
+        elif c.get('vp') == 'locked': f.add('lock')
         if (c.get('overflow') or 0) > 8: f.add('off')
         if c.get('rtl'): f.add('rtl')
         if c.get('https') is False: f.add('https')
-        if (c.get('zeros') or 0) >= 2: f.add('zeros')
-        if (c.get('overlaps') or 0) >= 2: f.add('overlap')
-        if (c.get('emptyBig') or 0) >= 1: f.add('emptyb')
         if not c.get('call'): f.add('call')
         if not c.get('install'): f.add('install')
-        mf = c.get('minFont') or 0
-        if 0 < mf < 12: f.add('tiny')
+        if (c.get('smallPct') or 0) > 40: f.add('tiny')
         if (c.get('tapsSmall') or 0) >= 3: f.add('tap')
         if (c.get('lazyMissing') or 0) >= 5: f.add('lazy')
         return f

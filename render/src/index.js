@@ -119,26 +119,53 @@ function measure() {
     }
   }
 
-  /* 2. The smallest type a visitor is actually asked to read. Only elements holding
-     their own words count, so a wrapper does not inherit the blame. */
-  let minFont = 0, minFontText = '';
+  /* 2. Type too small to read — as a share of the page's words, not as the single
+     smallest thing on it.
+
+     30.09.2026, the day the browser was first switched on: taking the minimum told our own
+     site it had 5.9 px type. True, and meaningless — it was the fine print inside a
+     blueprint-style illustration ("SCALE 1:1", "EST. 2026", "9 LETTERS") and an SVG marquee
+     running round a circle. creativity32.com "had" 1 px type by the same reckoning. A
+     decorative label is not copy anyone is asked to read, and one of them must not condemn
+     a page whose every sentence is 16 px.
+
+     So: what fraction of the characters on the page are drawn under 12 px. This is how
+     Lighthouse judges it too, and it fails a page only when most of its text is small.
+     SVG is left out entirely — its font-size is in user units the viewBox then scales, so
+     the computed number there means nothing at all. */
+  let minFont = 0, minFontText = '', smallChars = 0, totalChars = 0;
   for (const el of all) {
+    // SVG text is artwork, and its font-size does not mean pixels
+    if (el.ownerSVGElement || el.namespaceURI === 'http://www.w3.org/2000/svg') continue;
     let own = '';
     for (const n of el.childNodes) if (n.nodeType === 3) own += n.nodeValue;
     own = own.replace(/\s+/g, ' ').trim();
     if (own.length < 8) continue;
     const v = seen(el); if (!v) continue;
     const f = parseFloat(v.s.fontSize) || 0;
-    if (f > 0 && (minFont === 0 || f < minFont)) { minFont = f; minFontText = own.slice(0, 40); }
+    if (!(f > 0)) continue;
+    totalChars += own.length;
+    if (f < 12) smallChars += own.length;
+    if (minFont === 0 || f < minFont) { minFont = f; minFontText = own.slice(0, 40); }
   }
+  const smallPct = totalChars ? Math.round((smallChars / totalChars) * 100) : 0;
 
-  /* 3. Things meant to be tapped. Apple and Google both say 44 px; below that a thumb
-     hits the wrong one. */
+  /* 3. Things meant to be tapped, and clearly too small to hit.
+
+     30.09.2026: this was "under 44 px in either direction", counted over every <a> on the
+     page. That flagged a 154x40 WhatsApp button and every inline link inside a sentence —
+     16 of them on our own site — and 24 on a working studio's. A link inside a paragraph is
+     not a tap target, it is a word; Lighthouse leaves those out for the same reason. And 40
+     against a guideline of 44 is not a fault worth telling a business about.
+
+     So: block-like targets only, and only ones genuinely small — under 32 px on a side. */
   let taps = 0, tapsSmall = 0;
   for (const el of document.querySelectorAll('a[href], button, [role="button"], input[type="submit"], input[type="button"], select, summary')) {
     const v = seen(el); if (!v) continue;
+    // a link that flows inside a line of text is a word, not a button
+    if (v.s.display === 'inline' && el.tagName === 'A') continue;
     taps++;
-    if (v.r.width < 44 || v.r.height < 44) tapsSmall++;
+    if (Math.min(v.r.width, v.r.height) < 32) tapsSmall++;
   }
 
   /* 4. Counters that never started. A studio's "0 projects, 0 clients, 0 years" is a
@@ -197,8 +224,26 @@ function measure() {
   const ar = (text.match(/[ؠ-ي]/g) || []).length;
   const latin = (text.match(/[A-Za-zЀ-ӿ]/g) || []).length;
 
+  /* The viewport meta, read straight from the page. 30.09.2026: the rendered path had no
+     viewport check at all, so info.cern.ch — which genuinely has none, and which a real
+     phone therefore lays out at 980 px and shrinks to a stamp — came back with overflow 0
+     and a clean bill. The browser was asked to lay out at 390 and obligingly did. What the
+     visitor's phone does is decided by this tag, so this tag is read. Same words as the
+     HTML path uses, so one chip means one thing on both roads. */
+  let vp = 'missing', vpW = 0;
+  const vpTag = document.querySelector('meta[name="viewport" i]');
+  if (vpTag) {
+    const t = vpTag.getAttribute('content') || '';
+    const fw = /(?:^|[\s,;])width\s*=\s*(\d{3,4})\b/i.exec(t);
+    const phoneW = fw && +fw[1] >= 240 && +fw[1] <= 600 ? +fw[1] : 0;
+    if (/device-width|initial-scale\s*=\s*1/i.test(t) || phoneW) {
+      vp = /user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?\b/i.test(t) ? 'locked' : 'ok';
+      if (phoneW && !/device-width/i.test(t)) vpW = phoneW;
+    }
+  }
+
   return {
-    vw, overflow, widest, widestSel,
+    vw, overflow, widest, widestSel, vp, vpW, smallPct,
     minFont: Math.round(minFont * 10) / 10, minFontText,
     taps, tapsSmall, zeros, overlaps, emptyBig, emptyMax,
     dir: getComputedStyle(document.body || document.documentElement).direction,
@@ -287,9 +332,22 @@ function checksOf(phone, desk, finalUrl, httpOpen) {
     overflow: p.overflow || 0,
     widest: p.widest || 0,
     widestSel: p.widestSel || '',
+    // what the phone's own tag says, so "no phone layout" survives the move to the browser
+    vp: p.vp || 'missing',
+    vpW: p.vpW || 0,
     minFont: p.minFont || 0,
+    // the share of the page's characters drawn under 12 px; the chip is about this, not
+    // about the single smallest label in a piece of artwork
+    smallPct: p.smallPct || 0,
     taps: p.taps || 0,
     tapsSmall: p.tapsSmall || 0,
+    /* Measured and reported, but no longer turned red. 30.09.2026, first day the browser
+       ran: "overlaps" found 49 collisions on our own home page and every one was a design —
+       a card's caption sitting over its title, and a headline drawn twice for effect.
+       "emptyBig" found 37 empty screenfuls on a working studio's site. Neither can tell a
+       layered design from a broken one, and a number we cannot stand behind must not be
+       shown to someone as a verdict on their business. Kept in the answer so the next
+       person can see what they do before deciding to trust them. */
     zeros: p.zeros || 0,
     overlaps: p.overlaps || 0,
     emptyBig: p.emptyBig || 0,
