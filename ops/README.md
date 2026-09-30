@@ -37,6 +37,19 @@ ops/deploy.sh "what changed, in one line"
    `POST /ev` answer anything but 405; the home page answers 200.
 6. Pushes the commit to GitHub.
 
+## Add a page, or add words to the dictionary
+
+`i18n.js` is served `no-cache`, but every page still asks for it as `i18n.js?v=N`. **Adding keys
+to the dictionary means bumping that N on every page in the same commit** (`sed -i
+'s|i18n.js?v=17|i18n.js?v=18|' *.html`). Otherwise a browser or an edge holding the previous copy
+keeps translating the old pages correctly and leaves the new one in English, which reads as "the
+new page was never translated" and is the one failure that looks exactly like a missing
+translation. 30.09.2026: reported against `/apps` on the day it shipped.
+
+A new page also needs: `_headers` (`/name` and `/name.html`, `Cache-Control: no-cache`),
+`sitemap.xml`, and the path in the `source` map of `gvp-wa.js` so the WhatsApp tag says where
+the click came from.
+
 ## Restore the videos
 
 `ops/fetch-media.sh` pulls every missing or damaged video from the live site and verifies it
