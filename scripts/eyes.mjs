@@ -23,9 +23,13 @@ const puppeteer = (await import(pathToFileURL(path.join(PUP, 'lib/puppeteer/pupp
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 fs.mkdirSync(OUT, { recursive: true });
 
-const SIZES = [['laptop', 1440, 900], ['phone', 390, 844]];
-const LANGS = ['he', 'en', 'ru'];
-const PAGES = ['', 'app', 'automation', 'os', 'work', 'learn'];
+// Both lists are overridable, so one page or one odd width can be looked at on its own
+// without editing this file:  PAGES=apps SIZES=wide:1521x950,phone:375x812 node scripts/eyes.mjs
+const SIZES = (process.env.SIZES || 'laptop:1440x900,phone:390x844').split(',').map(s => {
+  const [n, wh] = s.split(':'); const [w, h] = wh.split('x').map(Number); return [n, w, h];
+});
+const LANGS = (process.env.LANGS || 'he,en,ru').split(',');
+const PAGES = (process.env.PAGES || ',app,automation,os,apps,work,learn').split(',');
 
 let pass = 0, fail = 0;
 function line(ok, name, detail) {

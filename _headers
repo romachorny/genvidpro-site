@@ -64,6 +64,12 @@
 /os.html
   Cache-Control: no-cache
 
+/apps
+  Cache-Control: no-cache
+
+/apps.html
+  Cache-Control: no-cache
+
 /learn.html
   Cache-Control: no-cache
 
