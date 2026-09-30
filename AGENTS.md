@@ -68,3 +68,17 @@ says whether anything is still missing.
 | `wrangler.toml` | Cloudflare Pages deploy config with KV/D1/Worker bindings |
 | `ops/` | Deploy scripts, media checksums, push schema |
 | `render/` | gvp-render Cloudflare Worker (Chromium page renderer) |
+
+## The preview address has to be short enough to resolve
+
+The sandbox hostname is `<port>-<appId>[--b-<short>]-<sandboxId>.imported.base44-preview.app`,
+and a DNS label may hold 63 characters. On **main** that label is 54 and resolves. On a
+**named branch** Base44 inserts `--b-xxxxxxx`, which takes it to 65 — over the limit, so the
+address resolves nowhere, in any browser or client. Measured 30.09.2026:
+
+    3000-<appId>-<sandboxId>                 54 characters, resolves
+    3000-<appId>--b-xxxxxxx-<sandboxId>      65 characters, "label too long"
+
+So the preview has to run on **main**. A branch preview of this repo cannot be opened at all,
+and the failure looks nothing like the 403 this setup was built to fix: the name simply does
+not exist, and nothing ever reaches nginx.
