@@ -490,6 +490,18 @@ export default {
     if (url.pathname === '/budget') {
       return new Response(JSON.stringify(await budget(env)), { headers: JSON_H });
     }
+    /* What the platform itself says, rather than what we guess from an error string.
+       puppeteer.limits() costs no browser time and answers the only question that matters
+       when nothing renders: is a new browser refused because the day's ten minutes are
+       gone, because all the concurrent slots are taken, or because we simply asked too
+       fast and there is a wait. Guessing that from the message wasted most of 30.09.2026. */
+    if (url.pathname === '/limits') {
+      const out = { day: await budget(env) };
+      try { out.limits = await puppeteer.limits(env.BROWSER); } catch (e) { out.limitsErr = String(e && e.message).slice(0, 200); }
+      try { out.sessions = await puppeteer.sessions(env.BROWSER); } catch (e) { out.sessionsErr = String(e && e.message).slice(0, 200); }
+      try { out.history = (await puppeteer.history(env.BROWSER) || []).slice(-8); } catch (e) {}
+      return new Response(JSON.stringify(out), { headers: JSON_H });
+    }
     const u = clean(url.searchParams.get('u'));
     if (!u) return new Response(JSON.stringify({ ok: false, why: 'bad_address' }), { status: 400, headers: JSON_H });
 

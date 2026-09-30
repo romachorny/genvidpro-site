@@ -476,6 +476,18 @@ export async function onRequestGet({ request, env }) {
 
   // How much of the day's free browser time is gone. Read by the server's watcher, which
   // tells Roma at 70 % so the move to the paid plan is a decision and not a surprise.
+  // The platform's own account of why a browser is or is not available. Ours to read; the
+  // page never shows it. No browser time is spent answering this.
+  if (url.searchParams.get('limits') === '1') {
+    if (!env.RENDER) return new Response(JSON.stringify({ ok: false, why: 'no_render' }), { headers: JSON_H });
+    try {
+      const r = await env.RENDER.fetch('https://gvp-render/limits');
+      return new Response(await r.text(), { headers: JSON_H });
+    } catch (e) {
+      return new Response(JSON.stringify({ ok: false, why: 'render_unreachable' }), { headers: JSON_H });
+    }
+  }
+
   if (url.searchParams.get('budget') === '1') {
     if (!env.RENDER) return new Response(JSON.stringify({ ok: false, why: 'no_render' }), { headers: JSON_H });
     try {
