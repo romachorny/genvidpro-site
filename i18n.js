@@ -486,6 +486,59 @@
     /* 28.09.2026: three captions on the home buttons had no entry and stayed English in
        every language. 'your own automation · new' was the key until the NEW badge moved
        into its own span, so the key stopped matching the text on the button. */
+    /* 30.09.2026, the /apps page: a working app for a business, built on Base44.
+       The headline "Your business. Your app." stays English on purpose, like the one
+       on /os: Anton carries no Hebrew. The package names Start, Business and Pro are
+       names, and the three app names are names, so they stay as they are too. */
+    'GenVidPro · Apps': 'GenVidPro · אפליקציות',
+    'A working app for your small business, built and hosted on Base44 (base44.app), the app platform owned by Wix. Booking, a menu, a catalogue, orders, your crew or your clients. It installs on the phone and opens like any other app. Hebrew and English in one app, right to left where it belongs. Ready in days, not months.':
+      'אפליקציה עובדת לעסק הקטן שלכם, בנויה ומאוחסנת על Base44 (base44.app), פלטפורמת האפליקציות של Wix. תורים, תפריט, קטלוג, הזמנות, הצוות או הלקוחות. היא מותקנת על הטלפון ונפתחת כמו כל אפליקציה אחרת. עברית ואנגלית באפליקציה אחת, מימין לשמאל במקום שצריך. מוכנה בתוך ימים, לא חודשים.',
+    'Booking, menu, catalogue, orders, crew or clients. Whatever your work actually runs on.':
+      'תורים, תפריט, קטלוג, הזמנות, צוות או לקוחות. מה שהעבודה שלכם באמת רצה עליו.',
+    'Installs on the phone straight from the browser. No App Store, no Google Play, no approvals.':
+      'מותקנת על הטלפון ישיר מהדפדפן. בלי App Store, בלי Google Play, בלי אישורים.',
+    'Hebrew and English in one app, with the layout turned round where it should be.':
+      'עברית ואנגלית באפליקציה אחת, עם פריסה שמתהפכת במקום שצריך.',
+    'A WhatsApp button inside, so a customer writes to you in one tap.':
+      'כפתור וואטסאפ בפנים, כך שלקוח כותב לכם בלחיצה אחת.',
+    'The app sits on Base44 in your own account, so it stays yours from the first day.':
+      'האפליקציה יושבת על Base44 בחשבון שלכם, ולכן היא שלכם מהיום הראשון.',
+    'Build my app': 'לבנות לי אפליקציה',
+    'We agree what goes in before anything is built. You see the first working version in the first week.':
+      'מסכמים מה נכנס לפני שבונים משהו. את הגרסה העובדת הראשונה רואים כבר בשבוע הראשון.',
+    'Proof': 'הוכחה',
+    'Three apps you can open right now': 'שלוש אפליקציות שאפשר לפתוח עכשיו',
+    'Not pictures of apps. Live addresses, open them and press the buttons.':
+      'לא תמונות של אפליקציות. כתובות חיות, פתחו ולחצו על הכפתורים.',
+    'Production planning for video crews. The day, the crew, the shots, one sheet for everyone.':
+      'תכנון הפקה לצוותי וידאו. היום, הצוות, השוטים, דף אחד לכולם.',
+    'A concept site for a wine bar, in Hebrew and English. Menu, events, a table booking. Concept, not a client.':
+      'אתר קונספט לבר יין, בעברית ובאנגלית. תפריט, אירועים, הזמנת שולחן. קונספט, לא לקוח.',
+    'Live website templates that wear your brand. Type a name, pick a colour, every preview changes at once.':
+      'תבניות אתר חיות שלובשות את המותג שלכם. מקלידים שם, בוחרים צבע, וכל התצוגות משתנות בבת אחת.',
+    'The source code of these apps is open:': 'קוד המקור של האפליקציות האלה פתוח:',
+    'Prices': 'מחירים',
+    'What it costs': 'כמה זה עולה',
+    'A starting price for each size of job. The exact number comes after the brief, and nothing is built before you agree to it.':
+      'מחיר התחלה לכל גודל של עבודה. המחיר המדויק מגיע אחרי הבריף, ושום דבר לא נבנה לפני שאתם מסכימים לו.',
+    'An app with 2 to 4 screens: a catalogue, a menu or a booking, a WhatsApp button. Installs on the phone.':
+      'אפליקציה של 2 עד 4 מסכים: קטלוג, תפריט או הזמנת תור, כפתור וואטסאפ. מותקנת על הטלפון.',
+    'About 1 week': 'כשבוע',
+    'Booking or orders with an owner dashboard, Hebrew and English, notifications, a simple admin.':
+      'תורים או הזמנות עם לוח בקרה לבעלים, עברית ואנגלית, התראות וניהול פשוט.',
+    'About 2 weeks': 'כשבועיים',
+    'and up': 'ומעלה',
+    'Several user roles, payments, integrations with the other services you already use.':
+      'כמה סוגי משתמשים, תשלומים וחיבורים לשירותים שאתם כבר עובדים איתם.',
+    'From 3 weeks': 'משלושה שבועות',
+    'The Base44 plan, about 16 to 40 USD a month, is paid by you, and the app account belongs to you.':
+      'את המנוי של Base44, בערך 16 עד 40 דולר לחודש, משלמים אתם, וחשבון האפליקציה שלכם.',
+    'Want a promo film for the app as well?': 'רוצים גם סרטון פרסומי לאפליקציה?',
+    'Order a video from GenVidPro': 'להזמין וידאו מ-GenVidPro',
+    'Live apps on this page, open them and try them yourself': 'אפליקציות חיות בדף הזה, פתחו ונסו בעצמכם',
+    'Days from the brief to the first working version in your hand': 'ימים מהבריף ועד הגרסה העובדת הראשונה ביד',
+    'Languages in one app, Hebrew and English, right to left included': 'שפות באפליקציה אחת, עברית ואנגלית, כולל מימין לשמאל',
+    'working app on base44': 'אפליקציה עובדת על base44',
     'orders in whatsapp': 'הזמנות בוואטסאפ',
     'your own automation': 'אוטומציה משלך',
     'selected films': 'סרטים נבחרים',
@@ -1119,6 +1172,59 @@
     "In Hebrew or in Russian, whichever suits you": "На иврите или по-русски, как вам удобнее",
     "Lesson 1": "Урок 1",
     "The very first lesson ends with a result of your own": "Уже первый урок заканчивается вашим собственным результатом",
+    /* 30.09.2026, страница /apps: рабочее приложение для бизнеса на Base44.
+       Заголовок «Your business. Your app.» намеренно остаётся английским, как и на /os:
+       в Anton нет кириллицы. Названия пакетов Start, Business, Pro и имена трёх
+       приложений — имена, они тоже не переводятся. */
+    'GenVidPro · Apps': 'GenVidPro · Приложения',
+    'A working app for your small business, built and hosted on Base44 (base44.app), the app platform owned by Wix. Booking, a menu, a catalogue, orders, your crew or your clients. It installs on the phone and opens like any other app. Hebrew and English in one app, right to left where it belongs. Ready in days, not months.':
+      'Рабочее приложение для вашего небольшого бизнеса, собранное и размещённое на Base44 (base44.app), платформе приложений от Wix. Запись, меню, каталог, заказы, команда или клиенты. Оно ставится на телефон и открывается как любое другое. Иврит и английский в одном приложении, справа налево там, где это нужно. Готово за дни, а не за месяцы.',
+    'Booking, menu, catalogue, orders, crew or clients. Whatever your work actually runs on.':
+      'Запись, меню, каталог, заказы, команда или клиенты. То, на чём действительно держится ваша работа.',
+    'Installs on the phone straight from the browser. No App Store, no Google Play, no approvals.':
+      'Ставится на телефон прямо из браузера. Без App Store, без Google Play, без проверок.',
+    'Hebrew and English in one app, with the layout turned round where it should be.':
+      'Иврит и английский в одном приложении, с развёрнутой вёрсткой там, где надо.',
+    'A WhatsApp button inside, so a customer writes to you in one tap.':
+      'Кнопка WhatsApp внутри, чтобы клиент написал вам в одно касание.',
+    'The app sits on Base44 in your own account, so it stays yours from the first day.':
+      'Приложение живёт на Base44 в вашем аккаунте, поэтому оно ваше с первого дня.',
+    'Build my app': 'Собрать мне приложение',
+    'We agree what goes in before anything is built. You see the first working version in the first week.':
+      'Что войдёт внутрь, мы согласуем до сборки. Первую рабочую версию вы видите на первой неделе.',
+    'Proof': 'Доказательство',
+    'Three apps you can open right now': 'Три приложения, которые можно открыть прямо сейчас',
+    'Not pictures of apps. Live addresses, open them and press the buttons.':
+      'Это не картинки. Живые адреса, откройте и пожмите кнопки.',
+    'Production planning for video crews. The day, the crew, the shots, one sheet for everyone.':
+      'Планирование съёмочного дня. День, команда, кадры, один лист для всех.',
+    'A concept site for a wine bar, in Hebrew and English. Menu, events, a table booking. Concept, not a client.':
+      'Концепт-сайт винного бара, на иврите и английском. Меню, события, бронь столика. Концепт, а не клиент.',
+    'Live website templates that wear your brand. Type a name, pick a colour, every preview changes at once.':
+      'Живые шаблоны сайтов, которые одеваются в ваш бренд. Вводите имя, выбираете цвет, и все превью меняются сразу.',
+    'The source code of these apps is open:': 'Исходный код этих приложений открыт:',
+    'Prices': 'Цены',
+    'What it costs': 'Сколько это стоит',
+    'A starting price for each size of job. The exact number comes after the brief, and nothing is built before you agree to it.':
+      'Начальная цена для каждого размера работы. Точная сумма появляется после брифа, и ничего не собирается, пока вы её не одобрите.',
+    'An app with 2 to 4 screens: a catalogue, a menu or a booking, a WhatsApp button. Installs on the phone.':
+      'Приложение на 2–4 экрана: каталог, меню или запись, кнопка WhatsApp. Ставится на телефон.',
+    'About 1 week': 'Около недели',
+    'Booking or orders with an owner dashboard, Hebrew and English, notifications, a simple admin.':
+      'Запись или заказы с панелью владельца, иврит и английский, уведомления и простое управление.',
+    'About 2 weeks': 'Около двух недель',
+    'and up': 'и выше',
+    'Several user roles, payments, integrations with the other services you already use.':
+      'Несколько ролей, оплаты и связки с другими сервисами, которыми вы уже пользуетесь.',
+    'From 3 weeks': 'От трёх недель',
+    'The Base44 plan, about 16 to 40 USD a month, is paid by you, and the app account belongs to you.':
+      'Подписку Base44, примерно от 16 до 40 долларов в месяц, оплачиваете вы, и аккаунт приложения принадлежит вам.',
+    'Want a promo film for the app as well?': 'Хотите ещё и рекламный ролик про приложение?',
+    'Order a video from GenVidPro': 'Заказать видео в GenVidPro',
+    'Live apps on this page, open them and try them yourself': 'Живых приложения на этой странице, откройте и попробуйте сами',
+    'Days from the brief to the first working version in your hand': 'Дней от брифа до первой рабочей версии у вас в руках',
+    'Languages in one app, Hebrew and English, right to left included': 'Языка в одном приложении, иврит и английский, вместе с вёрсткой справа налево',
+    'working app on base44': 'рабочее приложение на base44',
     'orders in whatsapp': 'заказы в whatsapp',
     'your own automation': 'своя автоматизация',
     'selected films': 'избранные фильмы',
