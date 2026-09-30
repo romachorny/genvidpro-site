@@ -27,15 +27,16 @@ database_id = "fcc906ab-d6b2-4f25-88c8-bd02d8a075ae"
 # visitor's page at a phone's size. That browser is the gvp-render Worker (render/ in
 # this repo, published by ops/render-deploy.sh). It has no public address at all — this
 # binding is the only way in, which is why it needs no shared secret.
-# TURN THIS ON once gvp-render exists (ops/render-deploy.sh). It is off because a Pages
-# deployment that binds a Worker which is not there yet would answer every check with an
-# error, and /preview is a button on a live sales page. With the binding off, the checker
-# reads the HTML and says so; with it on, a real browser draws the page. 29.09.2026: the
-# Cloudflare token can only do Pages — it needs Workers Scripts:Edit and Browser
-# Rendering:Edit before the Worker can be published at all.
-# [[services]]
-# binding = "RENDER"
-# service = "gvp-render"
+# ON since 30.09.2026: Roma added Workers Scripts:Edit and Browser Run:Edit to the token
+# (Cloudflare renamed Browser Rendering to Browser Run), gvp-render is published, and the
+# checker measures a page a real Chromium drew instead of guessing from the HTML.
+# Order matters if this is ever rebuilt: the Worker has to be live BEFORE the Pages deploy
+# that binds it, or the binding fails to resolve and /preview — a button on a live sales
+# page — answers every check with an error. ops/render-deploy.sh first, then this, then
+# ops/deploy.sh. With the binding off the checker still works, it just reads the HTML.
+[[services]]
+binding = "RENDER"
+service = "gvp-render"
 
 [env.preview]
 [[env.preview.kv_namespaces]]
@@ -47,6 +48,6 @@ binding = "PUSHDB"
 database_name = "gvp-push"
 database_id = "fcc906ab-d6b2-4f25-88c8-bd02d8a075ae"
 
-# [[env.preview.services]]
-# binding = "RENDER"
-# service = "gvp-render"
+[[env.preview.services]]
+binding = "RENDER"
+service = "gvp-render"
