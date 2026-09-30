@@ -68,10 +68,33 @@ const MEASURE_V = 'v3';
 const keyOf = (u, al) => 'rr:' + MEASURE_V + ':' + (al ? al.slice(0, 5).replace(/[^a-z-]/gi, '') + ':' : '') +
   u.toString().replace(/\/$/, '').toLowerCase();
 
+/* How much of the day's browser time is gone — asked of the platform, which knows.
+
+   30.09.2026: this used to report our own stopwatch, the wall time of each render. It said
+   220 seconds on a day Cloudflare had already counted 1074 against a 600-second cap, and
+   so the budget endpoint cheerfully reported 37 % while every launch was refused. The
+   stopwatch could not have been right: a session goes on being billed after we let go of
+   it, and with the old ten-minute keep_alive most of the spending happened when nobody was
+   looking. puppeteer.limits() costs no browser time and carries usedBrowserTimeSeconds.
+   The KV tally stays as a fallback for when limits() cannot be reached, and is marked as
+   such so nobody trusts it twice. */
 async function budget(env) {
+  try {
+    const l = await puppeteer.limits(env.BROWSER);
+    if (l && typeof l.usedBrowserTimeSeconds === 'number') {
+      const used = Math.round(l.usedBrowserTimeSeconds * 1000);
+      return {
+        usedMs: used, capMs: CAP_MS, pct: Math.round((used / CAP_MS) * 100), source: 'cloudflare',
+        activeSessions: (l.activeSessions || []).length,
+        maxConcurrentSessions: l.maxConcurrentSessions,
+        allowedBrowserAcquisitions: l.allowedBrowserAcquisitions,
+        waitMs: l.timeUntilNextAllowedBrowserAcquisition || 0
+      };
+    }
+  } catch (e) {}
   let used = 0;
   try { used = parseInt((await env.EVENTS.get('brms:' + day())) || '0', 10) || 0; } catch (e) {}
-  return { usedMs: used, capMs: CAP_MS, pct: Math.round((used / CAP_MS) * 100) };
+  return { usedMs: used, capMs: CAP_MS, pct: Math.round((used / CAP_MS) * 100), source: 'our own tally, approximate' };
 }
 async function spend(env, ms) {
   try {
@@ -458,10 +481,26 @@ async function render(env, u, al) {
        "Rate limit exceeded" is a moment's crowding that the next visitor will not meet.
        Both fall back to reading the HTML, but only one of them is worth telling Roma
        about, and lumping them together cost an afternoon of guessing on 30.09.2026. */
+    /* Why there was no browser, decided by the numbers rather than by the message.
+       30.09.2026: Cloudflare refuses a launch with "code: 429: message: Rate limit
+       exceeded" even when the real cause is the day's ten minutes being gone — the
+       documented "Browser time limit exceeded for today" is not what actually arrives.
+       Keying on that string made the 'spent' branch unreachable and sent us hunting a
+       phantom rate limit for half a day while limits() plainly said usedBrowserTimeSeconds
+       1074 of 600 and activeSessions empty. So: ask, then judge. */
     const msg = String((e && e.message) || '');
-    const why = /time limit exceeded for today|daily limit/i.test(msg) ? 'spent'
-      : /429|rate limit|limit exceeded/i.test(msg) ? 'busy' : 'render_failed';
-    out = { ok: false, why, detail: String(e && e.message).slice(0, 200) };
+    let why = 'render_failed';
+    if (/429|rate limit|limit exceeded|unable to create new browser/i.test(msg)) {
+      why = 'busy';
+      try {
+        const l = await puppeteer.limits(env.BROWSER);
+        if (l) {
+          if ((l.usedBrowserTimeSeconds || 0) * 1000 >= CAP_MS) why = 'spent';
+          else if ((l.activeSessions || []).length >= (l.maxConcurrentSessions || 0)) why = 'crowded';
+        }
+      } catch (e2) {}
+    }
+    out = { ok: false, why, detail: msg.slice(0, 200) };
   } finally {
     /* Closed, not merely let go of. disconnect() leaves the browser running and the free
        plan's ten minutes a day draining; close() ends the session and the billing with it.

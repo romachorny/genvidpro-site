@@ -581,7 +581,10 @@ export async function onRequestGet({ request, env }) {
   } else {
     // 'spent' is the day's free browser time gone until midnight UTC; 'busy' is a moment's
     // crowding. Both read the HTML instead, and the page says so either way.
-    busy = !!(rend && (rend.why === 'busy' || rend.why === 'spent'));
+    // 'spent' = the day's free browser time is gone until midnight UTC, 'crowded' = every
+    // concurrent slot taken, 'busy' = asked too fast. All three read the HTML instead and
+    // the page says so; only the exact reason differs, and renderWhy carries it.
+    busy = !!(rend && (rend.why === 'busy' || rend.why === 'spent' || rend.why === 'crowded'));
     /* Why the browser did not draw it. 30.09.2026: every check quietly fell back to the
        HTML for an afternoon and the answer said only "busy", which covers a rate limit, a
        time limit and a browser that never started. Without this the only way to tell them
