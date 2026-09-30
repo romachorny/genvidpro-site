@@ -567,7 +567,9 @@ export async function onRequestGet({ request, env }) {
     shotH = rend.shotH || 0;
     if (rend.url) finalUrl = rend.url;
   } else {
-    busy = !!(rend && rend.why === 'busy');
+    // 'spent' is the day's free browser time gone until midnight UTC; 'busy' is a moment's
+    // crowding. Both read the HTML instead, and the page says so either way.
+    busy = !!(rend && (rend.why === 'busy' || rend.why === 'spent'));
     /* Why the browser did not draw it. 30.09.2026: every check quietly fell back to the
        HTML for an afternoon and the answer said only "busy", which covers a rate limit, a
        time limit and a browser that never started. Without this the only way to tell them

@@ -453,7 +453,14 @@ async function render(env, u, al) {
       shotH: phone.shotH || 0
     };
   } catch (e) {
-    const why = /429|time limit|limit exceeded/i.test(String(e && e.message)) ? 'busy' : 'render_failed';
+    /* Cloudflare says these two apart and so should we: "Browser time limit exceeded for
+       today" is the Free plan's ten minutes a day, gone until the next UTC day, while
+       "Rate limit exceeded" is a moment's crowding that the next visitor will not meet.
+       Both fall back to reading the HTML, but only one of them is worth telling Roma
+       about, and lumping them together cost an afternoon of guessing on 30.09.2026. */
+    const msg = String((e && e.message) || '');
+    const why = /time limit exceeded for today|daily limit/i.test(msg) ? 'spent'
+      : /429|rate limit|limit exceeded/i.test(msg) ? 'busy' : 'render_failed';
     out = { ok: false, why, detail: String(e && e.message).slice(0, 200) };
   } finally {
     /* Closed, not merely let go of. disconnect() leaves the browser running and the free
