@@ -452,7 +452,17 @@ async function httpIsOpen(u) {
 
 async function render(env, u, al) {
   const b = await budget(env);
-  if (b.usedMs >= CAP_MS * STOP_AT) return { ok: false, why: 'busy', budget: b };
+  /* The day's ten minutes are gone: do not even ask for a browser, and say which it is.
+     30.09.2026, and this was the whole of the verifier's finding: this guard has always
+     KNOWN the budget was spent and still answered 'busy', the word for a moment's
+     crowding. So the site said "busy right now, try again" about a state that lasts until
+     midnight UTC, and the reason chased in the launch error was never reached because the
+     launch never happened. The word is the thing here — 'busy' invites a retry that cannot
+     work. */
+  if (b.usedMs >= CAP_MS * STOP_AT) {
+    return { ok: false, why: 'spent', detail: 'day used ' + Math.round(b.usedMs / 1000) + 's of ' +
+      Math.round(CAP_MS / 1000) + 's (' + (b.source || 'unknown source') + '), resets at midnight UTC', budget: b };
+  }
 
   const t0 = Date.now();
   let browser = null, out = null;
@@ -568,7 +578,8 @@ export default {
       try { await env.EVENTS.put(key, JSON.stringify(out), { expirationTtl: CACHE_TTL }); } catch (e) {}
     }
     return new Response(JSON.stringify(Object.assign({}, out, { cached: false, shots: undefined })), {
-      status: out.ok ? 200 : (out.why === 'busy' ? 503 : 502), headers: JSON_H
+      // 503 for "come back later" states, 502 for a genuine failure to draw the page
+      status: out.ok ? 200 : (/^(busy|spent|crowded)$/.test(out.why) ? 503 : 502), headers: JSON_H
     });
   }
 };
