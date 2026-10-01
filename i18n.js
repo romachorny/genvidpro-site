@@ -506,6 +506,7 @@
     'Build my app': 'לבנות לי אפליקציה',
     /* 01.10.2026: кнопка ведёт в живое приложение, а не в вотсап, и подпись под ней новая. */
     'Open the live app, pick what your business needs': 'נפתחת האפליקציה החיה, בוחרים מה העסק שלכם צריך',
+    'Sound': 'קול',
     'We agree what goes in before anything is built. You see the first working version in the first week.':
       'מסכמים מה נכנס לפני שבונים משהו. את הגרסה העובדת הראשונה רואים כבר בשבוע הראשון.',
     'Proof': 'הוכחה',
@@ -1194,6 +1195,7 @@
     'Build my app': 'Собрать мне приложение',
     /* 01.10.2026: кнопка ведёт в живое приложение, а не в вотсап, и подпись под ней новая. */
     'Open the live app, pick what your business needs': 'Откроется живое приложение, выберите, что нужно вашему делу',
+    'Sound': 'Звук',
     'We agree what goes in before anything is built. You see the first working version in the first week.':
       'Что войдёт внутрь, мы согласуем до сборки. Первую рабочую версию вы видите на первой неделе.',
     'Proof': 'Доказательство',

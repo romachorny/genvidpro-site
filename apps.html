@@ -33,6 +33,25 @@ h1 span{color:#46FFA0}
       box-shadow:0 0 60px rgba(70,255,160,.08)}
 .film video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#EEF1F6}
 .film.vert video{aspect-ratio:9/16;max-height:calc(100svh - 170px);object-fit:contain;margin:0 auto}
+/* Звук. Браузер не даёт запустить ролик со звуком без жеста человека, поэтому он стартует
+   немым, а эта кнопка — единственный способ его включить. Угол задан логическими свойствами,
+   так что на иврите она сама уезжает в левый нижний. Высота 44 px: это нижняя граница
+   попадания пальцем. Подложка тёмная, потому что кадр под ней светлый. */
+.film{--snd:12px}
+.snd{position:absolute;bottom:var(--snd);inset-inline-end:var(--snd);z-index:2;
+     display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;
+     border:1px solid rgba(255,255,255,.22);border-radius:999px;cursor:pointer;
+     background:rgba(10,24,18,.82);color:#F2F2F0;font:600 14px/1 Inter,system-ui,sans-serif;
+     -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:background .18s,border-color .18s}
+.snd:hover{background:rgba(10,24,18,.95);border-color:#46FFA0}
+.snd:focus-visible{outline:2px solid #46FFA0;outline-offset:2px}
+.snd svg{width:20px;height:20px;flex:0 0 auto;display:block}
+.snd .wv{opacity:.35;transition:opacity .18s}
+.snd .xx{opacity:1;transition:opacity .18s}
+.snd[aria-pressed="true"]{background:#46FFA0;color:#050C09;border-color:#46FFA0}
+.snd[aria-pressed="true"] .wv{opacity:1}
+.snd[aria-pressed="true"] .xx{opacity:0}
+.film video{cursor:pointer}
 .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:clamp(20px,3.4vw,44px);align-items:start}
 @media(max-width:860px){.split{grid-template-columns:1fr}}
 .pts{list-style:none;margin:0;padding:0}
@@ -92,6 +111,12 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
   <div class="film" id="filmslot">
     <video id="gvfilm" src="videos/gvpro-en-16x9-r2.mp4" poster="media/gvpro-en-16x9-r2-poster.jpg"
            autoplay muted loop playsinline></video>
+    <button class="snd" id="gvsnd" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor" stroke="none"></path>
+        <g class="wv"><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></g>
+        <path class="xx" d="M22 9l-6 6M16 9l6 6"></path>
+      </svg><span>Sound</span></button>
   </div>
   <a class="cta cta2" data-gvpro href="https://gvpro.base44.app/?lang=en" target="_blank" rel="noopener">
     Build my app<span>Open the live app, pick what your business needs</span></a>
@@ -189,6 +214,8 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
   var OFFERED = ['en', 'he', 'ru'];
   var slot = document.getElementById('filmslot');
   var v = document.getElementById('gvfilm');
+  var btn = document.getElementById('gvsnd');
+  var sound = false;   /* всегда стартуем немыми: со звуком браузер автозапуск не даст */
 
   function lang() {
     var c = 'en';
@@ -214,9 +241,25 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
     v.setAttribute('poster', 'media/' + base + '-poster.jpg');
     v.setAttribute('src', 'videos/' + base + '.mp4');
     v.load();
+    v.muted = !sound;                /* смена языка или ширины не должна снова затыкать ролик */
+    if (sound) { try { v.currentTime = 0; } catch (e) {} }
     var p = v.play();
     if (p && p.catch) p.catch(function () {});   /* a browser that refuses autoplay keeps the poster */
   }
+
+  /* Звук включается только по жесту человека, поэтому и кнопка, и сам кадр делают одно и то же:
+     снимают немоту и отматывают ролик на начало, чтобы музыка шла с первого такта, а не с середины. */
+  function toggle() {
+    sound = !sound;
+    v.muted = !sound;
+    v.volume = 1;
+    btn.setAttribute('aria-pressed', String(sound));
+    if (sound) { try { v.currentTime = 0; } catch (e) {} }
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+  if (btn) btn.addEventListener('click', toggle);
+  if (v) v.addEventListener('click', toggle);
 
   apply();
   document.addEventListener('gvlang', apply);
@@ -225,7 +268,7 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
 </script>
 <!-- v=19 только здесь: словарь получил строки этой страницы, а остальные страницы
      не меняются и свою закэшированную v=18 переводят верно. ops/README.md, раздел о словаре -->
-<script src="/i18n.js?v=19" defer></script>
+<script src="/i18n.js?v=20" defer></script>
 <script src="gv-chrome.js?v=18" defer></script>
 <script src="/gvp-wa.js?v=3" defer></script>
 </body></html>
