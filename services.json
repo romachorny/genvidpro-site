@@ -1,7 +1,7 @@
 {
   "$schema": "https://genvidpro.com/services.schema.json",
-  "version": "2026-09-30.1",
-  "updated": "2026-09-30",
+  "version": "2026-10-01.1",
+  "updated": "2026-10-01",
   "wa_number": "972539760820",
   "languages": ["he", "en", "ru", "ar"],
   "owner": { "he": "רומן", "en": "Roman", "ru": "Роман", "ar": "رومان" },
@@ -720,12 +720,12 @@
     },
     { "id": "apps_build", "tag": "apps", "active": true, "order": 9, "category": "web",
       "names": { "he": "אפליקציה לעסק", "en": "Build my app", "ru": "Приложение для бизнеса", "ar": "تطبيق للأعمال" },
-      "short": { "he": "אפליקציה לעסק", "en": "Business app", "ru": "Приложение", "ar": "تطبيق" },
+      "short": { "he": "אפליקציה לעסק", "en": "Business app", "ru": "Бизнес-приложение", "ar": "تطبيق للأعمال" },
       "keywords": {
-        "he": ["אפליקציה לעסק", "לבנות אפליקציה", "אפליקציה", "אפליקציה להזמנות", "אפליקציה לתורים", "אפליקציה לתפריט", "אפליקציה לקטלוג", "base44"],
+        "he": ["אפליקציה לעסק", "לבנות אפליקציה", "אפליקציה להזמנות", "אפליקציה לתורים", "אפליקציה לתפריט", "אפליקציה לקטלוג", "base44"],
         "en": ["build my app", "business app", "app for my business", "booking app", "menu app", "catalogue app", "ordering app", "base44"],
-        "ru": ["приложение для бизнеса", "сделать приложение", "приложение", "приложение для записи", "приложение для заказов", "приложение с меню", "приложение каталог", "base44"],
-        "ar": ["تطبيق للأعمال", "بناء تطبيق", "تطبيق", "تطبيق حجوزات", "تطبيق طلبات", "تطبيق قائمة طعام", "base44"] },
+        "ru": ["приложение для бизнеса", "бизнес-приложение", "сделать приложение", "приложение для записи", "приложение для заказов", "приложение с меню", "приложение каталог", "base44"],
+        "ar": ["تطبيق للأعمال", "بناء تطبيق", "تطبيق حجوزات", "تطبيق طلبات", "تطبيق قائمة طعام", "base44"] },
       "pitch": {
         "he": "אפליקציה עובדת לעסק שלך, בנויה ומאוחסנת על Base44: תורים, תפריט, קטלוג, הזמנות, הצוות או הלקוחות. מותקנת על הטלפון ונפתחת כמו כל אפליקציה, בעברית ובאנגלית. שלוש אפליקציות חיות פתוחות לבדיקה ב-genvidpro.com/apps. {from}.",
         "en": "A working app for your business, built and hosted on Base44: booking, a menu, a catalogue, orders, your crew or your clients. It installs on the phone and opens like any other app, in Hebrew and English. Three live apps are open to try at genvidpro.com/apps. {from}.",
