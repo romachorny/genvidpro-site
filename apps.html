@@ -7,7 +7,7 @@
 <meta name="description" content="A working app for your business, built and hosted on Base44: booking, menu, catalogue, orders, crew. Installs on the phone, Hebrew and English, ready in days.">
 <meta property="og:title" content="Build my app — GenVidPro">
 <meta property="og:description" content="Your business, your app. Built on Base44, installs on the phone, ready in days.">
-<meta property="og:image" content="https://genvidpro.com/media/base44-apps.jpg">
+<meta property="og:image" content="https://genvidpro.com/media/gvpro-en-16x9-r2-poster.jpg">
 <meta property="og:url" content="https://genvidpro.com/apps">
 <meta name="twitter:card" content="summary_large_image">
 <script>if(location.protocol!=='file:'&&'serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('/sw.js')})}</script>
@@ -26,9 +26,13 @@ h1{font-family:Anton,Impact,sans-serif;font-weight:400;margin:0 0 14px;line-heig
    font-size:clamp(38px,8.4vw,92px);text-transform:uppercase;letter-spacing:.01em}
 h1 span{color:#46FFA0}
 .lead{font-size:clamp(16px,2vw,21px);line-height:1.55;color:#C9C9C5;max-width:780px;margin:0 0 clamp(26px,4vw,44px)}
-.film{position:relative;background:#050C09;border-radius:6px;overflow:hidden;border:1px solid #173226;margin:0 0 clamp(22px,3.4vw,40px);
+/* Ролик показывает светлое приложение, поэтому подложка слота светлая: тёмная рамка вокруг
+   белого кадра читалась как чёрная кайма. Уже 700 px — вертикальный монтаж того же ролика,
+   и слот меняет пропорцию вместе с ним, иначе кадр лёг бы в чёрные поля. */
+.film{position:relative;background:#EEF1F6;border-radius:6px;overflow:hidden;border:1px solid #173226;margin:0 0 clamp(18px,2.6vw,28px);
       box-shadow:0 0 60px rgba(70,255,160,.08)}
-.film video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#050C09}
+.film video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#EEF1F6}
+.film.vert video{aspect-ratio:9/16;max-height:calc(100svh - 170px);object-fit:contain;margin:0 auto}
 .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:clamp(20px,3.4vw,44px);align-items:start}
 @media(max-width:860px){.split{grid-template-columns:1fr}}
 .pts{list-style:none;margin:0;padding:0}
@@ -73,6 +77,7 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
 .tp i{font-style:normal;font-family:Inter,sans-serif;font-size:14px;font-weight:400;color:#8DB8A2;letter-spacing:0}
 .td{margin:0 0 14px;color:#C9C9C5;font-size:14px;line-height:1.5;flex:1 1 auto}
 .tt{margin:0;color:#8DB8A2;font-family:monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.cta2{margin:0 0 clamp(26px,4vw,44px)}
 .back{display:inline-block;margin-top:clamp(26px,4vw,44px);color:#46FFA0;text-decoration:none;font-size:14px}
 </style>
 </head>
@@ -84,10 +89,12 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
   Booking, a menu, a catalogue, orders, your crew or your clients. It installs on the phone and opens like any other app.
   Hebrew and English in one app, right to left where it belongs. Ready in days, not months.</p>
 
-  <div class="film">
-    <video id="b44film" src="videos/base44-apps.mp4" poster="media/base44-apps.jpg"
-           controls playsinline preload="none"></video>
+  <div class="film" id="filmslot">
+    <video id="gvfilm" src="videos/gvpro-en-16x9-r2.mp4" poster="media/gvpro-en-16x9-r2-poster.jpg"
+           autoplay muted loop playsinline></video>
   </div>
+  <a class="cta cta2" data-gvpro href="https://gvpro.base44.app/?lang=en" target="_blank" rel="noopener">
+    Build my app<span>Open the live app, pick what your business needs</span></a>
 
   <div class="split">
     <div>
@@ -100,8 +107,8 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
       </ul>
     </div>
     <div>
-      <a class="cta" href="https://wa.me/972539760820" data-gvp-service="apps_build" data-gvp-source="apps" target="_blank" rel="noopener">
-        Build my app<span>WhatsApp, a short brief with our agent, answer within 24 hours</span></a>
+      <a class="cta" data-gvpro href="https://gvpro.base44.app/?lang=en" target="_blank" rel="noopener">
+        Build my app<span>Open the live app, pick what your business needs</span></a>
       <p class="note">We agree what goes in before anything is built. You see the first working version in the first week.</p>
     </div>
   </div>
@@ -169,25 +176,56 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
   <a class="back" href="/">&larr; genvidpro.com</a>
 </main>
 <script>
-/* The film about this service is not cut yet, and the slot still has to look finished.
-   preload="none" is what makes that honest: the browser draws the poster and asks the
-   network for nothing, so a page whose film is missing does not report a missing file on
-   every visit. Dropping videos/base44-apps.mp4 in is then the only change needed. A phone
-   takes videos/m/base44-apps.mp4 when that one is there, and falls back to the full file
-   once if it is not. The fourth name from the brief, media/base44-apps-preview.mp4, is the
-   hover preview of a showcase ring on the home page; this service has no ring there yet,
-   so nothing on this page reads that file. */
+/* The film and the two buttons both follow the page language, and the language is decided
+   before i18n.js runs: that file is deferred, this one is inline, so it cannot be asked.
+   The rule is read the same way i18n reads it — ?lang= first, then what the visitor chose
+   last — and then corrected on the `gvlang` event i18n fires on every switch.
+
+   Hebrew gets the Hebrew cut, English and Russian share the English one. Under 700 px the
+   vertical cut of the same language plays instead, and the slot changes shape with it.
+   Nothing is re-assigned unless the chosen file actually changed, so a resize that stays on
+   one side of 700 px does not restart the film. */
 (function () {
-  var v = document.getElementById('b44film');
-  if (!v || !window.matchMedia || !matchMedia('(max-width:719px)').matches) return;
-  v.src = 'videos/m/base44-apps.mp4';
-  v.addEventListener('error', function once() {
-    v.removeEventListener('error', once);
-    v.src = 'videos/base44-apps.mp4';
-  });
+  var OFFERED = ['en', 'he', 'ru'];
+  var slot = document.getElementById('filmslot');
+  var v = document.getElementById('gvfilm');
+
+  function lang() {
+    var c = 'en';
+    try { c = localStorage.getItem('gvlang') || 'en'; } catch (e) {}
+    try {
+      var q = /[?&#]lang=([a-z-]{2,5})/i.exec(location.search + location.hash);
+      if (q && OFFERED.indexOf(q[1].toLowerCase()) >= 0) c = q[1].toLowerCase();
+    } catch (e) {}
+    return OFFERED.indexOf(c) >= 0 ? c : 'en';
+  }
+
+  function apply() {
+    var l = lang();
+    [].forEach.call(document.querySelectorAll('a[data-gvpro]'), function (a) {
+      a.setAttribute('href', 'https://gvpro.base44.app/?lang=' + l);
+    });
+    if (!v || !slot) return;
+    var vert = (window.innerWidth || document.documentElement.clientWidth) < 700;
+    var base = 'gvpro-' + (l === 'he' ? 'he' : 'en') + '-' + (vert ? '9x16' : '16x9') + '-r2';
+    slot.classList.toggle('vert', vert);
+    if (v.getAttribute('data-base') === base) return;
+    v.setAttribute('data-base', base);
+    v.setAttribute('poster', 'media/' + base + '-poster.jpg');
+    v.setAttribute('src', 'videos/' + base + '.mp4');
+    v.load();
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});   /* a browser that refuses autoplay keeps the poster */
+  }
+
+  apply();
+  document.addEventListener('gvlang', apply);
+  addEventListener('resize', apply);
 })();
 </script>
-<script src="/i18n.js?v=18" defer></script>
+<!-- v=19 только здесь: словарь получил строки этой страницы, а остальные страницы
+     не меняются и свою закэшированную v=18 переводят верно. ops/README.md, раздел о словаре -->
+<script src="/i18n.js?v=19" defer></script>
 <script src="gv-chrome.js?v=18" defer></script>
 <script src="/gvp-wa.js?v=3" defer></script>
 </body></html>

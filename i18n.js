@@ -504,6 +504,8 @@
     'The app sits on Base44 in your own account, so it stays yours from the first day.':
       'האפליקציה יושבת על Base44 בחשבון שלכם, ולכן היא שלכם מהיום הראשון.',
     'Build my app': 'לבנות לי אפליקציה',
+    /* 01.10.2026: кнопка ведёт в живое приложение, а не в вотсап, и подпись под ней новая. */
+    'Open the live app, pick what your business needs': 'נפתחת האפליקציה החיה, בוחרים מה העסק שלכם צריך',
     'We agree what goes in before anything is built. You see the first working version in the first week.':
       'מסכמים מה נכנס לפני שבונים משהו. את הגרסה העובדת הראשונה רואים כבר בשבוע הראשון.',
     'Proof': 'הוכחה',
@@ -1190,6 +1192,8 @@
     'The app sits on Base44 in your own account, so it stays yours from the first day.':
       'Приложение живёт на Base44 в вашем аккаунте, поэтому оно ваше с первого дня.',
     'Build my app': 'Собрать мне приложение',
+    /* 01.10.2026: кнопка ведёт в живое приложение, а не в вотсап, и подпись под ней новая. */
+    'Open the live app, pick what your business needs': 'Откроется живое приложение, выберите, что нужно вашему делу',
     'We agree what goes in before anything is built. You see the first working version in the first week.':
       'Что войдёт внутрь, мы согласуем до сборки. Первую рабочую версию вы видите на первой неделе.',
     'Proof': 'Доказательство',
