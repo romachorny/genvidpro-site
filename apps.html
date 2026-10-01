@@ -46,6 +46,9 @@ h1 span{color:#46FFA0}
 .snd:hover{background:rgba(10,24,18,.95);border-color:#46FFA0}
 .snd:focus-visible{outline:2px solid #46FFA0;outline-offset:2px}
 .snd svg{width:20px;height:20px;flex:0 0 auto;display:block}
+/* Значок и подпись не ловят клик сами: иначе целью события становится <path> внутри <svg>,
+   и любая проверка «попали ли по кнопке» усложняется на ровном месте. */
+.snd *{pointer-events:none}
 .snd .wv{opacity:.35;transition:opacity .18s}
 .snd .xx{opacity:1;transition:opacity .18s}
 .snd[aria-pressed="true"]{background:#46FFA0;color:#050C09;border-color:#46FFA0}
@@ -258,25 +261,60 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
 
   /* Звук включается только по жесту человека, поэтому всё — снятие немоты, перемотка на ноль
      и play() — делается синхронно внутри самого клика: уйди это в промис или в таймер, жест
-     бы истёк и браузер отказал. */
+     бы истёк и браузер отказал.
+
+     01.10.2026. На живой машине Ромы клик по кнопке давал одно событие `pause` и ничего больше:
+     ролик вставал, немота не снималась. В самой странице нет ни одного обработчика
+     `pointerdown`, `mousedown` или `touchstart` — только `click`, — значит паузу ставит что-то
+     снаружи неё (расширение браузера либо сам браузер). Поэтому здесь не доказательство
+     невиновности, а устойчивость: если ролик встал, его поднимают обратно; если `play()`
+     отказал со звуком, звук возвращают в немоту и ролик всё равно продолжает идти, а причина
+     уходит в консоль, а не в тишину. Два клика подряд в пределах 350 мс считаются одним —
+     двойное переключение выглядело бы как «кнопка не работает». */
+  var last = 0;
   function toggle(e) {
     if (e) { e.preventDefault(); e.stopPropagation(); }
+    var now = Date.now();
+    if (now - last < 350) return;
+    last = now;
     sound = !sound;
-    v.muted = !sound;
-    v.volume = 1;
+    if (sound) {
+      v.muted = false;
+      v.volume = 1;
+      try { v.currentTime = 0; } catch (err) {}
+    } else {
+      v.muted = true;
+    }
     btn.setAttribute('aria-pressed', String(sound));
-    if (sound) { try { v.currentTime = 0; } catch (err) {} }
     var p = v.play();
-    if (p && p.catch) p.catch(function () {});
+    if (p && p.catch) p.catch(function (err) {
+      console.warn('[apps] play() отказал:', err && err.name, err && err.message);
+      /* Со звуком браузер может отказать (нет звукового устройства, политика автозапуска).
+         Тогда кадр не должен застыть: возвращаем немоту и продолжаем крутить картинку. */
+      sound = false;
+      v.muted = true;
+      btn.setAttribute('aria-pressed', 'false');
+      var q = v.play();
+      if (q && q.catch) q.catch(function (e2) { console.warn('[apps] немой play() тоже отказал:', e2 && e2.name); });
+    });
   }
+
+  /* Только click. Слот ловит и кнопку, и кадр, поэтому обработчик на самой кнопке гасит
+     всплытие, чтобы один клик не сосчитался дважды. */
   if (btn) btn.addEventListener('click', toggle);
-  /* Кнопка лежит поверх кадра, но она ему не потомок, так что всплытия нет. Проверка всё равно
-     стоит: один клик обязан переключить звук ровно один раз, а не туда и обратно. */
-  if (v) v.addEventListener('click', function (e) {
+  if (slot) slot.addEventListener('click', function (e) {
     if (e.target && e.target.closest && e.target.closest('.snd')) return;
     toggle(e);
   });
+
   if (v) { v.addEventListener('canplay', start); v.addEventListener('loadeddata', start); }
+  /* `loop` обычно справляется сам, но если браузер доведёт ролик до конца и там его оставит,
+     застывший кадр выглядит как сломанная страница. Поэтому конец всегда возвращается в начало. */
+  if (v) v.addEventListener('ended', function () {
+    try { v.currentTime = 0; } catch (e) {}
+    var p = v.play();
+    if (p && p.catch) p.catch(function (err) { console.warn('[apps] петля не пошла:', err && err.name); });
+  });
 
   apply();
   document.addEventListener('gvlang', apply);
