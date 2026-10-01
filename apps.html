@@ -109,7 +109,8 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
   Hebrew and English in one app, right to left where it belongs. Ready in days, not months.</p>
 
   <div class="film" id="filmslot">
-    <video id="gvfilm" src="videos/gvpro-en-16x9-r2.mp4" poster="media/gvpro-en-16x9-r2-poster.jpg"
+    <video id="gvfilm" data-base="gvpro-en-16x9-r2"
+           src="videos/gvpro-en-16x9-r2.mp4" poster="media/gvpro-en-16x9-r2-poster.jpg"
            autoplay muted loop playsinline></video>
     <button class="snd" id="gvsnd" type="button" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -227,6 +228,16 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
     return OFFERED.indexOf(c) >= 0 ? c : 'en';
   }
 
+  /* play() сразу после load() отменяется самим load(): данных ещё нет, и промис падает
+     с AbortError, а ролик остаётся на нуле белым кадром. Поэтому запуск всегда идёт через
+     canplay, а файл, который уже стоит в разметке, второй раз не перезагружается вовсе. */
+  function start() {
+    if (!v) return;
+    v.muted = !sound;
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});   /* браузер отказал в автозапуске — остаётся постер и кнопка */
+  }
+
   function apply() {
     var l = lang();
     [].forEach.call(document.querySelectorAll('a[data-gvpro]'), function (a) {
@@ -236,30 +247,36 @@ h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;
     var vert = (window.innerWidth || document.documentElement.clientWidth) < 700;
     var base = 'gvpro-' + (l === 'he' ? 'he' : 'en') + '-' + (vert ? '9x16' : '16x9') + '-r2';
     slot.classList.toggle('vert', vert);
-    if (v.getAttribute('data-base') === base) return;
+    if (v.getAttribute('data-base') === base) { start(); return; }
     v.setAttribute('data-base', base);
     v.setAttribute('poster', 'media/' + base + '-poster.jpg');
     v.setAttribute('src', 'videos/' + base + '.mp4');
-    v.load();
     v.muted = !sound;                /* смена языка или ширины не должна снова затыкать ролик */
     if (sound) { try { v.currentTime = 0; } catch (e) {} }
-    var p = v.play();
-    if (p && p.catch) p.catch(function () {});   /* a browser that refuses autoplay keeps the poster */
+    v.load();                        /* play() придёт из canplay, см. выше */
   }
 
-  /* Звук включается только по жесту человека, поэтому и кнопка, и сам кадр делают одно и то же:
-     снимают немоту и отматывают ролик на начало, чтобы музыка шла с первого такта, а не с середины. */
-  function toggle() {
+  /* Звук включается только по жесту человека, поэтому всё — снятие немоты, перемотка на ноль
+     и play() — делается синхронно внутри самого клика: уйди это в промис или в таймер, жест
+     бы истёк и браузер отказал. */
+  function toggle(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
     sound = !sound;
     v.muted = !sound;
     v.volume = 1;
     btn.setAttribute('aria-pressed', String(sound));
-    if (sound) { try { v.currentTime = 0; } catch (e) {} }
+    if (sound) { try { v.currentTime = 0; } catch (err) {} }
     var p = v.play();
     if (p && p.catch) p.catch(function () {});
   }
   if (btn) btn.addEventListener('click', toggle);
-  if (v) v.addEventListener('click', toggle);
+  /* Кнопка лежит поверх кадра, но она ему не потомок, так что всплытия нет. Проверка всё равно
+     стоит: один клик обязан переключить звук ровно один раз, а не туда и обратно. */
+  if (v) v.addEventListener('click', function (e) {
+    if (e.target && e.target.closest && e.target.closest('.snd')) return;
+    toggle(e);
+  });
+  if (v) { v.addEventListener('canplay', start); v.addEventListener('loadeddata', start); }
 
   apply();
   document.addEventListener('gvlang', apply);
