@@ -1,6 +1,6 @@
 {
   "name": "GenVidPro - Creative Studio",
-  "short_name": "GVPro",
+  "short_name": "GenVidPro",
   "description": "Creative studio of Roman Chorny: brand, video and sites.",
   "start_url": "/?source=pwa",
   "scope": "/",

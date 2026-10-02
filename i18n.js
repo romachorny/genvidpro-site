@@ -1551,7 +1551,7 @@
   function offered(l) { for (var i = 0; i < LANGS.length; i++) if (LANGS[i][0] === l) return true; return false; }
   var cur = 'en';
   try { cur = localStorage.getItem('gvlang') || 'en'; } catch (e) {}
-  /* 16.09.2026, Roma: TERMS and PRIVACY opened from the GVPro app came up in Hebrew while the
+  /* 16.09.2026, Roma: TERMS and PRIVACY opened from the builder (GVP Site) came up in Hebrew while the
      app itself was in English. The app lives on app.genvidpro.com, a different address with its
      own memory, so the language chosen there never reached this one. Now the link carries it:
      ?lang=xx wins over what this address remembers, and is remembered here from then on. */

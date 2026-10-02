@@ -1,6 +1,6 @@
 {
   "$schema": "https://genvidpro.com/services.schema.json",
-  "version": "2026-10-02.1",
+  "version": "2026-10-02.2",
   "updated": "2026-10-02",
   "wa_number": "972539760820",
   "languages": ["he", "en", "ru", "ar"],
@@ -663,6 +663,7 @@
     },
     { "id": "apps_build", "tag": "apps", "aliases": ["app"], "active": true, "order": 5, "category": "web",
       "source_service": "site",
+      "currency": "ILS",
       "names": { "he": "אפליקציה בלי חנות", "en": "App without the store", "ru": "Приложение без магазина", "ar": "تطبيق بدون متجر" },
       "short": { "he": "אפליקציה", "en": "App, no store", "ru": "Приложение", "ar": "تطبيق" },
       "keywords": {
