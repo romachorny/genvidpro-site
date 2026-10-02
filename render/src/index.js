@@ -64,7 +64,7 @@ const day = () => new Date().toISOString().slice(0, 10);
    numbers for a day — which is exactly what happened on 30.09.2026 between switching the
    browser on and correcting what it counted. Nothing is deleted; the old keys simply
    expire on their own. */
-const MEASURE_V = 'v3';
+const MEASURE_V = 'v4';
 const keyOf = (u, al) => 'rr:' + MEASURE_V + ':' + (al ? al.slice(0, 5).replace(/[^a-z-]/gi, '') + ':' : '') +
   u.toString().replace(/\/$/, '').toLowerCase();
 
@@ -162,7 +162,27 @@ function measure() {
      Lighthouse judges it too, and it fails a page only when most of its text is small.
      SVG is left out entirely — its font-size is in user units the viewBox then scales, so
      the computed number there means nothing at all. */
-  let minFont = 0, minFontText = '', smallChars = 0, totalChars = 0;
+  /* Text drawn much smaller than it was laid out is a picture of a design, not something
+     the visitor is asked to read: a thumbnail, a template preview, a device mockup. The
+     page shrinks a 281 px card to 55 px and every word inside it goes with it. Counting
+     those words as "type too small to read" is how our own home page came out 49 % tiny
+     while its actual copy is fine — measured 30.09-02.10.2026: 1439 of the 2444 small
+     characters sat inside previews scaled to between 0.195 and 0.538, and not one
+     character of real copy was scaled at all.
+
+     rect.width / offsetWidth is the honest measure of that: how big it is drawn against
+     how big it was laid out. No class names, no guessing at intent, nothing specific to
+     this site — any page that shows a shrunken preview of another design gets the same
+     treatment, which is the point. Elements with no layout box of their own are left in. */
+  const SHRUNK = 0.8;
+  const drawnScale = (el) => {
+    const o = el.offsetWidth;
+    if (!o) return 1;
+    const w = el.getBoundingClientRect().width;
+    return w / o;
+  };
+
+  let minFont = 0, minFontText = '', smallChars = 0, totalChars = 0, shrunkChars = 0;
   for (const el of all) {
     // SVG text is artwork, and its font-size does not mean pixels
     if (el.ownerSVGElement || el.namespaceURI === 'http://www.w3.org/2000/svg') continue;
@@ -173,6 +193,7 @@ function measure() {
     const v = seen(el); if (!v) continue;
     const f = parseFloat(v.s.fontSize) || 0;
     if (!(f > 0)) continue;
+    if (drawnScale(el) < SHRUNK) { shrunkChars += own.length; continue; }
     totalChars += own.length;
     if (f < 12) smallChars += own.length;
     if (minFont === 0 || f < minFont) { minFont = f; minFontText = own.slice(0, 40); }
@@ -273,6 +294,8 @@ function measure() {
 
   return {
     vw, overflow, widest, widestSel, vp, vpW, smallPct, textChars: totalChars,
+    // how much text was set aside as a shrunken preview, so the decision is inspectable
+    shrunkChars,
     minFont: Math.round(minFont * 10) / 10, minFontText,
     taps, tapsSmall, zeros, overlaps, emptyBig, emptyMax,
     dir: getComputedStyle(document.body || document.documentElement).direction,
@@ -406,6 +429,7 @@ function checksOf(phone, desk, finalUrl, httpOpen) {
     // a page caught mid-build has only a handful.
     smallPct: p.smallPct || 0,
     textChars: p.textChars || 0,
+    shrunkChars: p.shrunkChars || 0,
     taps: p.taps || 0,
     tapsSmall: p.tapsSmall || 0,
     /* Measured and reported, but no longer turned red. 30.09.2026, first day the browser

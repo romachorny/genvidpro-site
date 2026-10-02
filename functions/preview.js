@@ -41,7 +41,11 @@
 // fetched: http and https only, no loopback, no private range, no cloud metadata
 // address. Nothing from the answer is executed or stored.
 
-const OURS = ['genvidpro.com', 'www.genvidpro.com'];
+/* app.genvidpro.com is the order builder, and it is ours. 02.10.2026 it stopped carrying
+   its own copy of this checker — a copy that had drifted months behind, still double-
+   escaping titles and inventing a fixed width for dalba.co.il — and now proxies to this
+   one. One checker, one set of rules, nothing left that can drift apart again. */
+const OURS = ['genvidpro.com', 'www.genvidpro.com', 'app.genvidpro.com'];
 const PER_IP_HOUR = 40;
 // one lookup (capped above at 40 an hour) opens up to three rebuilt screens, plus the
 // tab switches on a phone and a redraw after a language switch
@@ -466,7 +470,8 @@ function rebuild(html, finalUrl) {
 const JSON_H = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
 const RENDER_CSP = "default-src 'none'; img-src https: http: data: blob:; style-src https: http: 'unsafe-inline'; " +
   "font-src https: http: data:; media-src https: http: data:; script-src 'none'; frame-src 'none'; form-action 'none'; " +
-  "frame-ancestors 'self' https://genvidpro.com https://www.genvidpro.com https://*.genvidpro.pages.dev http://localhost:* http://127.0.0.1:*; sandbox";
+  "frame-ancestors 'self' https://genvidpro.com https://www.genvidpro.com https://app.genvidpro.com " +
+  "https://*.genvidpro.pages.dev https://*.gvpro.pages.dev http://localhost:* http://127.0.0.1:*; sandbox";
 
 export async function onRequestGet({ request, env }) {
   if (!ours(caller(request)) && !dev(request)) {
