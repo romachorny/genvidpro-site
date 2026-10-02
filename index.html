@@ -1882,9 +1882,13 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
   function sync(){ go.disabled = state === 'loading' || !valid(inp.value); }
 
   /* What is wrong with the page, worst first, and plain facts to fill the row. */
+  /* The chips are scored by /preview now (functions/preview.js, score()), so this page and
+     the order builder cannot disagree about the same site. What follows is the same rules,
+     kept as a fallback for an answer from an older deployment still in a visitor's cache. */
   function findings(c){
     var f = [];
     if(!c) return f;
+    if(c.findings) return c.findings;
     if(c.rendered){
       /* Measured on the page a real browser drew at 390 x 844. Every one of these is
          something a visitor feels in the first three seconds, which is why none of them

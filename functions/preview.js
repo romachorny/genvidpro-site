@@ -467,6 +467,59 @@ function rebuild(html, finalUrl) {
   return h;
 }
 
+/* The chips, scored here and once.
+
+   02.10.2026: the order builder on app.genvidpro.com carried its own copy of this scoring,
+   and the copy had drifted — it still asked for `reqs` and `kb`, which the browser road
+   does not produce, so the moment the builder started getting real answers it printed
+   "undefined requests on first open" at customers. Pointing it at this function was not
+   enough; the rules had to come from one place too. Both pages render what this decides.
+
+   The order is the order a visitor feels things in, and nothing here is about code: it is
+   about what is wrong on the screen. Up to four, worst first, padded with plain facts so
+   the row is never empty.
+
+   If you change a threshold, change it in ops/checker-regress.sh as well — that file
+   mirrors these numbers on purpose, so you will notice. */
+export function score(c) {
+  const f = [];
+  if (!c) return f;
+  if (c.rendered) {
+    if (c.vp === 'missing') f.push({ k: 'vp', bad: 1, s: 100 });
+    else if (c.vp === 'locked') f.push({ k: 'lock', bad: 1, s: 55 });
+    if (c.overflow > 8) f.push({ k: 'off', bad: 1, s: 98, a: c.overflow });
+    if (c.rtl) f.push({ k: 'rtl', bad: 1, s: 95, a: c.rtl });
+    if (c.https === false) f.push({ k: 'https', bad: 1, s: 90 });
+    if (!c.call) f.push({ k: 'call', bad: 1, s: 75 });
+    if (!c.install) f.push({ k: 'install', bad: 1, s: 70 });
+    if (c.smallPct > 40 && c.textChars >= 400) f.push({ k: 'tiny', bad: 1, s: 60, a: c.minFont });
+    if (c.tapsSmall >= 3 && c.taps > 0 && c.tapsSmall / c.taps >= 0.2) f.push({ k: 'tap', bad: 1, s: 55, a: c.tapsSmall });
+    if (c.lazyMissing >= 5) f.push({ k: 'lazy', bad: 1, s: 40, a: c.lazyMissing });
+    f.sort((x, y) => y.s - x.s);
+    const plain = [{ k: 'tap', a: c.tapsSmall }, { k: 'tiny', a: c.minFont }, { k: 'lazy', a: c.lazyMissing }];
+    for (let j = 0; j < plain.length && f.length < 4; j++) {
+      if (plain[j].a && !f.some((x) => x.k === plain[j].k)) f.push(plain[j]);
+    }
+    return f.slice(0, 4);
+  }
+  if (c.vp === 'missing') f.push({ k: 'vp', bad: 1, s: 100 });
+  else if (c.vp === 'locked') f.push({ k: 'lock', bad: 1, s: 55 });
+  if (c.rtl) f.push({ k: 'rtl', bad: 1, s: 95, a: c.rtl });
+  if (c.https === false) f.push({ k: 'https', bad: 1, s: 90 });
+  if (c.fixedW > 500) f.push({ k: 'fixed', bad: 1, s: 80, a: c.fixedW });
+  if (!c.call) f.push({ k: 'call', bad: 1, s: 75 });
+  if (!c.install) f.push({ k: 'install', bad: 1, s: 70 });
+  if (c.reqs > 40) f.push({ k: 'reqs', bad: 1, s: 45, a: c.reqs });
+  if (c.lazyMissing >= 5) f.push({ k: 'lazy', bad: 1, s: 40, a: c.lazyMissing });
+  if (c.kb > 250) f.push({ k: 'kb', bad: 1, s: 35, a: c.kb });
+  f.sort((x, y) => y.s - x.s);
+  const plain = [{ k: 'reqs', a: c.reqs }, { k: 'kb', a: c.kb }, { k: 'lazy', a: c.lazyMissing }];
+  for (let i = 0; i < plain.length && f.length < 4; i++) {
+    if (!f.some((x) => x.k === plain[i].k)) f.push(plain[i]);
+  }
+  return f.slice(0, 4);
+}
+
 const JSON_H = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
 const RENDER_CSP = "default-src 'none'; img-src https: http: data: blob:; style-src https: http: 'unsafe-inline'; " +
   "font-src https: http: data:; media-src https: http: data:; script-src 'none'; frame-src 'none'; form-action 'none'; " +
@@ -629,6 +682,9 @@ export async function onRequestGet({ request, env }) {
     checks.httpOpen = httpOpen;
     if (httpOpen) checks.https = false;
   }
+
+  // scored here so both pages show the same verdict about the same site
+  if (checks) checks.findings = score(checks);
 
   return new Response(JSON.stringify({
     ok: true, url: finalUrl, title, frameable: pol.frameable, why: pol.why,

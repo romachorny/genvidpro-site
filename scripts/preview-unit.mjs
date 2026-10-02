@@ -116,6 +116,44 @@ is('requests: quoted, unquoted and multi-value rel all read',
     homeKb > 60 && homeKb < 140, true);
 }
 
+/* ---- the chips are scored in one place ----------------------------------------------
+   02.10.2026: app.genvidpro.com kept its own copy of this scoring. The copy still asked
+   for `reqs` and `kb`, which the browser road does not produce, so the day the builder
+   started getting real answers it printed "undefined requests on first open" at customers.
+   Both pages render what score() decides now. These cases pin the thresholds that the two
+   roads disagree about most, and ops/checker-regress.sh mirrors the same numbers. */
+{
+  // the row is padded with plain facts up to four, so what matters is which chips are RED
+  const keys = (c) => P.score(c).filter((f) => f.bad).map((f) => f.k);
+  const anyKey = (c) => P.score(c).map((f) => f.k);
+  const rendered = (o) => Object.assign({ rendered: true, vp: 'ok', overflow: 0, rtl: '', https: true,
+    call: true, install: true, smallPct: 0, textChars: 3000, minFont: 14, taps: 20, tapsSmall: 0,
+    lazyMissing: 0 }, o);
+
+  is('score: a clean rendered page has no red chip',
+    P.score(rendered({})).filter((f) => f.bad).length, 0);
+  is('score: no viewport tag is "no phone layout" even when nothing overflows',
+    keys(rendered({ vp: 'missing' })).indexOf('vp') === 0, true);
+  is('score: small type needs both a real share and a real sample',
+    [keys(rendered({ smallPct: 49, textChars: 300 })).includes('tiny'),
+     keys(rendered({ smallPct: 49, textChars: 3000 })).includes('tiny'),
+     keys(rendered({ smallPct: 8, textChars: 3000 })).includes('tiny')], [false, true, false]);
+  is('score: three small targets out of twenty-six is not a fault, out of eight it is',
+    [keys(rendered({ taps: 26, tapsSmall: 3 })).includes('tap'),
+     keys(rendered({ taps: 8, tapsSmall: 3 })).includes('tap')], [false, true]);
+  is('score: the browser road never asks for reqs or kb, which it does not measure',
+    anyKey(rendered({ reqs: 99, kb: 999 })).some((k) => k === 'reqs' || k === 'kb'), false);
+  is('score: the HTML road still uses them, with the downloaded-size line at 250',
+    [keys({ rendered: false, vp: 'ok', call: true, install: true, reqs: 99 }).includes('reqs'),
+     keys({ rendered: false, vp: 'ok', call: true, install: true, kb: 300 }).includes('kb'),
+     keys({ rendered: false, vp: 'ok', call: true, install: true, kb: 200 }).includes('kb')],
+    [true, true, false]);
+  is('score: never more than four chips', P.score(rendered({
+    vp: 'missing', overflow: 99, rtl: 'he', https: false, call: false, install: false,
+    smallPct: 99, tapsSmall: 9, taps: 10, lazyMissing: 9 })).length, 4);
+  is('score: nothing to say about nothing', P.score(null), []);
+}
+
 /* ---- the address comes from a stranger's keyboard ----------------------------------- */
 falsy('address: loopback refused', P.clean('127.0.0.1'));
 falsy('address: a private range refused', P.clean('http://192.168.1.1/'));

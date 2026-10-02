@@ -9,8 +9,10 @@
 #   bar-nikuy.co.il      answers at http and never redirects, so a visitor lands unencrypted
 #                        and every browser says "not secure". We only ever asked for https
 #                        and called it fine.
-#   musach-victor.co.il  its firewall answers with a refusal page. We read that page as the
-#                        site and told a working business it had no Hebrew and no phone link.
+#   musach-victor.co.il  its firewall answered with a refusal page and we read that page as
+#                        the site, telling a working business it had no Hebrew and no phone
+#                        link. It stopped refusing us on 02.10.2026, so this now accepts
+#                        either answer — see the note on the case itself.
 #   dalba.co.il          "fixed width 1280 px" off a stylesheet, about a site that is fine on
 #                        a phone, because a later rule narrows it.
 #   creativity32.com     Wix, which hands phones their own page at width=320. Called it "no
@@ -111,8 +113,19 @@ CASES = [
         lambda j, c, bad: live(j, c, bad) and len(bad) >= 4),
     ('bar-nikuy.co.il',     'http is open, so it is marked not secure',
         lambda j, c, bad: live(j, c, bad) and c and c.get('httpOpen') is True and 'https' in bad),
-    ('musach-victor.co.il', 'the firewall blocked us and we say so',
-        lambda j, c, bad: j.get('ok') and j.get('blocked') is True and not c),
+    # musach-victor: on 29.09.2026 its F5 firewall answered us with "The requested URL was
+    # rejected" and we read that page as the site, telling a working garage it had no
+    # Hebrew, no phone link and no manifest. On 02.10.2026 it stopped refusing us — a plain
+    # curl now returns the real 46 KB page — so the live state this case was written
+    # against no longer exists, and demanding blocked=True would be demanding a lie.
+    # Either answer is correct and which one happens is their firewall's choice, not ours.
+    # What must never come back is the third thing: a refusal page judged as a site. The
+    # detection itself is pinned offline, deterministically, in scripts/preview-unit.mjs
+    # (F5, Cloudflare, Imperva, a bare 403, and two pages that must NOT count as blocked).
+    ('musach-victor.co.il', 'blocked and we say so, or read properly and judged on merit',
+        lambda j, c, bad: j.get('ok') and (
+            (j.get('blocked') is True and not c) or
+            (j.get('blocked') is False and bool(c) and bool(j.get('title'))))),
     # dalba: the bug was "fixed width 1280 px" about a site that is fine on a phone, so no
     # layout chip may appear. The two that do are true and measured 29.09.2026 — 29 external
     # scripts plus 44 fetching links plus 7 images is 83 requests on first open, and not one
