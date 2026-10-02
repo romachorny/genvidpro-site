@@ -64,7 +64,7 @@ const day = () => new Date().toISOString().slice(0, 10);
    numbers for a day — which is exactly what happened on 30.09.2026 between switching the
    browser on and correcting what it counted. Nothing is deleted; the old keys simply
    expire on their own. */
-const MEASURE_V = 'v4';
+const MEASURE_V = 'v5';
 const keyOf = (u, al) => 'rr:' + MEASURE_V + ':' + (al ? al.slice(0, 5).replace(/[^a-z-]/gi, '') + ':' : '') +
   u.toString().replace(/\/$/, '').toLowerCase();
 
@@ -174,6 +174,14 @@ function measure() {
      how big it was laid out. No class names, no guessing at intent, nothing specific to
      this site — any page that shows a shrunken preview of another design gets the same
      treatment, which is the point. Elements with no layout box of their own are left in. */
+  /* And text the page itself declares is not content. aria-hidden="true" is the author
+     saying "a screen reader must skip this": a watermark, the fake address bar of a device
+     mockup, a label drawn inside an illustration. If it is not content for someone
+     listening to the page, it is not copy we can accuse the page of setting too small.
+     Generic, and deliberately the page's own word rather than our guess at intent — no
+     class names, nothing about any one site. The characters are counted separately so the
+     decision is inspectable, and a page that hides its real copy this way loses the chip
+     rather than gaining a false one, which is the safe direction to be wrong in. */
   const SHRUNK = 0.8;
   const drawnScale = (el) => {
     const o = el.offsetWidth;
@@ -181,8 +189,9 @@ function measure() {
     const w = el.getBoundingClientRect().width;
     return w / o;
   };
+  const decorative = (el) => !!(el.closest && el.closest('[aria-hidden="true"]'));
 
-  let minFont = 0, minFontText = '', smallChars = 0, totalChars = 0, shrunkChars = 0;
+  let minFont = 0, minFontText = '', smallChars = 0, totalChars = 0, shrunkChars = 0, decorChars = 0;
   for (const el of all) {
     // SVG text is artwork, and its font-size does not mean pixels
     if (el.ownerSVGElement || el.namespaceURI === 'http://www.w3.org/2000/svg') continue;
@@ -193,6 +202,7 @@ function measure() {
     const v = seen(el); if (!v) continue;
     const f = parseFloat(v.s.fontSize) || 0;
     if (!(f > 0)) continue;
+    if (decorative(el)) { decorChars += own.length; continue; }
     if (drawnScale(el) < SHRUNK) { shrunkChars += own.length; continue; }
     totalChars += own.length;
     if (f < 12) smallChars += own.length;
@@ -294,8 +304,9 @@ function measure() {
 
   return {
     vw, overflow, widest, widestSel, vp, vpW, smallPct, textChars: totalChars,
-    // how much text was set aside as a shrunken preview, so the decision is inspectable
-    shrunkChars,
+    // how much text was set aside as a shrunken preview or as declared non-content, so
+    // both decisions are inspectable
+    shrunkChars, decorChars,
     minFont: Math.round(minFont * 10) / 10, minFontText,
     taps, tapsSmall, zeros, overlaps, emptyBig, emptyMax,
     dir: getComputedStyle(document.body || document.documentElement).direction,
@@ -430,6 +441,7 @@ function checksOf(phone, desk, finalUrl, httpOpen) {
     smallPct: p.smallPct || 0,
     textChars: p.textChars || 0,
     shrunkChars: p.shrunkChars || 0,
+    decorChars: p.decorChars || 0,
     taps: p.taps || 0,
     tapsSmall: p.tapsSmall || 0,
     /* Measured and reported, but no longer turned red. 30.09.2026, first day the browser

@@ -3,9 +3,10 @@
 //   node scripts/preview-unit.mjs
 //
 // No network, no browser, under a second. This is the layer that can be checked without
-// deploying; the other two are ops/checker-regress.sh (eight real sites, against the live
-// function) and scripts/regress.mjs (the pages in a real Chrome). All three run after a
-// deploy, and this one runs before it.
+// deploying; the others are scripts/measure-unit.mjs (what the browser measures, on
+// fixtures), ops/checker-regress.sh (eight real sites, against the live function) and
+// scripts/regress.mjs (the pages in a real Chrome). All of them run after a deploy, and
+// this one and measure-unit run before it.
 //
 // Why the file copy below: Cloudflare runs functions/ as ES modules, but there is no
 // package.json in this tree saying "type": "module", so Node reads a .js as CommonJS and
