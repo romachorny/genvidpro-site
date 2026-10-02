@@ -73,6 +73,7 @@
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "tag": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{1,30}$" },
+        "aliases": { "type": "array", "items": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{1,30}$" } },
         "active": { "type": "boolean" },
         "order": { "type": "integer" },
         "category": { "$ref": "#/$defs/id" },
