@@ -2920,11 +2920,12 @@ function calc(){
   var dep=Math.round(total/2);
   var item=(n?rows.filter(function(r){return r[2]!=='off'&&r[2]!=='mo'}).map(function(r){return r[0]}).join(', '):'GenVidPro package');
   if(item.length>120){item=item.slice(0,117)+'...'}
-  var pp='https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business='+encodeURIComponent('romachorny@gmail.com')+
-    '&item_name='+encodeURIComponent('GenVidPro deposit 50% — '+item)+
-    '&amount='+dep+'&currency_code='+(ils()?'ILS':'USD')+'&no_shipping=1&no_note=0'+
-    '&return='+encodeURIComponent('https://genvidpro.com/thanks.html')+
-    '&cancel_return='+encodeURIComponent('https://genvidpro.com/');
+  /* 03.10.2026: the deposit link is our own /pay, and PayPal's page is one 302 away.
+     The payee address used to be written right here, in a file the site hands to anyone
+     and a repository that is public — spam harvesters read exactly that. It is a Pages
+     secret now and functions/pay.js puts it into the URL on Cloudflare, out of sight.
+     The amount stays in this link: the deposit is half the total and must be checkable. */
+  var pp='/pay?amount='+dep+'&currency='+(ils()?'ILS':'USD')+'&item='+encodeURIComponent(item);
   var ppb=document.getElementById('send-pp');
   if(ppb){ppb.href=n?pp:'#';ppb.textContent=n?('Pay 50% deposit — '+money(dep)):'Pay 50% deposit — PayPal';}
 }
