@@ -1,7 +1,7 @@
 {
   "$schema": "https://genvidpro.com/services.schema.json",
-  "version": "2026-10-02.2",
-  "updated": "2026-10-02",
+  "version": "2026-10-03.1",
+  "updated": "2026-10-03",
   "wa_number": "972539760820",
   "languages": ["he", "en", "ru", "ar"],
   "owner": { "he": "רומן", "en": "Roman", "ru": "Роман", "ar": "رومان" },
