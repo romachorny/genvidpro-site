@@ -96,6 +96,10 @@
     'Time lapse': 'טיים לאפס',
     live: 'חי',
     'Sound on': 'הפעלת קול',
+    // the Share button under an open film, 03.10.2026
+    Share: 'שיתוף',
+    'Copy link': 'העתקת קישור',
+    'Link copied': 'הקישור הועתק',
 
     // founder
     'Founder, GenVidPro · Tel Aviv, Israel': 'מייסד, GenVidPro · תל אביב, ישראל',
@@ -824,6 +828,10 @@
     'Time lapse': 'Таймлапс',
     live: 'вживую',
     'Sound on': 'Включить звук',
+    // the Share button under an open film, 03.10.2026
+    Share: 'Поделиться',
+    'Copy link': 'Копировать ссылку',
+    'Link copied': 'Ссылка скопирована',
 
     'Founder, GenVidPro · Tel Aviv, Israel': 'Основатель, GenVidPro · Тель-Авив, Израиль',
     'I build video, brands and sites with AI. One person, a small studio, and a lot of takes until it looks right.':

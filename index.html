@@ -583,8 +583,24 @@ body.lb-open #gvtop,body.lb-open #deep,body.lb-open nav,body.lb-open footer{visi
 .lb-bar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}
 /* Under the frame, not over it: the film keeps a clean picture and the two
    controls sit together where a thumb already is. */
-.lb-btns{display:flex;align-items:center;gap:10px;margin-left:auto}
-.lb-btns .close{order:2}
+.lb-btns{display:flex;align-items:center;gap:10px;margin-left:auto;position:relative}
+/* Sound, Share, Close - in that order, whatever order the sound button mounts in */
+.lb-btns .lb-shr{order:2}
+.lb-btns .close{order:3}
+.lb-shr{border:1px solid var(--line);background:none;color:var(--fg);border-radius:100px;padding:9px 18px;cursor:pointer;font-size:13px;font-family:inherit}
+.lb-shr:hover,.lb-shr[aria-expanded="true"]{background:var(--acc);border-color:var(--acc);color:#000}
+/* the share list opens upwards, over the film, so it never leaves the screen on a phone
+   where the bar sits at the very bottom */
+.lb-menu{position:absolute;bottom:calc(100% + 8px);right:0;z-index:5;min-width:200px;padding:6px;
+  background:rgba(14,13,12,.96);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,74,28,.6);border-radius:16px;box-shadow:0 0 14px rgba(255,74,28,.35),0 22px 50px rgba(0,0,0,.6);
+  display:flex;flex-direction:column;gap:2px}
+.lb-menu[hidden]{display:none}
+.lb-menu a,.lb-menu button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;background:none;border:0;
+  color:var(--fg);font-family:inherit;font-size:14px;text-align:left;text-decoration:none;cursor:pointer;transition:background .18s,color .18s}
+.lb-menu a:hover,.lb-menu button:hover{background:rgba(255,74,28,.16);color:#fff}
+.lb-menu i{width:18px;text-align:center;font-style:normal;color:var(--acc);font-size:14px}
+.lb-menu .ok{color:var(--acc)}
 .lb-btns .hx-snd{order:1;position:static;right:auto;bottom:auto;box-shadow:none;background:none;border:1px solid var(--line);color:var(--fg);padding:9px 18px;font-size:13px;font-family:inherit;letter-spacing:0;text-transform:none;backdrop-filter:none;-webkit-backdrop-filter:none}
 .lb-btns .hx-snd:hover{background:var(--acc);border-color:var(--acc);color:#000;box-shadow:none}
 /* On a phone the player is the screen itself. The film takes everything above a
@@ -596,10 +612,11 @@ body.lb-open #gvtop,body.lb-open #deep,body.lb-open nav,body.lb-open footer{visi
   .lb-player,.lb-player.vert,.lb-player.tall{max-width:none;margin:0;flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
   .lb-frame,.lb-frame.vert,.lb-frame.tall{padding-top:0;flex:1 1 auto;min-height:0;border:0;border-radius:0}
   .lb-frame video{object-fit:contain}
-  .lb-bar{margin:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));gap:10px;flex-wrap:nowrap;background:#0A0A0A;border-top:1px solid var(--line)}
+  .lb-bar{margin:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));gap:10px;flex-wrap:nowrap;background:#0A0A0A;border-top:1px solid var(--line);overflow:visible}
   .lb-bar h4{display:none}
   .lb-btns{margin-left:0;width:100%}
-  .lb-btns .hx-snd,.lb-btns .close{flex:1 1 0;text-align:center;padding:13px 10px;font-size:14px}
+  .lb-btns .hx-snd,.lb-btns .lb-shr,.lb-btns .close{flex:1 1 0;text-align:center;padding:13px 10px;font-size:14px}
+  .lb-menu{left:0;right:0;min-width:0}
 }
 .lb-bar h4{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;font-size:19px}
 .close{border:1px solid var(--line);background:none;color:var(--fg);border-radius:100px;padding:9px 18px;cursor:pointer;font-size:13px;font-family:inherit}
@@ -2497,7 +2514,7 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
 <footer><div class="wrap foot"><span class="m">© 2026 GenVidPro — Roman Chorny</span><span class="m"><a href="terms.html" style="color:inherit">Terms</a> · <a href="privacy.html" style="color:inherit">Privacy</a> · Tel Aviv, Israel</span></div></footer>
 
 <div class="lb" id="lb"><div class="lb-box">
-  <div class="lb-player" id="lbP"><div class="lb-frame" id="lbF"><video id="lbV" data-snd-host="lbBtns" muted playsinline webkit-playsinline preload="auto" controls controlsList="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback></video></div><div class="lb-bar" id="lbBar"><h4 id="lbT"></h4><div class="lb-btns" id="lbBtns"><button class="close" id="lbC">Close ✕</button></div></div></div>
+  <div class="lb-player" id="lbP"><div class="lb-frame" id="lbF"><video id="lbV" data-snd-host="lbBtns" muted playsinline webkit-playsinline preload="auto" controls controlsList="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback></video></div><div class="lb-bar" id="lbBar"><h4 id="lbT"></h4><div class="lb-btns" id="lbBtns"><button class="lb-shr" id="lbS" type="button" aria-expanded="false">Share</button><div class="lb-menu" id="lbSM" hidden role="menu" aria-labelledby="lbS"><a id="lbS-wa" href="#" target="_blank" rel="noopener"><i>💬</i>WhatsApp</a><a id="lbS-tg" href="#" target="_blank" rel="noopener"><i>✈</i>Telegram</a><button type="button" id="lbS-copy"><i>⧉</i>Copy link</button></div><button class="close" id="lbC">Close ✕</button></div></div></div>
 </div></div>
 <script>
 /* Client brief. Fifty questions in eight groups, Fiverr-style: tap to choose, type where a line is offered.
@@ -2630,14 +2647,16 @@ window.lbOpened=lbOpened;
    already cleared, never shut anything: the film stayed open behind a dead button. */
 function closeLb(){var pushed=lbPushed;lbPushed=false;lbShut();if(pushed){try{history.back()}catch(e){}}}
 window.addEventListener('popstate',function(){
-  if(lbPushed){lbPushed=false;lbShut();return}
-  /* a Back that only closed the assistant or the share menu is not a Back from the order screen */
+  /* a Back that only closed the assistant or a share list is not a Back from the film
+     or from the order screen: the film's own share list opens over the open film,
+     and closing it used to close the film as well */
   if(window.gvLayerBusy&&gvLayerBusy())return;
+  if(lbPushed){lbPushed=false;lbShut();return}
   if(window.gvBackY!=null){var y=window.gvBackY;window.gvBackY=null;window.scrollTo({top:y,behavior:'smooth'})}
 });
 document.querySelectorAll('.piece').forEach(function(p){p.addEventListener('click',function(){
   var im=p.querySelector('.thumb img'),ratio=p.dataset.ratio||'';
-  lbT.textContent=p.dataset.title;
+  lbT.textContent=p.dataset.title;lbV._slug='';lbV._title=p.dataset.title||'';
   lbF.classList.toggle('tall',ratio==='tall');lbP.classList.toggle('tall',ratio==='tall');
   lbF.classList.toggle('vert',ratio==='vert');lbP.classList.toggle('vert',ratio==='vert');
   if(im&&im.src)lbV.poster=im.src;
@@ -2677,6 +2696,54 @@ rail.addEventListener('click',function(e){if(moved){e.stopPropagation();e.preven
 document.getElementById('lbC').addEventListener('click',closeLb);
 lb.addEventListener('click',function(e){if(e.target===lb)closeLb()});
 addEventListener('keydown',function(e){if(e.key==='Escape')closeLb()});
+/* Share the film that is open. Chrome's own three-dot menu under the picture cannot
+   take a new item, so the player carries its own Share button next to Sound and
+   Close. On a phone it hands over to the system sheet; a desktop browser without
+   the Web Share API gets WhatsApp, Telegram and Copy link. The link carries the
+   film: genvidpro.com/?film=slug opens that film straight away (see the ring
+   script), so a shared link lands on the film and not on the home page. */
+(function(){
+  var btn=document.getElementById('lbS'),menu=document.getElementById('lbSM');
+  if(!btn||!menu)return;
+  var wa=document.getElementById('lbS-wa'),tg=document.getElementById('lbS-tg'),cp=document.getElementById('lbS-copy');
+  function url(){return location.origin+'/'+(lbV._slug?'?film='+encodeURIComponent(lbV._slug):'');}
+  function title(){return (lbV._title?lbV._title+' — ':'')+'GenVidPro';}
+  var text='A film by GenVidPro, creative studio by Roman Chorny';
+  function fill(){
+    var u=url(),t=title();
+    wa.href='https://wa.me/?text='+encodeURIComponent(t+' '+u);
+    tg.href='https://t.me/share/url?url='+encodeURIComponent(u)+'&text='+encodeURIComponent(t);
+  }
+  /* the list is a layer: Back on a phone closes it and leaves the film open */
+  var L=null;
+  function lay(){if(!L&&window.gvLayer){L=gvLayer();L.onBack=function(){menu.hidden=true;btn.setAttribute('aria-expanded','false');};}return L;}
+  function open(o){var was=!menu.hidden;if(o)fill();menu.hidden=!o;btn.setAttribute('aria-expanded',String(o));var l=lay();if(l){if(o&&!was)l.open();else if(!o&&was)l.shut();}}
+  window.lbShareClose=function(){if(!menu.hidden)open(false);};
+  cp.addEventListener('click',function(){
+    var u=url();
+    var done=function(){cp.innerHTML='<i class="ok">✓</i>Link copied';if(window.gvT)window.gvT();
+      setTimeout(function(){cp.innerHTML='<i>⧉</i>Copy link';if(window.gvT)window.gvT();open(false);},1100);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,done);}
+    else{var ta=document.createElement('textarea');ta.value=u;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}ta.remove();done();}
+  });
+  [wa,tg].forEach(function(a){a.addEventListener('click',function(){setTimeout(function(){open(false)},200);});});
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(window.gvpEv)gvpEv('film_share',{film:lbV._slug||''});
+    if(navigator.share){navigator.share({title:title(),text:text,url:url()}).catch(function(err){
+      /* the person closed the sheet: nothing else to show */
+      if(err&&err.name==='AbortError')return;
+      open(menu.hidden);
+    });return;}
+    open(menu.hidden);
+  });
+  document.addEventListener('click',function(e){if(!menu.hidden&&!menu.contains(e.target)&&e.target!==btn)open(false);});
+  /* Escape with the list open closes the list only; the film stays */
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!menu.hidden){e.stopPropagation();open(false);}});
+  /* closing the player, by any road, takes the list with it */
+  var shut=window.lbShut;
+  if(typeof shut==='function')window.lbShut=function(){window.lbShareClose();return shut.apply(this,arguments);};
+})();
 /* 23.09.2026, Roma: p is the price in US dollars, pi the price in shekels, shown to a visitor
    reading the page in Hebrew (the same rule as the WhatsApp agent). Where /services.json has the
    item both come from it (see the sync below); a site-only price has pi = p x 3.6 rounded DOWN to
@@ -3614,6 +3681,7 @@ function gvLightbox(slug,title){
   if(!lbV._tap){lbV._tap=1;lbV.addEventListener('click',function(){
     if(!lbV.hasAttribute('controls')){if(lbV.paused){var q=lbV.play();if(q&&q.catch)q.catch(function(){});}else{lbV.pause();}}
   });}
+  lbV._slug=slug;lbV._title=title;
   if(lbT)lbT.textContent=title;
   if(lbF){lbF.classList.remove('tall');lbF.classList.remove('vert');}
   if(lbP){lbP.classList.remove('tall');lbP.classList.remove('vert');}
@@ -3961,6 +4029,13 @@ var ARTV=[
  ['robert-worlds','Robert&rsquo;s Worlds','A person, any world']
 ];
 makeRing('gvstart','gvrart',ARTV,CW,CH,filmCard,filmFront,filmOpen,TILT_ART);
+/* A shared link carries the film: /?film=slug opens it at once, muted like every
+   film here, with the Sound button under it. An unknown slug is simply the home page. */
+(function(){
+  var m=/[?&]film=([^&#]+)/.exec(location.search);if(!m)return;
+  var want=decodeURIComponent(m[1]),all=VIDS.concat(ARTV);
+  for(var i=0;i<all.length;i++)if(all[i][0]===want){setTimeout(function(){filmOpen(all[i])},250);return;}
+})();
 
 /* 2. twelve brand concepts - twelve different worlds, not twelve colours */
 function cap(n){return n.charAt(0)+n.slice(1).toLowerCase();}
@@ -4280,7 +4355,7 @@ setTimeout(function(){fitAll();fitSeals();},900);setTimeout(function(){fitAll();
   if(/^#(order|faq|contact)$/.test(location.hash)){show(true,false);try{history.replaceState({gv:'order'},'',location.hash)}catch(e){}}
 })();
 </script>
-<script src="i18n.js?v=21" defer></script>
+<script src="i18n.js?v=22" defer></script>
 <script src="/gv-chrome.js?v=18" defer></script>
 <script src="/gvp-wa.js?v=1" defer></script>
 <script src="/push.js?v=3" defer></script>
