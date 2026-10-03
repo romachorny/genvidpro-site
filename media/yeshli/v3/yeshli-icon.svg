@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><defs>
+<linearGradient id="dN" gradientUnits="userSpaceOnUse" x1="0" y1="560" x2="0" y2="1024"><stop offset="0" stop-color="#00104a" stop-opacity="0"/><stop offset="1" stop-color="#00104a" stop-opacity=".22"/></linearGradient>
+<filter id="b20N" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="20"/></filter>
+<filter id="b26N" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter>
+<filter id="b14N" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+<filter id="b6N" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
+<clipPath id="cN"><rect width="1024" height="1024"/></clipPath><clipPath id="notRight"><polygon points="0,0 1024,0 512,512"/><polygon points="0,0 512,512 512,1024 0,1024"/></clipPath>
+<radialGradient id="tB" gradientUnits="userSpaceOnUse" cx="512" cy="60" r="620"><stop offset="0" stop-color="#9BE3FF"/><stop offset=".5" stop-color="#2F9BFF"/><stop offset="1" stop-color="#0B55E0"/></radialGradient>
+<radialGradient id="lY" gradientUnits="userSpaceOnUse" cx="120" cy="620" r="760"><stop offset="0" stop-color="#FFF66B"/><stop offset=".55" stop-color="#FFC400"/><stop offset="1" stop-color="#FF9D00"/></radialGradient>
+<radialGradient id="rW" gradientUnits="userSpaceOnUse" cx="900" cy="620" r="820"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".8" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EAF0FF"/></radialGradient><linearGradient id="ydN" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1024"><stop offset="0" stop-color="#1B36E0"/><stop offset="1" stop-color="#060F6E"/></linearGradient></defs><g clip-path="url(#cN)">
+<polygon points="0,0 1024,0 512,512" fill="url(#tB)"/>
+<polygon points="0,0 512,512 512,1024 0,1024" fill="url(#lY)"/>
+<polygon points="1024,0 512,512 512,1024 1024,1024" fill="#FFFFFF"/>
+<polygon points="0,512 1024,512 1024,1024 0,1024" fill="url(#dN)" clip-path="url(#notRight)"/>
+<ellipse cx="512" cy="90" rx="190" ry="44" fill="#fff" opacity=".7" filter="url(#b20N)"/>
+<ellipse cx="120" cy="700" rx="60" ry="140" transform="rotate(-18 120 700)" fill="#fff" opacity=".55" filter="url(#b20N)"/>
+<g fill="none" stroke-linejoin="round" stroke-linecap="round">
+<g clip-path="url(#notRight)"><path d="M -110 -110 L 512 512 L 1134 -110 M 512 512 L 512 1180" stroke="#020a45" stroke-width="176" opacity=".45" filter="url(#b26N)" transform="translate(0 30)"/></g>
+<path d="M -110 -110 L 512 512 L 1134 -110 M 512 512 L 512 1180" stroke="#061070" stroke-width="176"/>
+<path d="M -110 -110 L 512 512 L 1134 -110 M 512 512 L 512 1180" stroke="#1B36E0" stroke-width="128" filter="url(#b14N)" opacity=".95"/>
+<path d="M -110 -110 L 512 512 L 1134 -110 M 512 512 L 512 1180" stroke="#4A7CFF" stroke-width="78" filter="url(#b14N)" opacity=".95"/>
+<path d="M -110 -110 L 512 512 L 1134 -110 M 512 512 L 512 1180" stroke="#A9C6FF" stroke-width="40" filter="url(#b6N)" opacity=".9"/>
+<path d="M -110 -110 L 512 512 L 1134 -110 M 512 512 L 512 1180" stroke="#FFFFFF" stroke-width="16" filter="url(#b6N)" opacity=".95"/>
+</g></g></svg>
