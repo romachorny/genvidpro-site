@@ -21,6 +21,11 @@
     'ads · brand films': 'פרסומות · סרטים',
     'identity · logo': 'זהות · לוגו',
     'built in minutes': 'מוכן תוך דקות',
+    // the two apps under the services, 03.10.2026 (names stay as they are)
+    'Your idea. Your app!': 'הרעיון שלך. האפליקציה שלך',
+    'For business or for fun. Anything you can imagine.': 'לעסק או סתם בשביל הכיף. כל מה שאפשר לדמיין.',
+    'Your kid. Any world!': 'הילד שלכם. בכל עולם!',
+    'Free magic mirror, and a film of your child in four worlds.': 'מראת קסמים בחינם, וסרט של הילד שלכם בארבעה עולמות.',
     // app without the store
     App: 'אפליקציה',
     'no store, on the phone': 'בלי חנות, על הטלפון',
@@ -735,6 +740,11 @@
     'ads · brand films': 'реклама · фильмы',
     'identity · logo': 'айдентика · лого',
     'built in minutes': 'готов за минуты',
+    // the two apps under the services, 03.10.2026 (names stay as they are)
+    'Your idea. Your app!': 'Твоя идея. Твоё приложение!',
+    'For business or for fun. Anything you can imagine.': 'Для бизнеса или просто так. Всё, что можно придумать.',
+    'Your kid. Any world!': 'Твой ребёнок. Любой мир!',
+    'Free magic mirror, and a film of your child in four worlds.': 'Бесплатное волшебное зеркало и фильм о ребёнке в четырёх мирах.',
     // app without the store
     App: 'Приложение',
     'no store, on the phone': 'без магазина, на телефоне',

@@ -998,6 +998,37 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
 #gvtop .gv-hp5 .gv-c{min-height:0}
 #gvtop .gv-hpos{position:relative}#gvtop .gv-new{position:absolute;top:7px;right:9px;font:700 9px/1 monospace;letter-spacing:.08em;color:#050c09;background:#46FFA0;border-radius:999px;padding:3px 6px;box-shadow:0 0 10px rgba(70,255,160,.55)}@media(max-width:600px){#gvtop .gv-new{top:5px;right:5px;width:7px;height:7px;padding:0;font-size:0}}
 #gvtop .gv-hp:hover{transform:translateY(-3px)}
+/* 03.10.2026, Roma: the studio's two apps, Yeshli and Tiulio, stand under the services as
+   two big black buttons, side by side, and not as two more tiles: "our whole header stays
+   as it is, two rows of four, and these two at the bottom". The black look is his, approved
+   as drawn: black card, thin warm border, the app's own icon at 84px, name in small caps,
+   slogan in Anton, one line of what it is, a red arrow. Same edges as the grid, so the row
+   reads as part of the first block; the red line keeps closing it. In Hebrew the page is
+   right-to-left already, so the icon moves to the right on its own and the arrow is flipped. */
+#gvtop .gv-aprow{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1.6vw,24px);width:100%;max-width:1500px;margin:clamp(8px,1.6vw,24px) auto 4px;padding:0 var(--gvpad)}
+#gvtop .gv-apb{display:flex;align-items:center;gap:14px;padding:14px;min-width:0;text-decoration:none;background:#161210;border:1px solid #2c2420;border-radius:14px;transition:transform .2s,border-color .2s}
+#gvtop .gv-apb:hover{border-color:#f6f1ec;transform:translateY(-2px)}
+#gvtop .gv-apb-ic{flex:none;width:84px;height:84px;border-radius:20px;box-shadow:0 8px 22px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.4);object-fit:cover}
+#gvtop .gv-apb-tx{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;text-align:start}
+#gvtop .gv-apb-nm{font:800 12px/1 Inter,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#a3978f}
+#gvtop .gv-apb-sl{font-family:Anton,Impact,sans-serif;font-size:25px;line-height:1.05;color:#fff}
+#gvtop .gv-apb-ds{font:400 13px/1.4 Inter,system-ui,sans-serif;color:#a3978f}
+#gvtop .gv-apb-arw{flex:none;color:var(--gvred);font-size:26px;line-height:1;margin-inline-start:auto;transition:transform .2s}
+#gvtop .gv-apb:hover .gv-apb-arw{transform:translateX(6px)}
+/* the name is a label i18n.js leaves alone, so it keeps the page frame's left-to-right and would sit on
+   the far side of its own card in Hebrew; it follows the card instead. */
+[dir=rtl] #gvtop .gv-apb-nm{direction:rtl;text-align:right}
+[dir=rtl] #gvtop .gv-apb-arw{transform:scaleX(-1)}
+[dir=rtl] #gvtop .gv-apb:hover .gv-apb-arw{transform:scaleX(-1) translateX(6px)}
+/* Anton carries no Cyrillic: in Russian the slogan falls to the system face, so it is set
+   bold there rather than left thin. Hebrew is Heebo already, by i18n.js. */
+html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-weight:800;letter-spacing:-.01em}
+@media(max-width:759px){
+  #gvtop .gv-aprow{grid-template-columns:1fr;gap:8px;margin-top:8px}
+  #gvtop .gv-apb{gap:12px;padding:12px}
+  #gvtop .gv-apb-ic{width:72px;height:72px;border-radius:17px}
+  #gvtop .gv-apb-sl{font-size:22px}
+}
 
 :is(#gvtop,#art) .gv-sec{padding:18px 0 0}
 :is(#gvtop,#art) .gv-stage{position:relative;perspective:640px;perspective-origin:50% 50%;touch-action:pan-y;cursor:grab;user-select:none;overflow:hidden}
@@ -1423,6 +1454,21 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
          gone; /apps stays live and is where the App tile's own page links on. Work is the only
          wide button again, and it reads red, the way it did before the ninth service. -->
     <a class="gv-hp gv-hp5 gv-hpr" href="/work" id="gvPanelWork"><span class="gv-w">Work</span><span class="gv-c">selected films</span></a>
+  </div>
+  <!-- 03.10.2026: the two apps, under Work and before the red line. The icons are the apps'
+       own, copied into media/ (no hotlinking); the whole card is the link and opens the app
+       in a new tab. See the .gv-aprow rules for why they look the way they do. -->
+  <div class="gv-aprow">
+    <a class="gv-apb" href="https://yeshli.base44.app/" id="gvAppYeshli" target="_blank" rel="noopener">
+      <img class="gv-apb-ic" src="/media/yeshli-icon.svg" alt="" width="84" height="84">
+      <span class="gv-apb-tx"><span class="gv-apb-nm">Yeshli</span><span class="gv-apb-sl">Your idea. Your app!</span><span class="gv-apb-ds">For business or for fun. Anything you can imagine.</span></span>
+      <span class="gv-apb-arw" aria-hidden="true">&rarr;</span>
+    </a>
+    <a class="gv-apb" href="https://tiulio.base44.app/" id="gvAppTiulio" target="_blank" rel="noopener">
+      <img class="gv-apb-ic" src="/media/tiulio-icon.png" alt="" width="84" height="84">
+      <span class="gv-apb-tx"><span class="gv-apb-nm">Tiulio</span><span class="gv-apb-sl">Your kid. Any world!</span><span class="gv-apb-ds">Free magic mirror, and a film of your child in four worlds.</span></span>
+      <span class="gv-apb-arw" aria-hidden="true">&rarr;</span>
+    </a>
   </div>
   <hr class="gv-stripe">
 
@@ -4232,7 +4278,7 @@ setTimeout(function(){fitAll();fitSeals();},900);setTimeout(function(){fitAll();
   if(/^#(order|faq|contact)$/.test(location.hash)){show(true,false);try{history.replaceState({gv:'order'},'',location.hash)}catch(e){}}
 })();
 </script>
-<script src="i18n.js?v=18" defer></script>
+<script src="i18n.js?v=19" defer></script>
 <script src="/gv-chrome.js?v=18" defer></script>
 <script src="/gvp-wa.js?v=1" defer></script>
 <script src="/push.js?v=3" defer></script>
