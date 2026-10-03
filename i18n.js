@@ -25,6 +25,7 @@
     'Your idea. Your app!': 'הרעיון שלך. האפליקציה שלך',
     'For business or for fun. Anything you can imagine.': 'לעסק או סתם בשביל הכיף. כל מה שאפשר לדמיין.',
     'A magic film with your child inside four seasons': 'סרט קסום שבו הילד בתוך ארבע עונות',
+    'Open beta · testers welcome': 'בטא פתוחה · מוזמנים לנסות',
     // app without the store
     App: 'אפליקציה',
     'no store, on the phone': 'בלי חנות, על הטלפון',
@@ -757,6 +758,7 @@
     'Your idea. Your app!': 'Твоя идея. Твоё приложение!',
     'For business or for fun. Anything you can imagine.': 'Для бизнеса или просто так. Всё, что можно придумать.',
     'A magic film with your child inside four seasons': 'Волшебный фильм, где ребёнок внутри четырёх времён года',
+    'Open beta · testers welcome': 'Открытая бета · приглашаем тестировать',
     // app without the store
     App: 'Приложение',
     'no store, on the phone': 'без магазина, на телефоне',

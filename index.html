@@ -1031,6 +1031,18 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
 #gvtop .gv-apb-sl{font-family:Anton,Impact,sans-serif;font-size:25px;line-height:1.05;color:#fff}
 #gvtop .gv-apb-sl2{font-size:21px}
 #gvtop .gv-apb-ds{font:400 13px/1.4 Inter,system-ui,sans-serif;color:#a3978f}
+/* 03.10.2026, Roma: both apps are in open beta — no release yet, not on sale, people are
+   invited to test. The usual way to say it: a small pill with a pulsing green light and
+   the words "open beta". It sits first in the text column so it flows with the card
+   (no overlap on narrow screens, and Hebrew turns it round by itself). The light is
+   the site's green (#46FFA0), the same as the NEW tag on Build my OS. */
+#gvtop .gv-apb-beta{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin-bottom:2px;
+  font:700 9px/1 "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#46FFA0;
+  background:rgba(70,255,160,.08);border:1px solid rgba(70,255,160,.35);border-radius:999px;padding:4px 8px 4px 6px;white-space:nowrap}
+#gvtop .gv-apb-beta::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:#46FFA0;
+  box-shadow:0 0 0 0 rgba(70,255,160,.7),0 0 8px #46FFA0;animation:gvbeta 1.4s ease-out infinite}
+@keyframes gvbeta{0%{opacity:1;box-shadow:0 0 0 0 rgba(70,255,160,.7),0 0 8px #46FFA0}70%{opacity:.35;box-shadow:0 0 0 6px rgba(70,255,160,0),0 0 2px #46FFA0}100%{opacity:1;box-shadow:0 0 0 0 rgba(70,255,160,0),0 0 8px #46FFA0}}
+@media(prefers-reduced-motion:reduce){#gvtop .gv-apb-beta::before{animation:none}}
 #gvtop .gv-apb-arw{flex:none;color:var(--gvred);font-size:26px;line-height:1;margin-inline-start:auto;transition:transform .2s}
 #gvtop .gv-apb:hover .gv-apb-arw{transform:translateX(6px)}
 /* the name is a label i18n.js leaves alone, so it keeps the page frame's left-to-right and would sit on
@@ -1480,12 +1492,12 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
   <div class="gv-aprow">
     <a class="gv-apb" href="https://yeshli.base44.app/" id="gvAppYeshli" target="_blank" rel="noopener">
       <img class="gv-apb-ic" src="/media/yeshli-icon.svg" alt="" width="84" height="84">
-      <span class="gv-apb-tx"><span class="gv-apb-nm">Yeshli</span><span class="gv-apb-sl">Your idea. Your app!</span><span class="gv-apb-ds">For business or for fun. Anything you can imagine.</span></span>
+      <span class="gv-apb-tx"><span class="gv-apb-beta">Open beta · testers welcome</span><span class="gv-apb-nm">Yeshli</span><span class="gv-apb-sl">Your idea. Your app!</span><span class="gv-apb-ds">For business or for fun. Anything you can imagine.</span></span>
       <span class="gv-apb-arw" aria-hidden="true">&rarr;</span>
     </a>
     <a class="gv-apb" href="https://tiulio.base44.app/" id="gvAppTiulio" target="_blank" rel="noopener">
       <img class="gv-apb-ic" src="/media/tiulio-icon.png" alt="" width="84" height="84">
-      <span class="gv-apb-tx"><span class="gv-apb-nm">Tiulio</span><span class="gv-apb-sl gv-apb-sl2">A magic film with your child inside four seasons</span></span>
+      <span class="gv-apb-tx"><span class="gv-apb-beta">Open beta · testers welcome</span><span class="gv-apb-nm">Tiulio</span><span class="gv-apb-sl gv-apb-sl2">A magic film with your child inside four seasons</span></span>
       <span class="gv-apb-arw" aria-hidden="true">&rarr;</span>
     </a>
   </div>
@@ -4356,7 +4368,7 @@ setTimeout(function(){fitAll();fitSeals();},900);setTimeout(function(){fitAll();
   if(/^#(order|faq|contact)$/.test(location.hash)){show(true,false);try{history.replaceState({gv:'order'},'',location.hash)}catch(e){}}
 })();
 </script>
-<script src="i18n.js?v=22" defer></script>
+<script src="i18n.js?v=23" defer></script>
 <script src="/gv-chrome.js?v=18" defer></script>
 <script src="/gvp-wa.js?v=1" defer></script>
 <script src="/push.js?v=3" defer></script>
