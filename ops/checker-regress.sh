@@ -17,7 +17,7 @@
 #                        a phone, because a later rule narrows it.
 #   creativity32.com     Wix, which hands phones their own page at width=320. Called it "no
 #                        phone layout".
-#   gvpro.base44.app     Roma's own Base44 app: 3.8 KB, an empty <title>, and the whole
+#   yeshli.base44.app    Roma's own Base44 app: 3.8 KB, an empty <title>, and the whole
 #                        site built by script. This is what the browser is for; without it
 #                        there is nothing to read at all. Not app.base44.com — their
 #                        marketing front page has plenty of HTML to read, which is the one
@@ -141,7 +141,7 @@ CASES = [
     # front page has enough HTML to read, which is exactly what this case must not have.
     # This one ships 3.8 KB with an empty <title> and builds everything in the browser — if
     # the browser is not running there is nothing here to judge, so it is the honest test.
-    ('gvpro.base44.app',    'an app shell is read by the browser, not the HTML',
+    ('yeshli.base44.app',   'an app shell is read by the browser, not the HTML',
         lambda j, c, bad: live(j, c, bad) and bool(c) and c.get('rendered') is True),
     ('genvidpro.com',       'our own site comes out clean',
         lambda j, c, bad: live(j, c, bad) and len(bad) == 0),
