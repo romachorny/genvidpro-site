@@ -24,8 +24,7 @@
     // the two apps under the services, 03.10.2026 (names stay as they are)
     'Your idea. Your app!': 'הרעיון שלך. האפליקציה שלך',
     'For business or for fun. Anything you can imagine.': 'לעסק או סתם בשביל הכיף. כל מה שאפשר לדמיין.',
-    'Your kid. Any world!': 'הילד שלכם. בכל עולם!',
-    'Free magic mirror, and a film of your child in four worlds.': 'מראת קסמים בחינם, וסרט של הילד שלכם בארבעה עולמות.',
+    'A magic film with your child inside four seasons': 'סרט קסום שבו הילד בתוך ארבע עונות',
     // app without the store
     App: 'אפליקציה',
     'no store, on the phone': 'בלי חנות, על הטלפון',
@@ -496,8 +495,8 @@
        on /os: Anton carries no Hebrew. The package names Start, Business and Pro are
        names, and the three app names are names, so they stay as they are too. */
     'GenVidPro · Apps': 'GenVidPro · אפליקציות',
-    'A working app for your small business, built and hosted on Base44 (base44.app), the app platform owned by Wix. Booking, a menu, a catalogue, orders, your crew or your clients. It installs on the phone and opens like any other app. Hebrew and English in one app, right to left where it belongs. Ready in days, not months.':
-      'אפליקציה עובדת לעסק הקטן שלכם, בנויה ומאוחסנת על Base44 (base44.app), פלטפורמת האפליקציות של Wix. תורים, תפריט, קטלוג, הזמנות, הצוות או הלקוחות. היא מותקנת על הטלפון ונפתחת כמו כל אפליקציה אחרת. עברית ואנגלית באפליקציה אחת, מימין לשמאל במקום שצריך. מוכנה בתוך ימים, לא חודשים.',
+    "Yeshli is the studio's app product: for business or for fun, anything you can imagine. Built and hosted on Base44 (base44.app), the app platform owned by Wix. Booking, a menu, a catalogue, orders, your crew or your clients. It installs on the phone and opens like any other app. Hebrew and English in one app, right to left where it belongs. Ready in days, not months.":
+      'Yeshli היא מוצר האפליקציות של הסטודיו: לעסק או סתם בשביל הכיף, כל מה שאפשר לדמיין. בנויה ומאוחסנת על Base44 (base44.app), פלטפורמת האפליקציות של Wix. תורים, תפריט, קטלוג, הזמנות, הצוות או הלקוחות. היא מותקנת על הטלפון ונפתחת כמו כל אפליקציה אחרת. עברית ואנגלית באפליקציה אחת, מימין לשמאל במקום שצריך. מוכנה בתוך ימים, לא חודשים.',
     'Booking, menu, catalogue, orders, crew or clients. Whatever your work actually runs on.':
       'תורים, תפריט, קטלוג, הזמנות, צוות או לקוחות. מה שהעבודה שלכם באמת רצה עליו.',
     'Installs on the phone straight from the browser. No App Store, no Google Play, no approvals.':
@@ -508,9 +507,19 @@
       'כפתור וואטסאפ בפנים, כך שלקוח כותב לכם בלחיצה אחת.',
     'The app sits on Base44 in your own account, so it stays yours from the first day.':
       'האפליקציה יושבת על Base44 בחשבון שלכם, ולכן היא שלכם מהיום הראשון.',
-    'Build my app': 'לבנות לי אפליקציה',
+    'For business or for fun: a shop or a booking, and just as happily a family game or a hobby of your own.':
+      'לעסק או סתם בשביל הכיף: חנות או תורים, ובאותה מידה משחק משפחתי או תחביב שלכם.',
+    /* 03.10.2026: הכפתור נקרא בשם המוצר, Yeshli. */
+    'Open Yeshli': 'לפתוח את Yeshli',
     /* 01.10.2026: кнопка ведёт в живое приложение, а не в вотсап, и подпись под ней новая. */
-    'Open the live app, pick what your business needs': 'נפתחת האפליקציה החיה, בוחרים מה העסק שלכם צריך',
+    'Open the live app, pick what your business or your idea needs': 'נפתחת האפליקציה החיה, בוחרים מה העסק או הרעיון שלכם צריך',
+    /* 03.10.2026, Tiulio על /apps: בלי מחיר, כי בסרט החי אין מחיר. */
+    'Also from the studio': 'עוד מהסטודיו',
+    'Tiulio, a film for a child': 'Tiulio, סרט לילד',
+    'A magic film with your child inside four seasons: snow in the Alps, blossoms in Japan, diving in Eilat and a golden forest, in their own voice. Parents film six seconds at home for each world. The magic mirror inside is free to try, and the film itself is quoted after the brief.':
+      'סרט קסום שבו הילד בתוך ארבע עונות: שלג באלפים, פריחה ביפן, צלילה באילת ויער זהוב, בקול שלו. ההורים מצלמים בבית שש שניות לכל עולם. מראת הקסמים שבפנים חינם לניסיון, ואת מחיר הסרט עצמו נותנים אחרי התיאום.',
+    'Open Tiulio': 'לפתוח את Tiulio',
+    'tiulio.base44.app, try the magic mirror free': 'tiulio.base44.app, אפשר לנסות את מראת הקסמים בחינם',
     'Sound': 'קול',
     'We agree what goes in before anything is built. You see the first working version in the first week.':
       'מסכמים מה נכנס לפני שבונים משהו. את הגרסה העובדת הראשונה רואים כבר בשבוע הראשון.',
@@ -743,8 +752,7 @@
     // the two apps under the services, 03.10.2026 (names stay as they are)
     'Your idea. Your app!': 'Твоя идея. Твоё приложение!',
     'For business or for fun. Anything you can imagine.': 'Для бизнеса или просто так. Всё, что можно придумать.',
-    'Your kid. Any world!': 'Твой ребёнок. Любой мир!',
-    'Free magic mirror, and a film of your child in four worlds.': 'Бесплатное волшебное зеркало и фильм о ребёнке в четырёх мирах.',
+    'A magic film with your child inside four seasons': 'Волшебный фильм, где ребёнок внутри четырёх времён года',
     // app without the store
     App: 'Приложение',
     'no store, on the phone': 'без магазина, на телефоне',
@@ -1189,8 +1197,8 @@
        в Anton нет кириллицы. Названия пакетов Start, Business, Pro и имена трёх
        приложений — имена, они тоже не переводятся. */
     'GenVidPro · Apps': 'GenVidPro · Приложения',
-    'A working app for your small business, built and hosted on Base44 (base44.app), the app platform owned by Wix. Booking, a menu, a catalogue, orders, your crew or your clients. It installs on the phone and opens like any other app. Hebrew and English in one app, right to left where it belongs. Ready in days, not months.':
-      'Рабочее приложение для вашего небольшого бизнеса, собранное и размещённое на Base44 (base44.app), платформе приложений от Wix. Запись, меню, каталог, заказы, команда или клиенты. Оно ставится на телефон и открывается как любое другое. Иврит и английский в одном приложении, справа налево там, где это нужно. Готово за дни, а не за месяцы.',
+    "Yeshli is the studio's app product: for business or for fun, anything you can imagine. Built and hosted on Base44 (base44.app), the app platform owned by Wix. Booking, a menu, a catalogue, orders, your crew or your clients. It installs on the phone and opens like any other app. Hebrew and English in one app, right to left where it belongs. Ready in days, not months.":
+      'Yeshli — приложение студии: для дела или просто для удовольствия, всё, что можно придумать. Собрано и размещено на Base44 (base44.app), платформе приложений от Wix. Запись, меню, каталог, заказы, команда или клиенты. Оно ставится на телефон и открывается как любое другое. Иврит и английский в одном приложении, справа налево там, где это нужно. Готово за дни, а не за месяцы.',
     'Booking, menu, catalogue, orders, crew or clients. Whatever your work actually runs on.':
       'Запись, меню, каталог, заказы, команда или клиенты. То, на чём действительно держится ваша работа.',
     'Installs on the phone straight from the browser. No App Store, no Google Play, no approvals.':
@@ -1201,9 +1209,19 @@
       'Кнопка WhatsApp внутри, чтобы клиент написал вам в одно касание.',
     'The app sits on Base44 in your own account, so it stays yours from the first day.':
       'Приложение живёт на Base44 в вашем аккаунте, поэтому оно ваше с первого дня.',
-    'Build my app': 'Собрать мне приложение',
+    'For business or for fun: a shop or a booking, and just as happily a family game or a hobby of your own.':
+      'Для дела или просто для удовольствия: магазин или запись, и с тем же успехом семейная игра или своё увлечение.',
+    /* 03.10.2026: кнопка названа именем изделия, Yeshli. */
+    'Open Yeshli': 'Открыть Yeshli',
     /* 01.10.2026: кнопка ведёт в живое приложение, а не в вотсап, и подпись под ней новая. */
-    'Open the live app, pick what your business needs': 'Откроется живое приложение, выберите, что нужно вашему делу',
+    'Open the live app, pick what your business or your idea needs': 'Откроется живое приложение, выберите, что нужно вашему делу или вашей задумке',
+    /* 03.10.2026, Tiulio на /apps: без цены, потому что в живом приложении её нет. */
+    'Also from the studio': 'Ещё из студии',
+    'Tiulio, a film for a child': 'Tiulio, фильм для ребёнка',
+    'A magic film with your child inside four seasons: snow in the Alps, blossoms in Japan, diving in Eilat and a golden forest, in their own voice. Parents film six seconds at home for each world. The magic mirror inside is free to try, and the film itself is quoted after the brief.':
+      'Волшебный фильм, где ребёнок внутри четырёх времён года: снег в Альпах, цветение в Японии, ныряние в Эйлате и золотой лес, его собственным голосом. Родители снимают дома по шесть секунд на каждый мир. Волшебное зеркало внутри можно попробовать бесплатно, а цену самого фильма называют после согласования.',
+    'Open Tiulio': 'Открыть Tiulio',
+    'tiulio.base44.app, try the magic mirror free': 'tiulio.base44.app, волшебное зеркало можно попробовать бесплатно',
     'Sound': 'Звук',
     'We agree what goes in before anything is built. You see the first working version in the first week.':
       'Что войдёт внутрь, мы согласуем до сборки. Первую рабочую версию вы видите на первой неделе.',
