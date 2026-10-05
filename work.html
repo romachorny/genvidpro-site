@@ -115,7 +115,11 @@ var W = [
  {b:'product-ads-showreel',   t:'Product Ads Showreel',        k:'5 spots · 4:5',             r:4/5},
  {b:'ai-doesnt-work-without-you-17s-social-cut', t:'It Does Not Work Without You', k:'Social cut · 17s · 16:9', r:16/9},
  {b:'app-without-store',      t:'App Without the Store',        k:'Product film · 2:33 · 9:16 · Hebrew', r:9/16},
- {b:'ai-build-pro',           t:'AIBuildPro',                   k:'Product film · 72s · 9:16 · Hebrew',  r:9/16}
+ {b:'ai-build-pro',           t:'AIBuildPro',                   k:'Product film · 72s · 9:16 · Hebrew',  r:9/16},
+ /* The only tile whose poster carries a version mark: media/build-my-os.jpg was
+    already on the site for /os, and _headers holds /media/* for a week, so the
+    edge would go on serving the old unstamped frame to this grid. */
+ {b:'build-my-os',            t:'My OS',                        k:'Product film · 55s · 16:9', r:16/9, pv:'?v=2'}
 ];
 
 /* A phone-shaped screen takes the 480-px previews and 540-px posters out of
@@ -136,11 +140,11 @@ var grid = document.getElementById('grid');
 /* justified rows: inside a row every tile keeps its own shape and they all
    end up the same height, because the width is shared in proportion to the
    aspect ratio (flex-grow = ratio, basis 0) */
-var LAYOUT = [[0],[1],[2],[3,4],[14,15],[5,6],[7,12],[8,9,10,11],[13]];
+var LAYOUT = [[0],[16],[1],[2],[3,4],[14,15],[5,6],[7,12],[8,9,10,11],[13]];
 /* On a phone the wide films take the full width and the four vertical ones stand
    in pairs. One vertical tile at full width is 690 px tall on a 390-px phone, so
    those four were 2 800 px of scrolling for four works; in pairs it is half that. */
-var LAYOUT_M = [[0],[1],[2],[3],[4],[5],[14,15],[6],[7],[8,9],[10,11],[12],[13]];
+var LAYOUT_M = [[0],[16],[1],[2],[3],[4],[5],[14,15],[6],[7],[8,9],[10,11],[12],[13]];
 var rows = (mob ? LAYOUT_M : LAYOUT).map(function(r){ return r.map(function(i){ return W[i]; }); });
 
 rows.forEach(function(items){
@@ -151,7 +155,7 @@ rows.forEach(function(items){
     f.style.flex = it.r + ' 1 0';
     f.innerHTML =
       '<div class="box" style="padding-top:'+((1/it.r)*100).toFixed(3)+'%">' +
-        '<img src="'+M+it.b+'.jpg" alt="'+it.t+'" loading="lazy" decoding="async">' +
+        '<img src="'+M+it.b+'.jpg'+(it.pv||'')+'" alt="'+it.t+'" loading="lazy" decoding="async">' +
         '<video muted loop playsinline preload="none" data-src="'+M+it.b+'-preview.mp4?pv=5"></video>' +
       '</div><span class="play"></span>' +
       '<figcaption class="cap"><span class="t">'+it.t+'</span><span class="k">'+it.k+'</span></figcaption>';
@@ -229,7 +233,7 @@ function openIt(it){
   closeIt();
   cv = document.createElement('video');
   cv.controls = true; cv.autoplay = true; cv.playsInline = true;
-  cv.poster = M + it.b + '.jpg';
+  cv.poster = M + it.b + '.jpg' + (it.pv || '');
   cv.src = (phone ? 'videos/m/' : 'videos/') + it.b + '.mp4';
   cv.onerror = function(){ if(cv.src.indexOf('/m/') > -1) cv.src = 'videos/' + it.b + '.mp4'; };
   lb.appendChild(cv);
