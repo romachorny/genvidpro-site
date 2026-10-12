@@ -1577,7 +1577,10 @@
     '#gv3 .gv3-lab,#gv3go,#gv3msg,#gv3tabs,#gv3s,#gv3facts,#gv3verdict,' +
     /* the fixed bar and the fixed legal line gv-chrome.js builds on every page: the studio's
        name, what it is and the way back are the same words in every language (16.09.2026) */
-    '#gvc-bar,#gvc-foot';
+    '#gvc-bar,#gvc-foot,' +
+    /* 12.10.2026: the XPlace review card is Hebrew content in every language - the words
+       are the client's own and are not ours to translate, and SEE ON stays English. */
+    '.gv-review';
   var SKIP_TAG = /^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|OPTION|IFRAME|VIDEO|CANVAS)$/;
 
   /* 28.09.2026: the gate was "is there a dictionary", and MORE.ar holds three lines kept

@@ -1353,7 +1353,12 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
   --gvfglow:0 0 9px rgba(255,74,28,.5),inset 0 0 12px rgba(255,74,28,.12);
   --gvpad:clamp(14px,3.4vw,40px)}
 .gv-who-any .gv-who{max-width:1500px;margin:16px auto 0;padding:26px var(--gvpad);display:grid;gap:22px;
-  grid-template-columns:minmax(180px,240px) 1fr minmax(240px,300px);align-items:center}
+  grid-template-columns:minmax(160px,210px) minmax(200px,1fr) minmax(300px,380px) minmax(190px,250px);
+  grid-template-areas:"ph inf rev emb";align-items:center}
+.gv-who-any .gv-who .gv-ph{grid-area:ph}
+.gv-who-any .gv-who .gv-inf{grid-area:inf}
+.gv-who-any .gv-who .gv-review{grid-area:rev;justify-self:center}
+.gv-who-any .gv-who .gv-wid{grid-area:emb}
 .gv-who-any .gv-who .gv-ph{width:100%;aspect-ratio:1;border-radius:50%;border:var(--gvframe);box-shadow:var(--gvfglow);
   background:#0a0a0a center/cover no-repeat;position:relative;overflow:hidden}
 .gv-who-any .gv-who .gv-inf{text-align:center;display:flex;flex-direction:column;align-items:center;gap:0}
@@ -1379,35 +1384,38 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
 .gv-emb .gv-cap2{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:8px;color:rgba(255,255,255,.5);letter-spacing:.14em;z-index:2}
 .gv-wid .gv-cap{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--gvmuted);letter-spacing:.14em}
 
-/* XPlace review card: sits between the name column and the logo animation.
-   Four columns from 1280px, the card drops under the name between 1001 and 1279,
-   and on a phone it follows the LinkedIn button. The card itself is Hebrew, rtl. */
-.gv-who-any .gv-who .gv-rev{direction:rtl;width:100%;max-width:400px;margin:0 auto;background:#121112;border:var(--gvframe);box-shadow:var(--gvfglow);
-  border-radius:18px;padding:22px 22px 20px;font-family:Heebo,system-ui,sans-serif;color:#f2f2f2;text-align:right;box-sizing:border-box}
-.gv-rev .gv-rev-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-.gv-rev .gv-rev-lbl{direction:ltr;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--gvmuted)}
-.gv-rev .gv-rev-big{color:#f5b301;font-size:24px;letter-spacing:3px;line-height:1}
-.gv-rev .gv-rev-q{font-size:18px;font-weight:500;line-height:1.45;margin:8px 0 10px;text-wrap:balance}
-.gv-rev .gv-rev-who{font-size:12.5px;color:var(--gvmuted);margin-bottom:14px}
-.gv-rev .gv-rev-who b{color:#f2f2f2;font-weight:700}
-.gv-rev .gv-rev-crit{border-top:1px solid #2a2626;padding-top:12px;display:grid;gap:7px}
-.gv-rev .gv-rev-row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px}
-.gv-rev .gv-rev-row i{font-style:normal;color:#f5b301;letter-spacing:2px;font-size:13px}
-.gv-rev .gv-rev-btn{margin-top:16px;display:flex;align-items:center;justify-content:center;gap:12px;direction:ltr;text-decoration:none;color:#fff;
-  font-family:Anton,Impact,sans-serif;font-size:18px;letter-spacing:.06em;text-transform:uppercase;padding:12px;border-radius:999px;
-  border:var(--gvframe);box-shadow:var(--gvfglow);transition:box-shadow .2s}
-.gv-rev .gv-rev-btn span{text-shadow:var(--gvglow)}
-.gv-rev .gv-rev-btn img{height:24px;width:auto;display:block;margin-top:3px;filter:drop-shadow(0 0 3px rgba(255,74,28,.95)) drop-shadow(0 0 9px rgba(255,74,28,.65))}
-.gv-rev .gv-rev-btn:hover{box-shadow:0 0 18px rgba(255,74,28,.8),inset 0 0 14px rgba(255,74,28,.3)}
-.gv-rev .gv-rev-btn:focus-visible{outline:2px solid #FF4A1C;outline-offset:3px}
-@media (min-width:1280px){
-  .gv-who-any .gv-who{grid-template-columns:minmax(180px,230px) 1fr minmax(320px,380px) minmax(200px,240px)}
-}
-@media (min-width:1001px) and (max-width:1279px){
-  .gv-who-any .gv-who{grid-template-areas:"ph inf wid" "ph rev wid"}
-  .gv-who-any .gv-who .gv-ph{grid-area:ph}.gv-who-any .gv-who .gv-inf{grid-area:inf}
-  .gv-who-any .gv-who .gv-rev{grid-area:rev}.gv-who-any .gv-who .gv-wid{grid-area:wid}
-}
+/* 12.10.2026: the first client review on XPlace, five stars, between the name column
+   and the logo animation. It is carried here as a component: every rule is scoped
+   under .gv-review and every inner class wears the gvr- prefix, so the site's own
+   .btn, .row and .top cannot reach into the card and nothing of the card leaks out.
+   The colours are the approved card's own, not the page's orange - that is the design
+   Roma signed off. Only the card is dir="rtl": the page frame around it is built left
+   to right and stays that way. The wordmark used to ride inside the markup as a 13 KB
+   base64 data URI; it is media/xplace-wordmark.png now, a file the browser caches once
+   instead of re-parsing it on every visit. */
+.gv-review{--gvr-card:#151517;--gvr-line:#26262a;--gvr-txt:#f2f2f2;--gvr-mut:#9a9aa0;--gvr-gold:#f5b301;
+  width:100%;max-width:420px;background:var(--gvr-card);border:1px solid var(--gvr-line);border-radius:18px;
+  padding:26px 24px 22px;box-shadow:0 20px 60px rgba(0,0,0,.45);
+  font-family:Heebo,system-ui,sans-serif;color:var(--gvr-txt);text-align:start}
+.gv-review,.gv-review *{box-sizing:border-box}
+.gv-review .gvr-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.gv-review .gvr-lbl{font-size:12px;letter-spacing:.12em;color:var(--gvr-mut);direction:ltr}
+.gv-review .gvr-big{color:var(--gvr-gold);font-size:30px;letter-spacing:4px;line-height:1}
+.gv-review .gvr-q{font-size:21px;font-weight:500;line-height:1.45;margin:14px 0 12px}
+.gv-review .gvr-who{font-size:14px;color:var(--gvr-mut);margin-bottom:18px}
+.gv-review .gvr-who b{color:var(--gvr-txt);font-weight:700}
+.gv-review .gvr-crit{border-top:1px solid var(--gvr-line);padding-top:14px;display:grid;gap:9px}
+.gv-review .gvr-row{display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.gv-review .gvr-row s{text-decoration:none;color:var(--gvr-gold);letter-spacing:2px;font-size:15px}
+.gv-review .gvr-btn{margin-top:22px;display:flex;align-items:center;justify-content:center;gap:14px;background:transparent;
+  border:1.5px solid #e24e28;box-shadow:0 0 12px rgba(226,78,40,.55),inset 0 0 10px rgba(226,78,40,.25);
+  color:#fff;text-decoration:none;font-family:Anton,Impact,sans-serif;font-weight:400;font-size:20px;
+  letter-spacing:.06em;text-transform:uppercase;padding:13px;border-radius:999px;direction:ltr;transition:box-shadow .25s}
+.gv-review .gvr-btn span{text-shadow:0 0 6px rgba(226,78,40,.95),0 0 16px rgba(201,58,22,.7)}
+.gv-review .gvr-btn:hover{box-shadow:0 0 22px rgba(226,78,40,.8),inset 0 0 14px rgba(226,78,40,.35)}
+.gv-review .gvr-btn:focus-visible{outline:2px solid #e24e28;outline-offset:3px}
+.gv-review .gvr-btn img{height:27px;width:auto;display:block;margin-top:3px;
+  filter:drop-shadow(0 0 3px rgba(226,78,40,.95)) drop-shadow(0 0 9px rgba(201,58,22,.7))}
 
 #gvtop .gv-cts{margin:10px 0 0;display:flex;flex-direction:column;gap:13px;padding:0 var(--gvpad)}
 #gvtop .gv-cb{position:relative;overflow:hidden;display:block;text-decoration:none;text-align:center;padding:20px;border-radius:70px;border:var(--gvframe);box-shadow:var(--gvfglow)}
@@ -1445,8 +1453,14 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
   background:linear-gradient(90deg,#7a1c06,var(--gvred) 22%,#fff 50%,var(--gvred) 78%,#7a1c06);
   box-shadow:0 0 10px rgba(255,74,28,.9),0 0 24px rgba(255,74,28,.55)}
 
+/* between 1001 and 1240 four columns squeeze the name onto two lines, so the card
+   drops under it and the photo and the animation keep the outer columns. */
+@media (max-width:1240px) and (min-width:1001px){
+  .gv-who-any .gv-who{grid-template-columns:minmax(150px,200px) minmax(260px,1fr) minmax(190px,240px);
+    grid-template-areas:"ph inf emb" "ph rev emb";row-gap:16px}
+}
 @media (max-width:1000px){
-  .gv-who-any .gv-who{grid-template-columns:1fr;justify-items:center;text-align:center;gap:18px}
+  .gv-who-any .gv-who{grid-template-columns:1fr;grid-template-areas:"ph" "inf" "rev" "emb";justify-items:center;text-align:center;gap:18px}
   .gv-who-any .gv-who .gv-ph{max-width:280px}
   .gv-who-any .gv-who .gv-rl{max-width:88%}
   .gv-who-any .gv-who .gv-bio{max-width:76%}
@@ -1455,6 +1469,13 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
   .gv-emb{max-width:300px}
   .gv-who-any .gv-who .gv-inf{text-align:center;width:100%}
   .gv-who-any .gv-who .gv-bio{margin-left:auto;margin-right:auto}
+  /* on a phone the card follows the LINKEDIN button and takes the width it is given */
+  .gv-who-any .gv-who .gv-review{max-width:420px;justify-self:stretch;margin:0 auto}
+}
+/* below 470px the clamp floors the block's side padding at 14px, and the card is drawn
+   with a 16px gutter. The whole block follows the card so the edges line up. */
+@media (max-width:470px){
+  .gv-who-any .gv-who{padding-left:16px;padding-right:16px}
 }
 @media (prefers-reduced-motion:reduce){
   #gvtop .gv-anim,#gvtop .gv-slogan.gv-lit{animation:none!important}
@@ -2402,19 +2423,19 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
       <p class="gv-bio">Living art is the part I love most. I also make films, sites and brands. Every take is mine, until the thing looks right.</p>
       <a class="gv-li" href="https://www.linkedin.com/in/genvidpro" target="_blank" rel="noopener">LinkedIn</a>
     </div>
-    <div class="gv-rev" lang="he">
-      <div class="gv-rev-top"><span class="gv-rev-big" aria-label="5 stars">★★★★★</span><span class="gv-rev-lbl">CLIENT REVIEW</span></div>
-      <div class="gv-rev-q">״היה נעים להכיר אותו. יש לו דרך ארץ ומידות טובות״</div>
-      <div class="gv-rev-who"><b>אמנון בע״מ</b> · הדרכת עבודה בקנבה · 11 באוקטובר 2026</div>
-      <div class="gv-rev-crit">
-        <div class="gv-rev-row"><span>איכות עבודה</span><i>★★★★★</i></div>
-        <div class="gv-rev-row"><span>מקצועיות</span><i>★★★★★</i></div>
-        <div class="gv-rev-row"><span>ידע ומומחיות</span><i>★★★★★</i></div>
-        <div class="gv-rev-row"><span>מהירות תגובה</span><i>★★★★★</i></div>
-        <div class="gv-rev-row"><span>דבקות במחיר</span><i>★★★★★</i></div>
-        <div class="gv-rev-row"><span>עמידה בלוח זמנים</span><i>★★★★★</i></div>
+    <div class="gv-review" dir="rtl" lang="he">
+      <div class="gvr-top"><span class="gvr-big" aria-label="5 stars">★★★★★</span><span class="gvr-lbl">CLIENT REVIEW</span></div>
+      <div class="gvr-q">״היה נעים להכיר אותו. יש לו דרך ארץ ומידות טובות״</div>
+      <div class="gvr-who"><b>אמנון בע״מ</b> · הדרכת עבודה בקנבה · 11 באוקטובר 2026</div>
+      <div class="gvr-crit">
+        <div class="gvr-row"><span>איכות עבודה</span><s>★★★★★</s></div>
+        <div class="gvr-row"><span>מקצועיות</span><s>★★★★★</s></div>
+        <div class="gvr-row"><span>ידע ומומחיות</span><s>★★★★★</s></div>
+        <div class="gvr-row"><span>מהירות תגובה</span><s>★★★★★</s></div>
+        <div class="gvr-row"><span>דבקות במחיר</span><s>★★★★★</s></div>
+        <div class="gvr-row"><span>עמידה בלוח זמנים</span><s>★★★★★</s></div>
       </div>
-      <a class="gv-rev-btn" href="https://www.xplace.com/il/u/user1789199412351" target="_blank" rel="noopener"><span>See on</span><img src="media/xplace-wordmark.png" alt="xplace" width="360" height="128"></a>
+      <a class="gvr-btn" href="https://www.xplace.com/il/u/user1789199412351" target="_blank" rel="noopener"><span>See on</span><img src="media/xplace-wordmark.png" alt="xplace" width="300" height="107"></a>
     </div>
     <div class="gv-wid">
       <div class="gv-emb"><video muted loop playsinline preload="none" poster="media/emblem-poster.jpg" data-src="media/emblem.mp4?pv=3"></video></div>
