@@ -1402,8 +1402,16 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
 .gv-review .gvr-lbl{font-size:12px;letter-spacing:.12em;color:var(--gvr-mut);direction:ltr}
 .gv-review .gvr-big{color:var(--gvr-gold);font-size:30px;letter-spacing:4px;line-height:1}
 .gv-review .gvr-q{font-size:21px;font-weight:500;line-height:1.45;margin:14px 0 12px}
-.gv-review .gvr-who{font-size:14px;color:var(--gvr-mut);margin-bottom:18px}
+.gv-review .gvr-who{font-size:14px;line-height:1.85;color:var(--gvr-mut);margin-bottom:18px}
 .gv-review .gvr-who b{color:var(--gvr-txt);font-weight:700}
+/* what the work was, as two pills instead of a Hebrew subject line: Canva and Claude.
+   The glow repeats the page frames by value, not by var(--gvfglow) - the card stays a
+   self-contained component. Each pill is ltr Inter inside an rtl line, and the wrapper
+   wraps them to a second row on a narrow phone instead of pushing the card wider. */
+.gv-review .gvr-tags{display:inline-flex;flex-wrap:wrap;gap:6px;vertical-align:middle;direction:ltr}
+.gv-review .gvr-tag{font-family:Inter,system-ui,sans-serif;font-size:11.5px;font-weight:500;line-height:1;
+  color:#fff;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,74,28,.75);
+  box-shadow:0 0 9px rgba(255,74,28,.5),inset 0 0 12px rgba(255,74,28,.12);white-space:nowrap}
 .gv-review .gvr-crit{border-top:1px solid var(--gvr-line);padding-top:14px;display:grid;gap:9px}
 .gv-review .gvr-row{display:flex;justify-content:space-between;align-items:center;font-size:15px}
 .gv-review .gvr-row s{text-decoration:none;color:var(--gvr-gold);letter-spacing:2px;font-size:15px}
@@ -2426,7 +2434,7 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
     <div class="gv-review" dir="rtl" lang="he">
       <div class="gvr-top"><span class="gvr-big" aria-label="5 stars">★★★★★</span><span class="gvr-lbl">CLIENT REVIEW</span></div>
       <div class="gvr-q">״היה נעים להכיר אותו. יש לו דרך ארץ ומידות טובות״</div>
-      <div class="gvr-who"><b>אמנון בע״מ</b> · הדרכת עבודה בקנבה · 11 באוקטובר 2026</div>
+      <div class="gvr-who"><b>אמנון בע״מ</b> · <span class="gvr-tags"><span class="gvr-tag">Canva</span><span class="gvr-tag">Claude</span></span> · 11 באוקטובר 2026</div>
       <div class="gvr-crit">
         <div class="gvr-row"><span>איכות עבודה</span><s>★★★★★</s></div>
         <div class="gvr-row"><span>מקצועיות</span><s>★★★★★</s></div>
