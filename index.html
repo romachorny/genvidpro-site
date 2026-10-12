@@ -913,7 +913,7 @@ html.plain *,html.plain *::before,html.plain *::after{text-shadow:none!important
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><!-- only the faces that are not in /fonts: the Google copies of Anton, Archivo Black,
      Bebas, Inter 400-600, JetBrains Mono, Playfair and Syncopate were downloaded on top
      of the local ones, 130 KB a phone had to swallow before the first film -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600&family=Inter:wght@700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600&family=Heebo:wght@400;500;700&family=Inter:wght@700;800&display=swap">
 <meta property="og:image" content="https://genvidpro.com/media/og-cover-v5.jpg?v=5">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -1378,6 +1378,36 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
 .gv-emb .hx-snd,.gv-emb button{display:none!important}
 .gv-emb .gv-cap2{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:8px;color:rgba(255,255,255,.5);letter-spacing:.14em;z-index:2}
 .gv-wid .gv-cap{font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--gvmuted);letter-spacing:.14em}
+
+/* XPlace review card: sits between the name column and the logo animation.
+   Four columns from 1280px, the card drops under the name between 1001 and 1279,
+   and on a phone it follows the LinkedIn button. The card itself is Hebrew, rtl. */
+.gv-who-any .gv-who .gv-rev{direction:rtl;width:100%;max-width:400px;margin:0 auto;background:#121112;border:var(--gvframe);box-shadow:var(--gvfglow);
+  border-radius:18px;padding:22px 22px 20px;font-family:Heebo,system-ui,sans-serif;color:#f2f2f2;text-align:right;box-sizing:border-box}
+.gv-rev .gv-rev-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.gv-rev .gv-rev-lbl{direction:ltr;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--gvmuted)}
+.gv-rev .gv-rev-big{color:#f5b301;font-size:24px;letter-spacing:3px;line-height:1}
+.gv-rev .gv-rev-q{font-size:18px;font-weight:500;line-height:1.45;margin:8px 0 10px;text-wrap:balance}
+.gv-rev .gv-rev-who{font-size:12.5px;color:var(--gvmuted);margin-bottom:14px}
+.gv-rev .gv-rev-who b{color:#f2f2f2;font-weight:700}
+.gv-rev .gv-rev-crit{border-top:1px solid #2a2626;padding-top:12px;display:grid;gap:7px}
+.gv-rev .gv-rev-row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px}
+.gv-rev .gv-rev-row i{font-style:normal;color:#f5b301;letter-spacing:2px;font-size:13px}
+.gv-rev .gv-rev-btn{margin-top:16px;display:flex;align-items:center;justify-content:center;gap:12px;direction:ltr;text-decoration:none;color:#fff;
+  font-family:Anton,Impact,sans-serif;font-size:18px;letter-spacing:.06em;text-transform:uppercase;padding:12px;border-radius:999px;
+  border:var(--gvframe);box-shadow:var(--gvfglow);transition:box-shadow .2s}
+.gv-rev .gv-rev-btn span{text-shadow:var(--gvglow)}
+.gv-rev .gv-rev-btn img{height:24px;width:auto;display:block;margin-top:3px;filter:drop-shadow(0 0 3px rgba(255,74,28,.95)) drop-shadow(0 0 9px rgba(255,74,28,.65))}
+.gv-rev .gv-rev-btn:hover{box-shadow:0 0 18px rgba(255,74,28,.8),inset 0 0 14px rgba(255,74,28,.3)}
+.gv-rev .gv-rev-btn:focus-visible{outline:2px solid #FF4A1C;outline-offset:3px}
+@media (min-width:1280px){
+  .gv-who-any .gv-who{grid-template-columns:minmax(180px,230px) 1fr minmax(320px,380px) minmax(200px,240px)}
+}
+@media (min-width:1001px) and (max-width:1279px){
+  .gv-who-any .gv-who{grid-template-areas:"ph inf wid" "ph rev wid"}
+  .gv-who-any .gv-who .gv-ph{grid-area:ph}.gv-who-any .gv-who .gv-inf{grid-area:inf}
+  .gv-who-any .gv-who .gv-rev{grid-area:rev}.gv-who-any .gv-who .gv-wid{grid-area:wid}
+}
 
 #gvtop .gv-cts{margin:10px 0 0;display:flex;flex-direction:column;gap:13px;padding:0 var(--gvpad)}
 #gvtop .gv-cb{position:relative;overflow:hidden;display:block;text-decoration:none;text-align:center;padding:20px;border-radius:70px;border:var(--gvframe);box-shadow:var(--gvfglow)}
@@ -2371,6 +2401,20 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
       <div class="gv-rl">Founder, GenVidPro &middot; Tel Aviv, Israel</div>
       <p class="gv-bio">Living art is the part I love most. I also make films, sites and brands. Every take is mine, until the thing looks right.</p>
       <a class="gv-li" href="https://www.linkedin.com/in/genvidpro" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <div class="gv-rev" lang="he">
+      <div class="gv-rev-top"><span class="gv-rev-big" aria-label="5 stars">★★★★★</span><span class="gv-rev-lbl">CLIENT REVIEW</span></div>
+      <div class="gv-rev-q">״היה נעים להכיר אותו. יש לו דרך ארץ ומידות טובות״</div>
+      <div class="gv-rev-who"><b>אמנון בע״מ</b> · הדרכת עבודה בקנבה · 11 באוקטובר 2026</div>
+      <div class="gv-rev-crit">
+        <div class="gv-rev-row"><span>איכות עבודה</span><i>★★★★★</i></div>
+        <div class="gv-rev-row"><span>מקצועיות</span><i>★★★★★</i></div>
+        <div class="gv-rev-row"><span>ידע ומומחיות</span><i>★★★★★</i></div>
+        <div class="gv-rev-row"><span>מהירות תגובה</span><i>★★★★★</i></div>
+        <div class="gv-rev-row"><span>דבקות במחיר</span><i>★★★★★</i></div>
+        <div class="gv-rev-row"><span>עמידה בלוח זמנים</span><i>★★★★★</i></div>
+      </div>
+      <a class="gv-rev-btn" href="https://www.xplace.com/il/u/user1789199412351" target="_blank" rel="noopener"><span>See on</span><img src="media/xplace-wordmark.png" alt="xplace" width="360" height="128"></a>
     </div>
     <div class="gv-wid">
       <div class="gv-emb"><video muted loop playsinline preload="none" poster="media/emblem-poster.jpg" data-src="media/emblem.mp4?pv=3"></video></div>
