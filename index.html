@@ -1407,8 +1407,10 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
 /* what the work was, as two pills instead of a Hebrew subject line: Canva and Claude.
    The glow repeats the page frames by value, not by var(--gvfglow) - the card stays a
    self-contained component. Each pill is ltr Inter inside an rtl line, and the wrapper
-   wraps them to a second row on a narrow phone instead of pushing the card wider. */
+   wraps them to a second row on a narrow phone instead of pushing the card wider. The date
+   is one unbreakable piece: at 390px the line wraps and a bare "2026" was left hanging. */
 .gv-review .gvr-tags{display:inline-flex;flex-wrap:wrap;gap:6px;vertical-align:middle;direction:ltr}
+.gv-review .gvr-dt{white-space:nowrap}
 .gv-review .gvr-tag{font-family:Inter,system-ui,sans-serif;font-size:11.5px;font-weight:500;line-height:1;
   color:#fff;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,74,28,.75);
   box-shadow:0 0 9px rgba(255,74,28,.5),inset 0 0 12px rgba(255,74,28,.12);white-space:nowrap}
@@ -2434,7 +2436,7 @@ html.gv-ru #gvtop .gv-apb-sl{font-family:system-ui,-apple-system,"Segoe UI",Robo
     <div class="gv-review" dir="rtl" lang="he">
       <div class="gvr-top"><span class="gvr-big" aria-label="5 stars">★★★★★</span><span class="gvr-lbl">CLIENT REVIEW</span></div>
       <div class="gvr-q">״היה נעים להכיר אותו. יש לו דרך ארץ ומידות טובות״</div>
-      <div class="gvr-who"><b>אמנון בע״מ</b> · <span class="gvr-tags"><span class="gvr-tag">Canva</span><span class="gvr-tag">Claude</span></span> · 11 באוקטובר 2026</div>
+      <div class="gvr-who"><b>אמנון בע״מ</b> · <span class="gvr-tags"><span class="gvr-tag">Canva</span><span class="gvr-tag">Claude</span></span> · <span class="gvr-dt">11 באוקטובר 2026</span></div>
       <div class="gvr-crit">
         <div class="gvr-row"><span>איכות עבודה</span><s>★★★★★</s></div>
         <div class="gvr-row"><span>מקצועיות</span><s>★★★★★</s></div>
