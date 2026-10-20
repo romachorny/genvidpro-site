@@ -119,7 +119,8 @@ var W = [
  /* The only tile whose poster carries a version mark: media/build-my-os.jpg was
     already on the site for /os, and _headers holds /media/* for a week, so the
     edge would go on serving the old unstamped frame to this grid. */
- {b:'build-my-os',            t:'My OS',                        k:'Product film · 55s · 16:9', r:16/9, pv:'?v=2'}
+ {b:'build-my-os',            t:'My OS',                        k:'Product film · 55s · 16:9', r:16/9, pv:'?v=2'},
+ {b:'doghouse',               t:'To Bark or Not to Bark',       k:'Animated short · 38s · 16:9 · Hebrew', r:16/9}
 ];
 
 /* A phone-shaped screen takes the 480-px previews and 540-px posters out of
@@ -140,11 +141,11 @@ var grid = document.getElementById('grid');
 /* justified rows: inside a row every tile keeps its own shape and they all
    end up the same height, because the width is shared in proportion to the
    aspect ratio (flex-grow = ratio, basis 0) */
-var LAYOUT = [[0],[16],[1],[2],[3,4],[14,15],[5,6],[7,12],[8,9,10,11],[13]];
+var LAYOUT = [[0],[16],[1],[2],[3,4],[17],[14,15],[5,6],[7,12],[8,9,10,11],[13]];
 /* On a phone the wide films take the full width and the four vertical ones stand
    in pairs. One vertical tile at full width is 690 px tall on a 390-px phone, so
    those four were 2 800 px of scrolling for four works; in pairs it is half that. */
-var LAYOUT_M = [[0],[16],[1],[2],[3],[4],[5],[14,15],[6],[7],[8,9],[10,11],[12],[13]];
+var LAYOUT_M = [[0],[16],[1],[2],[3],[4],[5],[17],[14,15],[6],[7],[8,9],[10,11],[12],[13]];
 var rows = (mob ? LAYOUT_M : LAYOUT).map(function(r){ return r.map(function(i){ return W[i]; }); });
 
 rows.forEach(function(items){
